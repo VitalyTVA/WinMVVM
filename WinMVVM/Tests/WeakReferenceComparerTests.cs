@@ -2,9 +2,6 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace WinMVVM.Tests {
     [TestFixture]
@@ -19,7 +16,7 @@ namespace WinMVVM.Tests {
         }
         [Test]
         public void GetHashCode() { 
-            string s = "test";
+            const string s = "test";
             WeakReference reference = new WeakReference(s);
             Assert.That(WeakReferenceComparer.Instance.GetHashCode(reference), Is.EqualTo(s.GetHashCode()));
             Assert.Throws<ArgumentException>(() => WeakReferenceComparer.Instance.GetHashCode(GetDeadWeakReference()));
