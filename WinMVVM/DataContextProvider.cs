@@ -10,13 +10,22 @@ namespace WinMVVM {
         public static object GetDataContext(this Control control) {
             Guard.ArgumentNotNull(control, "control");
             object result;
-            if(dictionary.TryGetValue(new WeakReference(control), out result))
-                return result;
-            return null;
+            if(!dictionary.TryGetValue(GetWeakReference(control), out result)) {
+                if(control.Parent != null)
+                    return GetDataContext(control.Parent);
+            }
+            return result;
         }
         public static void SetDataContext(this Control control, object value) {
             Guard.ArgumentNotNull(control, "control");
-            dictionary[new WeakReference(control)] = value;
+            dictionary[GetWeakReference(control)] = value;
+        }
+        public static bool HasLocalDataContext(this Control control) {
+            Guard.ArgumentNotNull(control, "control");
+            return dictionary.ContainsKey(GetWeakReference(control));
+        }
+        private static WeakReference GetWeakReference(Control control) {
+            return new WeakReference(control);
         }
     }
 }
