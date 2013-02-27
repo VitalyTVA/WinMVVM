@@ -4,9 +4,16 @@ using System.Linq;
 
 namespace WinMVVM.Utils {
     public static class Guard {
-        public static void ArgumentNotNull(object obj, string paramName) {
+        public static void ArgumentNotNull(object obj, string argumentName) {
             if(obj == null)
-                throw new ArgumentNullException(paramName);
+                throw new ArgumentNullException(argumentName);
+        }
+        public static void ArgumentInRange(bool condition, string argumentName) {
+            if(!condition)
+                throw new ArgumentOutOfRangeException(argumentName);
+        }
+        public static void ArgumentException(string argumentName) {
+            throw new ArgumentException(argumentName);
         }
     }
 }

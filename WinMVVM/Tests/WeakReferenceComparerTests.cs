@@ -19,7 +19,7 @@ namespace WinMVVM.Tests {
             const string s = "test";
             WeakReference reference = new WeakReference(s);
             Assert.That(WeakReferenceComparer.Instance.GetHashCode(reference), Is.EqualTo(s.GetHashCode()));
-            Assert.Throws<ArgumentException>(() => WeakReferenceComparer.Instance.GetHashCode(GetDeadWeakReference()));
+            Assert.Throws<ArgumentOutOfRangeException>(() => WeakReferenceComparer.Instance.GetHashCode(GetDeadWeakReference()));
         }
         WeakReference GetDeadWeakReference() {
             WeakReference reference = CreateWeakReference();

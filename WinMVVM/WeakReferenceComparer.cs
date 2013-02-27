@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using WinMVVM.Utils;
 
 namespace WinMVVM {
     public class WeakReferenceComparer : IEqualityComparer<WeakReference> {
@@ -12,8 +13,7 @@ namespace WinMVVM {
             return object.Equals(x.Target, y.Target);
         }
         int IEqualityComparer<WeakReference>.GetHashCode(WeakReference reference) {
-            if(!reference.IsAlive)
-                throw new ArgumentException("reference");
+            Guard.ArgumentInRange(reference.IsAlive, "reference");
             return reference.Target.GetHashCode();
         }
     }
