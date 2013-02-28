@@ -68,6 +68,20 @@ namespace WinMVVM.Tests {
                 Assert.That(button2.GetDataContext(), Is.Null);
                 Assert.That(button1.HasLocalDataContext(), Is.True);
                 Assert.That(button2.HasLocalDataContext(), Is.True);
+           }
+        }
+        [Test]
+        public void ChangeInheritedDataContext() {
+            using(var form = new Form()) {
+                var button1 = new Button();
+                var button2 = new Button();
+                form.Controls.Add(button1);
+                form.SetDataContext("test");
+                Assert.That(button1.GetDataContext(), Is.EqualTo("test"));
+                Assert.That(button1.HasLocalDataContext(), Is.False);
+                form.SetDataContext("test2");
+                Assert.That(button1.GetDataContext(), Is.EqualTo("test2"));
+                Assert.That(button1.HasLocalDataContext(), Is.False);
             }
         }
     }

@@ -22,6 +22,9 @@ namespace WinMVVM {
                         return;
                     IsValueSet = true;
                     propertyValue = value;
+                    foreach(Control child in Control.Controls) {
+                        UpdateChildValue(child);
+                    }    
                     if(PropertyChanged != null)
                         PropertyChanged(this, Args);
                 }
@@ -32,24 +35,25 @@ namespace WinMVVM {
 
             public PropertyEntry(WeakReference controlReference) {
                 this.controlReference = controlReference;
-                Control.ControlAdded += OnControlAdded;//TODO - unsubscribe
+                //TODO - unsubscribe
+                //TODO - weak subscription??
+                Control.ControlAdded += OnControlAdded;
                 //control.ControlRemoved += OnControlRemoved;//TODO
             }
             void OnControlAdded(object sender, ControlEventArgs e) {
-                e.Control.SetDataContextCore(PropertyValue, false);
+                UpdateChildValue(e.Control);
             }
             //void OnControlRemoved(object sender, ControlEventArgs e) {
             //}
+            void UpdateChildValue(Control child) {
+                child.SetDataContextCore(PropertyValue, false);
+            }
         }
         static readonly Dictionary<WeakReference, PropertyEntry> dictionary = new Dictionary<WeakReference, PropertyEntry>(WeakReferenceComparer.Instance);
         public static object GetDataContext(this Control control) {
             Guard.ArgumentNotNull(control, "control");
             PropertyEntry result;
-            if(!GetPropertyEntryCore(control, out result)) {
-                if(control.Parent != null)
-                    return GetDataContext(control.Parent);
-            }
-            return result != null ? result.PropertyValue : null;
+            return GetPropertyEntryCore(control, out result) ? result.PropertyValue : null;
         }
         public static void SetDataContext(this Control control, object value) {
             SetDataContextCore(control, value, true);
