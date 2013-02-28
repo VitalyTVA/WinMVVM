@@ -45,13 +45,22 @@ namespace WinMVVM.Tests {
             using(var form = new Form()) {
                 var button1 = new Button();
                 var button2 = new Button();
+                var button3 = new Button();
+                button3.SetDataContext("button3");
                 form.Controls.Add(button1);
                 form.SetDataContext("test");
                 form.Controls.Add(button2);
+                form.Controls.Add(button3);
                 Assert.That(button1.GetDataContext(), Is.EqualTo("test"));
                 Assert.That(button2.GetDataContext(), Is.EqualTo("test"));
+                Assert.That(button3.GetDataContext(), Is.EqualTo("button3"));
                 Assert.That(button1.HasLocalDataContext(), Is.False);
                 Assert.That(button2.HasLocalDataContext(), Is.False);
+                Assert.That(button3.HasLocalDataContext(), Is.True);
+
+                //button3.ClearDataContext(); //TODO
+                //Assert.That(button3.GetDataContext(), Is.EqualTo("test"));
+                //Assert.That(button3.HasLocalDataContext(), Is.False);
 
                 button1.SetDataContext("button1");
                 Assert.That(button1.GetDataContext(), Is.EqualTo("button1"));

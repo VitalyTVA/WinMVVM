@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Windows;
 using System.Windows.Forms;
 using WinMVVM.Utils;
 
@@ -9,6 +10,8 @@ namespace WinMVVM {
     public static class DataContextProvider {
         public class PropertyEntry : INotifyPropertyChanged {
             static PropertyChangedEventArgs Args = new PropertyChangedEventArgs(string.Empty);
+            private Control Control { get { return (Control)controlReference.Target; } }
+            private readonly WeakReference controlReference;
             private object propertyValue;
             public object PropertyValue {
                 get {
@@ -24,8 +27,19 @@ namespace WinMVVM {
                 }
             }
             public event PropertyChangedEventHandler PropertyChanged;
-
             public bool IsValueSet { get; private set; }
+            public bool IsLocalValue { get; set; }
+
+            public PropertyEntry(WeakReference controlReference) {
+                this.controlReference = controlReference;
+                Control.ControlAdded += OnControlAdded;//TODO - unsubscribe
+                //control.ControlRemoved += OnControlRemoved;//TODO
+            }
+            void OnControlAdded(object sender, ControlEventArgs e) {
+                e.Control.SetDataContextCore(PropertyValue, false);
+            }
+            //void OnControlRemoved(object sender, ControlEventArgs e) {
+            //}
         }
         static readonly Dictionary<WeakReference, PropertyEntry> dictionary = new Dictionary<WeakReference, PropertyEntry>(WeakReferenceComparer.Instance);
         public static object GetDataContext(this Control control) {
@@ -38,21 +52,27 @@ namespace WinMVVM {
             return result != null ? result.PropertyValue : null;
         }
         public static void SetDataContext(this Control control, object value) {
-            Guard.ArgumentNotNull(control, "control");
-            PropertyEntry entry = GetPropertyEntry(control);
-            entry.PropertyValue = value;
+            SetDataContextCore(control, value, true);
         }
         public static bool HasLocalDataContext(this Control control) {
             Guard.ArgumentNotNull(control, "control");
             PropertyEntry entry;
             if(!GetPropertyEntryCore(control, out entry))
                 return false;
-            return entry.IsValueSet;
+            return entry.IsValueSet && entry.IsLocalValue;
+        }
+        internal static void SetDataContextCore(this Control control, object value, bool isLocalValue) {
+            Guard.ArgumentNotNull(control, "control");
+            PropertyEntry entry = GetPropertyEntry(control);
+            if(isLocalValue || !entry.IsLocalValue) {
+                entry.IsLocalValue = isLocalValue;
+                entry.PropertyValue = value;
+            }
         }
         internal static PropertyEntry GetPropertyEntry(this Control control) {
             PropertyEntry entry;
             if(!GetPropertyEntryCore(control, out entry)) {
-                dictionary[GetWeakReference(control)] = (entry = new PropertyEntry());
+                dictionary[GetWeakReference(control)] = (entry = new PropertyEntry(new WeakReference(control)));
             }
             return entry;
         }

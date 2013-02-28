@@ -70,5 +70,36 @@ namespace WinMVVM.Tests {
                 Assert.That(button.Text2SetCount, Is.EqualTo(1));
             }
         }
+        [Test]
+        public void InheritedDataContextBinding_BindAfterAddToTree() {
+            using(var form = new Form()) {
+                var button1 = new Button();
+                var button2 = new Button();
+                form.Controls.Add(button1);
+                form.SetDataContext("test");
+                form.Controls.Add(button2);
+
+                //button1.SetBinding("Text", new Binding());
+                //Assert.That(button1.Text, Is.EqualTo("test"));
+                //Assert.That(button1.HasLocalDataContext(), Is.False);
+
+                button2.SetBinding("Text", new Binding());
+                Assert.That(button2.Text, Is.EqualTo("test"));
+                Assert.That(button2.HasLocalDataContext(), Is.False);
+
+
+                //Assert.That(button1.GetDataContext(), Is.EqualTo("test"));
+                //Assert.That(button2.GetDataContext(), Is.EqualTo("test"));
+                //Assert.That(button1.HasLocalDataContext(), Is.False);
+                //Assert.That(button2.HasLocalDataContext(), Is.False);
+
+                //button1.SetDataContext("button1");
+                //Assert.That(button1.GetDataContext(), Is.EqualTo("button1"));
+                //button2.SetDataContext(null);
+                //Assert.That(button2.GetDataContext(), Is.Null);
+                //Assert.That(button1.HasLocalDataContext(), Is.True);
+                //Assert.That(button2.HasLocalDataContext(), Is.True);
+            }
+        }
     }
 }
