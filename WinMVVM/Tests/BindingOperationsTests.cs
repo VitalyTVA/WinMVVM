@@ -121,5 +121,43 @@ namespace WinMVVM.Tests {
                 Assert.That(button2.HasLocalDataContext(), Is.False);
             }
         }
+        [Test]
+        public void MultiLevelDataContextInheritance1() {
+            using(var form = new Form()) {
+                var panel = new Panel();
+                var button = new Button();
+                button.SetBinding("Text", new Binding());
+                panel.Controls.Add(button);
+                form.Controls.Add(panel);
+                form.SetDataContext("test");
+
+                Assert.That(button.Text, Is.EqualTo("test"));
+                Assert.That(button.HasLocalDataContext(), Is.False);
+                form.SetDataContext("test2");
+                Assert.That(button.Text, Is.EqualTo("test2"));
+                Assert.That(button.HasLocalDataContext(), Is.False);
+            }
+        }
+        [Test]
+        public void MultiLevelDataContextInheritance2() {
+            using(var form = new Form()) {
+                var panel = new Panel();
+                var button = new Button();
+                panel.Controls.Add(button);
+                form.SetDataContext("test");
+                form.Controls.Add(panel);
+                button.SetBinding("Text", new Binding());
+
+                Assert.That(button.Text, Is.EqualTo("test"));
+                Assert.That(button.HasLocalDataContext(), Is.False);
+                form.SetDataContext("test2");
+                Assert.That(button.Text, Is.EqualTo("test2"));
+                Assert.That(button.HasLocalDataContext(), Is.False);
+
+                panel.SetDataContext("panel");
+                Assert.That(button.Text, Is.EqualTo("panel"));
+                Assert.That(button.HasLocalDataContext(), Is.False);
+            }
+        }
     }
 }

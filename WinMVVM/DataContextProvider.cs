@@ -65,6 +65,10 @@ namespace WinMVVM {
                 return false;
             return entry.IsValueSet && entry.IsLocalValue;
         }
+        public static void ClearDataContext(this Control control) {
+            Guard.ArgumentNotNull(control, "control");
+            dictionary.Remove(GetWeakReference(control));
+        }
         internal static void SetDataContextCore(this Control control, object value, bool isLocalValue) {
             Guard.ArgumentNotNull(control, "control");
             PropertyEntry entry = GetPropertyEntry(control);
