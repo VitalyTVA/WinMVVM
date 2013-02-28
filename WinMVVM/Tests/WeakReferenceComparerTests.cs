@@ -2,6 +2,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using WinMVVM.Utils;
 
 namespace WinMVVM.Tests {
     [TestFixture]

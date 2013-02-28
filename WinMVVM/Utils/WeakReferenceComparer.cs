@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using WinMVVM.Utils;
 
-namespace WinMVVM {
+namespace WinMVVM.Utils {
     public class WeakReferenceComparer : IEqualityComparer<WeakReference> {
         public static readonly IEqualityComparer<WeakReference> Instance = new WeakReferenceComparer();
         WeakReferenceComparer() { }
