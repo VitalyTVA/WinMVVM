@@ -66,6 +66,7 @@
     <Compile Include="Tests\TestUtils.cs" />
     <Compile Include="Tests\WeakReferenceComparerTests.cs" />
     <Compile Include="Utils\Guard.cs" />
+    <Compile Include="Utils\Utils.cs" />
     <Compile Include="Utils\WeakReferenceComparer.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
