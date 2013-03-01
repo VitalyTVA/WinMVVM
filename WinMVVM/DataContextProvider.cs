@@ -88,9 +88,10 @@ namespace WinMVVM {
         static void ClearDataContextCore(this Control control, bool isLocalValue) {
             PropertyEntry entry;
             if(GetPropertyEntryCore(control, out entry)) {
-                entry.ClearChildrenDataContext();
-                if(entry.CanChangeValue(isLocalValue))
+                if(entry.CanChangeValue(isLocalValue)) {
+                    entry.ClearChildrenDataContext();
                     dictionary.Remove(GetWeakReference(control));
+                }
             }
         }
         internal static void SetDataContextCore(this Control control, object value, bool isLocalValue) {

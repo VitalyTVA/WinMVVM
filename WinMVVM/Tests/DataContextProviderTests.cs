@@ -120,16 +120,62 @@ namespace WinMVVM.Tests {
         public void MultiLevelDataContextInheritance1() {
             using(var form = new Form()) {
                 var panel = new Panel();
-                var button = new Button();
-                panel.Controls.Add(button);
+                var button1 = new Button();
+                var button2 = new Button();
+                panel.Controls.Add(button1);
+                panel.Controls.Add(button2);
                 form.Controls.Add(panel);
                 form.SetDataContext("test");
 
-                Assert.That(button.GetDataContext(), Is.EqualTo("test"));
-                Assert.That(button.HasLocalDataContext(), Is.False);
+                Assert.That(button1.GetDataContext(), Is.EqualTo("test"));
+                Assert.That(button1.HasLocalDataContext(), Is.False);
                 form.SetDataContext("test2");
-                Assert.That(button.GetDataContext(), Is.EqualTo("test2"));
-                Assert.That(button.HasLocalDataContext(), Is.False);
+                Assert.That(button1.GetDataContext(), Is.EqualTo("test2"));
+                Assert.That(button1.HasLocalDataContext(), Is.False);
+
+                button2.SetDataContext("button2");
+
+                form.ClearDataContext();
+                Assert.That(button1.GetDataContext(), Is.Null);
+                Assert.That(button1.HasLocalDataContext(), Is.False);
+                Assert.That(button2.GetDataContext(), Is.EqualTo("button2"));
+                Assert.That(button2.HasLocalDataContext(), Is.True);
+
+                form.SetDataContext("test2");
+                Assert.That(button1.GetDataContext(), Is.EqualTo("test2"));
+                Assert.That(button2.GetDataContext(), Is.EqualTo("button2"));
+                Assert.That(button2.HasLocalDataContext(), Is.True);
+                Assert.That(button1.HasLocalDataContext(), Is.False);
+
+                panel.SetDataContext("panel");
+                Assert.That(button1.GetDataContext(), Is.EqualTo("panel"));
+                Assert.That(button1.HasLocalDataContext(), Is.False);
+                Assert.That(button2.GetDataContext(), Is.EqualTo("button2"));
+                Assert.That(button2.HasLocalDataContext(), Is.True);
+
+                form.ClearDataContext();
+                Assert.That(panel.GetDataContext(), Is.EqualTo("panel"));
+                Assert.That(panel.HasLocalDataContext(), Is.True);
+                Assert.That(button1.GetDataContext(), Is.EqualTo("panel"));
+                Assert.That(button1.HasLocalDataContext(), Is.False);
+                Assert.That(button2.GetDataContext(), Is.EqualTo("button2"));
+                Assert.That(button2.HasLocalDataContext(), Is.True);
+
+                form.SetDataContext("test2");
+                Assert.That(panel.GetDataContext(), Is.EqualTo("panel"));
+                Assert.That(panel.HasLocalDataContext(), Is.True);
+                Assert.That(button1.GetDataContext(), Is.EqualTo("panel"));
+                Assert.That(button1.HasLocalDataContext(), Is.False);
+                Assert.That(button2.GetDataContext(), Is.EqualTo("button2"));
+                Assert.That(button2.HasLocalDataContext(), Is.True);
+
+                panel.ClearDataContext();
+                Assert.That(panel.GetDataContext(), Is.EqualTo("test2"));
+                Assert.That(panel.HasLocalDataContext(), Is.False);
+                Assert.That(button1.GetDataContext(), Is.EqualTo("test2"));
+                Assert.That(button1.HasLocalDataContext(), Is.False);
+                Assert.That(button2.GetDataContext(), Is.EqualTo("button2"));
+                Assert.That(button2.HasLocalDataContext(), Is.True);
             }
         }
         [Test]
