@@ -45,8 +45,19 @@ namespace WinMVVM {
             }
             //void OnControlRemoved(object sender, ControlEventArgs e) {
             //}
-            void UpdateChildValue(Control child) {
+            public void UpdateChildValue(Control child) {
                 child.SetDataContextCore(PropertyValue, false);
+            }
+            void ClearChildValue(Control child) {
+                child.ClearDataContextCore(false);
+            }
+            public void ClearChildrenDataContext() {
+                foreach(Control child in Control.Controls) {
+                    ClearChildValue(child);
+                }    
+            }
+            public bool CanChangeValue(bool isLocalValue) { 
+                return isLocalValue || !IsLocalValue;
             }
         }
         static readonly Dictionary<WeakReference, PropertyEntry> dictionary = new Dictionary<WeakReference, PropertyEntry>(WeakReferenceComparer.Instance);
@@ -67,12 +78,25 @@ namespace WinMVVM {
         }
         public static void ClearDataContext(this Control control) {
             Guard.ArgumentNotNull(control, "control");
-            dictionary.Remove(GetWeakReference(control));
+            ClearDataContextCore(control, true);
+            if(control.Parent != null) {
+                PropertyEntry parentEntry;
+                if(GetPropertyEntryCore(control.Parent, out parentEntry))
+                    parentEntry.UpdateChildValue(control);
+            }
+        }
+        static void ClearDataContextCore(this Control control, bool isLocalValue) {
+            PropertyEntry entry;
+            if(GetPropertyEntryCore(control, out entry)) {
+                entry.ClearChildrenDataContext();
+                if(entry.CanChangeValue(isLocalValue))
+                    dictionary.Remove(GetWeakReference(control));
+            }
         }
         internal static void SetDataContextCore(this Control control, object value, bool isLocalValue) {
             Guard.ArgumentNotNull(control, "control");
             PropertyEntry entry = GetPropertyEntry(control);
-            if(isLocalValue || !entry.IsLocalValue) {
+            if(entry.CanChangeValue(isLocalValue)) {
                 entry.IsLocalValue = isLocalValue;
                 entry.PropertyValue = value;
             }
