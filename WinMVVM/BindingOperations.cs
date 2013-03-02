@@ -9,6 +9,7 @@ using WinMVVM.Utils;
 namespace WinMVVM {
     public static class BindingOperations {
         internal class BindingExpression {
+            //TODO clear expressions with dead references
             readonly WeakReference controlReference;
             Control Control { get { return (Control)controlReference.Target; } }
             readonly string propertyName;

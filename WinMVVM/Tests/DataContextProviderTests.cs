@@ -114,6 +114,21 @@ namespace WinMVVM.Tests {
                 Assert.That(button1.HasLocalDataContext(), Is.False);
                 Assert.That(button2.GetDataContext(), Is.EqualTo("button2"));
                 Assert.That(button2.HasLocalDataContext(), Is.True);
+
+                form.SetDataContext("test");
+                Assert.That(button1.GetDataContext(), Is.EqualTo("test"));
+                Assert.That(button1.HasLocalDataContext(), Is.False);
+                Assert.That(button2.GetDataContext(), Is.EqualTo("button2"));
+                Assert.That(button2.HasLocalDataContext(), Is.True);
+
+                form.Controls.Remove(button1);
+                Assert.That(button1.GetDataContext(), Is.Null);
+                Assert.That(button1.HasLocalDataContext(), Is.False);
+                Assert.That(button2.GetDataContext(), Is.EqualTo("button2"));
+                Assert.That(button2.HasLocalDataContext(), Is.True);
+                form.Controls.Remove(button2);
+                Assert.That(button2.GetDataContext(), Is.EqualTo("button2"));
+                Assert.That(button2.HasLocalDataContext(), Is.True);
             }
         }
         [Test]
@@ -176,6 +191,26 @@ namespace WinMVVM.Tests {
                 Assert.That(button1.HasLocalDataContext(), Is.False);
                 Assert.That(button2.GetDataContext(), Is.EqualTo("button2"));
                 Assert.That(button2.HasLocalDataContext(), Is.True);
+
+                form.Controls.Clear();
+                Assert.That(panel.GetDataContext(), Is.Null);
+                Assert.That(panel.HasLocalDataContext(), Is.False);
+                Assert.That(button1.GetDataContext(), Is.Null);
+                Assert.That(button1.HasLocalDataContext(), Is.False);
+                Assert.That(button2.GetDataContext(), Is.EqualTo("button2"));
+                Assert.That(button2.HasLocalDataContext(), Is.True);
+
+                panel.SetDataContext("panel");
+                Assert.That(button1.GetDataContext(), Is.EqualTo("panel"));
+                Assert.That(button1.HasLocalDataContext(), Is.False);
+                Assert.That(button2.GetDataContext(), Is.EqualTo("button2"));
+                Assert.That(button2.HasLocalDataContext(), Is.True);
+
+                panel.Controls.Clear();
+                Assert.That(button1.GetDataContext(), Is.Null);
+                Assert.That(button1.HasLocalDataContext(), Is.False);
+                Assert.That(button2.GetDataContext(), Is.EqualTo("button2"));
+                Assert.That(button2.HasLocalDataContext(), Is.True);
             }
         }
         [Test]
@@ -198,5 +233,7 @@ namespace WinMVVM.Tests {
                 Assert.That(button.HasLocalDataContext(), Is.False);
             }
         }
+
+        //TODO check all created elements collected on fixture tear down (create elements via factory)
     }
 }

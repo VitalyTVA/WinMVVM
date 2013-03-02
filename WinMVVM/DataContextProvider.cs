@@ -39,7 +39,7 @@ namespace WinMVVM {
                 //TODO - unsubscribe
                 //TODO - weak subscription??
                 Control.ControlAdded += OnControlAdded;
-                //control.ControlRemoved += OnControlRemoved;//TODO
+                Control.ControlRemoved += OnControlRemoved;
             }
             public bool AddListener(BindingOperations.BindingExpression expression) {
                 if(!listeners.ContainsKey(expression)) {
@@ -54,8 +54,9 @@ namespace WinMVVM {
             void OnControlAdded(object sender, ControlEventArgs e) {
                 UpdateChildValue(e.Control);
             }
-            //void OnControlRemoved(object sender, ControlEventArgs e) {
-            //}
+            void OnControlRemoved(object sender, ControlEventArgs e) {
+                ClearChildValue(e.Control);
+            }
             public void UpdateChildValue(Control child) {
                 child.SetDataContextCore(PropertyValue, false);
             }

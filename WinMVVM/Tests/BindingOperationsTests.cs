@@ -141,6 +141,10 @@ namespace WinMVVM.Tests {
                 Assert.That(button1.HasLocalDataContext(), Is.True);
                 Assert.That(button2.Text, Is.EqualTo("test"));
                 Assert.That(button2.HasLocalDataContext(), Is.False);
+
+                form.Controls.Clear();
+                Assert.That(button1.Text, Is.EqualTo("button1"));
+                Assert.That(button2.Text, Is.EqualTo(string.Empty));
             }
         }
         [Test]
@@ -201,6 +205,10 @@ namespace WinMVVM.Tests {
                 panel.ClearDataContext();
                 Assert.That(panel.Tag, Is.EqualTo("test2"));
                 Assert.That(button1.Text, Is.EqualTo("test2"));
+
+                form.Controls.Clear();
+                Assert.That(panel.Tag, Is.Null);
+                Assert.That(button1.Text, Is.EqualTo(string.Empty));
             }
         }
         [Test]
