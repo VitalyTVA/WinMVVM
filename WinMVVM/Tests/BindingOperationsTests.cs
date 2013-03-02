@@ -159,17 +159,41 @@ namespace WinMVVM.Tests {
         public void MultiLevelDataContextInheritance1() {
             using(var form = new Form()) {
                 var panel = new Panel();
-                var button = new Button();
-                button.SetBinding("Text", new Binding());
-                panel.Controls.Add(button);
+                var button1 = new Button();
+                button1.SetBinding("Text", new Binding());
+                panel.SetBinding("Tag", new Binding());
+                panel.Controls.Add(button1);
                 form.Controls.Add(panel);
                 form.SetDataContext("test");
 
-                Assert.That(button.Text, Is.EqualTo("test"));
-                Assert.That(button.HasLocalDataContext(), Is.False);
+                Assert.That(button1.Text, Is.EqualTo("test"));
+                Assert.That(button1.HasLocalDataContext(), Is.False);
                 form.SetDataContext("test2");
-                Assert.That(button.Text, Is.EqualTo("test2"));
-                Assert.That(button.HasLocalDataContext(), Is.False);
+                Assert.That(button1.Text, Is.EqualTo("test2"));
+                Assert.That(button1.HasLocalDataContext(), Is.False);
+
+                form.ClearDataContext();
+                Assert.That(button1.Text, Is.EqualTo(string.Empty));
+
+                form.SetDataContext("test2");
+                Assert.That(panel.Tag, Is.EqualTo("test2"));
+                Assert.That(button1.Text, Is.EqualTo("test2"));
+
+                panel.SetDataContext("panel");
+                Assert.That(panel.Tag, Is.EqualTo("panel"));
+                Assert.That(button1.Text, Is.EqualTo("panel"));
+
+                form.ClearDataContext();
+                Assert.That(panel.Tag, Is.EqualTo("panel"));
+                Assert.That(button1.Text, Is.EqualTo("panel"));
+
+                form.SetDataContext("test2");
+                Assert.That(panel.Tag, Is.EqualTo("panel"));
+                Assert.That(button1.Text, Is.EqualTo("panel"));
+
+                panel.ClearDataContext();
+                Assert.That(panel.Tag, Is.EqualTo("test2"));
+                Assert.That(button1.Text, Is.EqualTo("test2"));
             }
         }
         [Test]
