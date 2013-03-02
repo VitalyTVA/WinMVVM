@@ -29,6 +29,12 @@ namespace WinMVVM.Tests {
 
                 button.SetDataContext("test2");
                 Assert.That(button.Text, Is.EqualTo("test2"));
+
+                button.ClearDataContext();
+                Assert.That(button.Text, Is.EqualTo(string.Empty));
+
+                button.SetDataContext("test3");
+                Assert.That(button.Text, Is.EqualTo("test3"));
             }
         }
         [Test]

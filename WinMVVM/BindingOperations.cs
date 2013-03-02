@@ -28,7 +28,12 @@ namespace WinMVVM {
                 PropertyDescriptor property = GetProperty(control, propertyName);
                 if(property == null)
                     Guard.ArgumentException("propertyName");
-                property.SetValue(control, propertyEntry.PropertyValue);
+                if(propertyEntry.IsValueSet) {
+                    property.SetValue(control, propertyEntry.PropertyValue);
+                } else {
+                    //TODO  CanResetValue
+                    property.ResetValue(control);
+                }
             }
         }
         public static void SetBinding(this Control control, string propertyName, BindingBase binding) {

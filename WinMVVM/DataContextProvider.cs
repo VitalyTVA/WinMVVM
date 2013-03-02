@@ -8,19 +8,19 @@ using WinMVVM.Utils;
 
 namespace WinMVVM {
     public static class DataContextProvider {
-        public class PropertyEntry : INotifyPropertyChanged {
-            static PropertyChangedEventArgs Args = new PropertyChangedEventArgs(string.Empty);
+        internal class PropertyEntry : INotifyPropertyChanged {
+            static object NotSetValue = new object();
+            static readonly PropertyChangedEventArgs Args = new PropertyChangedEventArgs(string.Empty);
             private Control Control { get { return (Control)controlReference.Target; } }
             private readonly WeakReference controlReference;
             private object propertyValue;
             public object PropertyValue {
                 get {
-                    return propertyValue;
+                    return IsValueSet ? propertyValue : null;
                 }
                 set {
                     if(IsValueSet && propertyValue == value)
                         return;
-                    IsValueSet = true;
                     propertyValue = value;
                     foreach(Control child in Control.Controls) {
                         UpdateChildValue(child);
@@ -29,8 +29,8 @@ namespace WinMVVM {
                         PropertyChanged(this, Args);
                 }
             }
+            public bool IsValueSet { get { return !object.Equals(propertyValue, NotSetValue); } }
             public event PropertyChangedEventHandler PropertyChanged;
-            public bool IsValueSet { get; private set; }
             public bool IsLocalValue { get; set; }
 
             public PropertyEntry(WeakReference controlReference) {
@@ -58,6 +58,10 @@ namespace WinMVVM {
             }
             public bool CanChangeValue(bool isLocalValue) { 
                 return isLocalValue || !IsLocalValue;
+            }
+            public void ClearValue() {
+                PropertyValue = NotSetValue;
+                IsLocalValue = false;
             }
         }
         static readonly Dictionary<WeakReference, PropertyEntry> dictionary = new Dictionary<WeakReference, PropertyEntry>(WeakReferenceComparer.Instance);
@@ -89,8 +93,9 @@ namespace WinMVVM {
             PropertyEntry entry;
             if(GetPropertyEntryCore(control, out entry)) {
                 if(entry.CanChangeValue(isLocalValue)) {
+                    entry.ClearValue();
                     entry.ClearChildrenDataContext();
-                    dictionary.Remove(GetWeakReference(control));
+                    //dictionary.Remove(GetWeakReference(control));
                 }
             }
         }
