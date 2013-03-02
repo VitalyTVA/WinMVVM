@@ -53,6 +53,11 @@ namespace WinMVVM.Tests {
                 };
                 button.SetDataContext("test2");
                 Assert.That(textChangedCount, Is.EqualTo(0));
+
+                button.ClearDataContext();
+                Assert.That(button.Text, Is.EqualTo(string.Empty));
+                button.SetDataContext("test3");
+                Assert.That(button.Text, Is.EqualTo("test3"));
             }
         }
         public class TestButton : Button {
@@ -106,6 +111,29 @@ namespace WinMVVM.Tests {
                 button2.SetDataContext(null);
                 Assert.That(button2.Text, Is.EqualTo(string.Empty));
                 Assert.That(button2.HasLocalDataContext(), Is.True);
+
+                button1.ClearDataContext();
+                Assert.That(button1.Text, Is.EqualTo("test2"));
+                Assert.That(button1.HasLocalDataContext(), Is.False);
+                button2.ClearDataContext();
+                Assert.That(button2.Text, Is.EqualTo("test2"));
+                Assert.That(button2.HasLocalDataContext(), Is.False);
+
+                form.ClearDataContext();
+                Assert.That(button1.Text, Is.EqualTo(string.Empty));
+                Assert.That(button1.HasLocalDataContext(), Is.False);
+                Assert.That(button2.Text, Is.EqualTo(string.Empty));
+                Assert.That(button2.HasLocalDataContext(), Is.False);
+
+                button1.SetDataContext("button1");
+                Assert.That(button1.Text, Is.EqualTo("button1"));
+                Assert.That(button1.HasLocalDataContext(), Is.True);
+
+                form.SetDataContext("test");
+                Assert.That(button1.Text, Is.EqualTo("button1"));
+                Assert.That(button1.HasLocalDataContext(), Is.True);
+                Assert.That(button2.Text, Is.EqualTo("test"));
+                Assert.That(button2.HasLocalDataContext(), Is.False);
             }
         }
         [Test]
