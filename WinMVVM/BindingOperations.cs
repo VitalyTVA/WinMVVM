@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Windows;
 using System.Windows.Forms;
 using WinMVVM.Utils;
@@ -53,6 +54,9 @@ namespace WinMVVM {
                 var other = obj as BindingExpression;
                 return other != null && other.Control == Control && other.propertyName == propertyName;
             }
+        }
+        public static void SetBinding<T>(this Control control, Expression<Func<T>> expression, BindingBase binding) {
+            control.SetBinding(ExpressionHelper.GetPropertyName(expression), binding);
         }
         public static void SetBinding(this Control control, string propertyName, BindingBase binding) {
             Guard.ArgumentNotNull(control, "control");

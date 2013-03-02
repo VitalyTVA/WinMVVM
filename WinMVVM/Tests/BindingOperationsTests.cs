@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using DevExpress.Xpf.Mvvm;
 
 namespace WinMVVM.Tests {
     [TestFixture]
@@ -42,6 +43,16 @@ namespace WinMVVM.Tests {
                 Assert.That(button.Tag, Is.Null);
                 button.SetDataContext("test4");
                 Assert.That(button.Text, Is.EqualTo(string.Empty));
+            }
+        }
+        [Test]
+        public void SetBindingWithLambdaExpression() {
+            using(var button = new Button()) {
+                button.SetBinding(() => button.Text, new Binding());
+                Assert.That(button.HasLocalDataContext(), Is.False);
+                button.SetDataContext("test");
+                Assert.That(button.Text, Is.EqualTo("test"));
+                Assert.That(button.HasLocalDataContext(), Is.True);
             }
         }
         [Test]
@@ -258,6 +269,21 @@ namespace WinMVVM.Tests {
                 Assert.That(button.Text2SetCount, Is.EqualTo(2));
             }
         }
+        //[Test]
+        //public void BindingWithPath() {
+        //    using(var button = new Button()) {
+        //        button.SetBinding("Text", new Binding());
+        //        button.SetDataContext("test");
+        //    }
+        //}
         //TODO test when update comes to collected control
+    }
+    public class TestViewModel : BindableBase {
+        string stringProperty;
+        public string StringProperty {
+            get { return stringProperty; }
+            set { SetProperty(ref stringProperty, value, () => StringProperty); }
+        }
+        
     }
 }
