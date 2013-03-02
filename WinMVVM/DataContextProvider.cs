@@ -48,6 +48,9 @@ namespace WinMVVM {
                 }
                 return false;
             }
+            public void RemoveListener(BindingOperations.BindingExpression expression) {
+                listeners.Remove(expression);
+            }
             void OnControlAdded(object sender, ControlEventArgs e) {
                 UpdateChildValue(e.Control);
             }

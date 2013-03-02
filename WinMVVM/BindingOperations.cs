@@ -23,6 +23,13 @@ namespace WinMVVM {
                     UpdateTargetProperty(propertyEntry);
                 }
             }
+            public void Clear() {
+                var propertyEntry = Control.GetPropertyEntry();
+                propertyEntry.RemoveListener(this);
+                PropertyDescriptor property = GetProperty(Control, propertyName);
+                ClearTargetProperty(property);
+            }
+
             public void UpdateTargetProperty(DataContextProvider.PropertyEntry propertyEntry) {
                 PropertyDescriptor property = GetProperty(Control, propertyName);
                 if(property == null)
@@ -30,9 +37,12 @@ namespace WinMVVM {
                 if(propertyEntry.IsValueSet) {
                     property.SetValue(Control, propertyEntry.PropertyValue);
                 } else {
-                    //TODO  CanResetValue
-                    property.ResetValue(Control);
+                    ClearTargetProperty(property);
                 }
+            }
+            void ClearTargetProperty(PropertyDescriptor property) {
+                //TODO  CanResetValue
+                property.ResetValue(Control);
             }
             //TODO - check wheter target is alive
             public override int GetHashCode() {
@@ -54,8 +64,10 @@ namespace WinMVVM {
             bindingExpression.Initialize();
         }
 
-        //public static void ClearBinding(this Control control, string propertyName) {
-        //}
+        public static void ClearBinding(this Control control, string propertyName) {
+            BindingExpression bindingExpression = new BindingExpression(control, propertyName);
+            bindingExpression.Clear();
+        }
         //public static void ClearAllBinding(this Control control, string propertyName) {
         //}
 
