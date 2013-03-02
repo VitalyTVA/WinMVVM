@@ -2,38 +2,45 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Windows;
 using System.Windows.Forms;
 using WinMVVM.Utils;
 
 namespace WinMVVM {
     public static class BindingOperations {
-        class BindingExpression {
-            private readonly Control control;
-            private readonly string propertyName;
+        internal class BindingExpression {
+            readonly WeakReference controlReference;
+            Control Control { get { return (Control)controlReference.Target; } }
+            readonly string propertyName;
             public BindingExpression(Control control, string propertyName) {
                 this.propertyName = propertyName;
-                this.control = control;
+                this.controlReference = new WeakReference(control);
 
-                var propertyEntry = control.GetPropertyEntry();
-                if(propertyEntry != null) {
-                    propertyEntry.PropertyChanged += OnPropertyEntryChanged;
+            }
+            public void Initialize() {
+                var propertyEntry = Control.GetPropertyEntry();
+                if(propertyEntry.AddListener(this)) {
                     UpdateTargetProperty(propertyEntry);
                 }
             }
-            public void OnPropertyEntryChanged(object sender, PropertyChangedEventArgs e) {
-                var propertyEntry = (DataContextProvider.PropertyEntry)sender;
-                UpdateTargetProperty(propertyEntry);
-            }
-            void UpdateTargetProperty(DataContextProvider.PropertyEntry propertyEntry) {
-                PropertyDescriptor property = GetProperty(control, propertyName);
+            public void UpdateTargetProperty(DataContextProvider.PropertyEntry propertyEntry) {
+                PropertyDescriptor property = GetProperty(Control, propertyName);
                 if(property == null)
                     Guard.ArgumentException("propertyName");
                 if(propertyEntry.IsValueSet) {
-                    property.SetValue(control, propertyEntry.PropertyValue);
+                    property.SetValue(Control, propertyEntry.PropertyValue);
                 } else {
                     //TODO  CanResetValue
-                    property.ResetValue(control);
+                    property.ResetValue(Control);
                 }
+            }
+            //TODO - check wheter target is alive
+            public override int GetHashCode() {
+                return Control.GetHashCode() ^ propertyName.GetHashCode();
+            }
+            public override bool Equals(object obj) {
+                var other = obj as BindingExpression;
+                return other != null && other.Control == Control && other.propertyName == propertyName;
             }
         }
         public static void SetBinding(this Control control, string propertyName, BindingBase binding) {
@@ -43,8 +50,8 @@ namespace WinMVVM {
             if(GetProperty(control, propertyName) == null)
                 Guard.ArgumentException("propertyName");
 
-            new BindingExpression(control, propertyName);
-
+            BindingExpression bindingExpression = new BindingExpression(control, propertyName);
+            bindingExpression.Initialize();
         }
 
         //public static void ClearBinding(this Control control, string propertyName) {

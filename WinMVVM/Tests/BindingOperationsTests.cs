@@ -217,5 +217,32 @@ namespace WinMVVM.Tests {
                 Assert.That(button.HasLocalDataContext(), Is.False);
             }
         }
+        [Test]
+        public void CollectBoundControl() {
+            var reference = DoCollectControlWithDataContextSet();
+            TestUtils.GarbageCollect();
+            Assert.That(reference.IsAlive, Is.False);
+        }
+        WeakReference DoCollectControlWithDataContextSet() {
+            var button = new Button();
+            button.SetDataContext("test");
+            button.SetBinding("Text", new Binding());
+            return new WeakReference(button);
+        }
+        [Test]
+        public void SetBindingTwice() {
+            using(var button = new TestButton()) {
+                button.SetDataContext("test");
+                button.SetBinding("Text2", new Binding());
+                button.SetBinding("Text2", new Binding());
+                Assert.That(button.Text2, Is.EqualTo("test"));
+                Assert.That(button.Text2SetCount, Is.EqualTo(1));
+
+                button.SetDataContext("test2");
+                Assert.That(button.Text2, Is.EqualTo("test2"));
+                Assert.That(button.Text2SetCount, Is.EqualTo(2));
+            }
+        }
+        //TODO test when update comes to collected control
     }
 }

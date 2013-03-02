@@ -8,7 +8,7 @@ using WinMVVM.Utils;
 
 namespace WinMVVM {
     public static class DataContextProvider {
-        internal class PropertyEntry : INotifyPropertyChanged {
+        internal class PropertyEntry {
             static object NotSetValue = new object();
             static readonly PropertyChangedEventArgs Args = new PropertyChangedEventArgs(string.Empty);
             private Control Control { get { return (Control)controlReference.Target; } }
@@ -24,14 +24,15 @@ namespace WinMVVM {
                     propertyValue = value;
                     foreach(Control child in Control.Controls) {
                         UpdateChildValue(child);
-                    }    
-                    if(PropertyChanged != null)
-                        PropertyChanged(this, Args);
+                    }
+                    foreach(BindingOperations.BindingExpression expression in listeners.Keys) {
+                        expression.UpdateTargetProperty(this);
+                    }
                 }
             }
             public bool IsValueSet { get { return !object.Equals(propertyValue, NotSetValue); } }
-            public event PropertyChangedEventHandler PropertyChanged;
             public bool IsLocalValue { get; set; }
+            Dictionary<BindingOperations.BindingExpression, object> listeners = new Dictionary<BindingOperations.BindingExpression, object>();
 
             public PropertyEntry(WeakReference controlReference) {
                 this.controlReference = controlReference;
@@ -39,6 +40,13 @@ namespace WinMVVM {
                 //TODO - weak subscription??
                 Control.ControlAdded += OnControlAdded;
                 //control.ControlRemoved += OnControlRemoved;//TODO
+            }
+            public bool AddListener(BindingOperations.BindingExpression expression) {
+                if(!listeners.ContainsKey(expression)) {
+                    listeners[expression] = null;
+                    return true;
+                }
+                return false;
             }
             void OnControlAdded(object sender, ControlEventArgs e) {
                 UpdateChildValue(e.Control);
