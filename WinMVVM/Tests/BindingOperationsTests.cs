@@ -49,10 +49,11 @@ namespace WinMVVM.Tests {
         public void SetBindingWithLambdaExpression() {
             using(var button = new Button()) {
                 button.SetBinding(() => button.Text, new Binding());
-                Assert.That(button.HasLocalDataContext(), Is.False);
                 button.SetDataContext("test");
                 Assert.That(button.Text, Is.EqualTo("test"));
-                Assert.That(button.HasLocalDataContext(), Is.True);
+
+                button.ClearBinding(() => button.Text);
+                Assert.That(button.Text, Is.EqualTo(string.Empty));
             }
         }
         [Test]
@@ -269,13 +270,20 @@ namespace WinMVVM.Tests {
                 Assert.That(button.Text2SetCount, Is.EqualTo(2));
             }
         }
-        //[Test]
-        //public void BindingWithPath() {
-        //    using(var button = new Button()) {
-        //        button.SetBinding("Text", new Binding());
-        //        button.SetDataContext("test");
-        //    }
-        //}
+        [Test]
+        public void BindingWithPath() {
+            var viewModel = new TestViewModel() { StringProperty = "test" };
+            using(var button = new Button()) {
+                button.SetDataContext(viewModel);
+                //button.SetBinding(() => button.Text, new Binding("StringProperty"));
+
+                Assert.That(button.Text, Is.EqualTo("test"));
+                //viewModel.StringProperty = "test2";
+                //Assert.That(button.Text, Is.EqualTo("test2"));
+
+                //button.ClearBinding(() => button.Text);
+            }
+        }
         //TODO test when update comes to collected control
     }
     public class TestViewModel : BindableBase {

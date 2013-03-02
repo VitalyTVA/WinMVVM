@@ -73,6 +73,9 @@ namespace WinMVVM {
             BindingExpression bindingExpression = new BindingExpression(control, propertyName);
             bindingExpression.Clear();
         }
+        public static void ClearBinding<T>(this Control control, Expression<Func<T>> expression) {
+            control.ClearBinding(ExpressionHelper.GetPropertyName(expression));
+        }
         //public static void ClearAllBinding(this Control control, string propertyName) {
         //}
 

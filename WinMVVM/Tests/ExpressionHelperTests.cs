@@ -16,6 +16,9 @@ namespace WinMVVM.Tests {
             Assert.Throws<ArgumentException>(() => { 
                 ExpressionHelper.GetPropertyName(() => GetInt()); 
             });
+            Assert.Throws<ArgumentNullException>(() => {
+                ExpressionHelper.GetPropertyName<int>(null);
+            });
         }
     }
 }
