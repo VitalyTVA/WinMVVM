@@ -10,16 +10,16 @@ using WinMVVM.Utils;
 
 namespace WinMVVM {
     public static class AttachedPropertyExtensions {
-        public static object GetValue(this Control control, AttachedProperty property) {
+        public static T GetValue<T>(this Control control, AttachedProperty<T> property) {
             return property.GetValue(control);
         }
-        public static void SetValue(this Control control, AttachedProperty property, object value) {
+        public static void SetValue<T>(this Control control, AttachedProperty<T> property, T value) {
             property.SetValue(control, value);
         }
-        public static bool HasLocalValue(this Control control, AttachedProperty property) {
+        public static bool HasLocalValue<T>(this Control control, AttachedProperty<T> property) {
             return property.HasLocalValue(control);
         }
-        public static void ClearValue(this Control control, AttachedProperty property) {
+        public static void ClearValue<T>(this Control control, AttachedProperty<T> property) {
             property.ClearValue(control);
         }
     }

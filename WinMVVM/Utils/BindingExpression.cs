@@ -13,7 +13,9 @@ namespace WinMVVM.Utils {
         string PropertyName { get { return Key.propertyName; } }
         public BindingBase Binding { get; private set; }
         PropertyChangeListener listener;
-        public BindingExpression(BindingExpressionKey key, BindingBase binding, PropertyEntry propertyEntry) {
+        readonly PropertyEntry<object> propertyEntry;
+        public BindingExpression(BindingExpressionKey key, BindingBase binding, PropertyEntry<object> propertyEntry) {
+            this.propertyEntry = propertyEntry;
             Binding = binding;
             this.Key = key;
             WpfBinding wpfBinding = new WpfBinding("PropertyValue." + ((Binding)binding).Path) { Source = propertyEntry };
@@ -28,7 +30,7 @@ namespace WinMVVM.Utils {
             PropertyDescriptor property = BindingOperations.GetProperty(Control, PropertyName);
             if(property == null)
                 Guard.ArgumentException("propertyName");
-            if(!PropertyEntry.IsNotSetValue(value)) {
+            if(propertyEntry.IsValueSet) {
                 property.SetValue(Control, value);
             } else {
                 ClearTargetProperty(property);

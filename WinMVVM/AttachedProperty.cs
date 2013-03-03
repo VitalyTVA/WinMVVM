@@ -9,8 +9,8 @@ using System.Windows.Forms;
 using WinMVVM.Utils;
 
 namespace WinMVVM {
-    public sealed class AttachedProperty {
-        public static AttachedProperty Register(Expression<Func<AttachedProperty>> property, PropertyMetadata metadata = null) {
+    public sealed class AttachedProperty<T> {
+        public static AttachedProperty<T> Register(Expression<Func<AttachedProperty<T>>> property, PropertyMetadata<T> metadata = null) {
             MemberInfo mi = ExpressionHelper.GetMemberInfo(property, MemberTypes.Field);
             //TODO check string not empty, check existing properties
             const string Suffix = "Property";
@@ -20,34 +20,34 @@ namespace WinMVVM {
             int index = mi.Name.Length - Suffix.Length;
             return Register(mi.Name.Remove(index, Suffix.Length), mi.DeclaringType, metadata);
         }
-        public static AttachedProperty Register(string name, Type ownerType, PropertyMetadata metadata = null) {
+        public static AttachedProperty<T> Register(string name, Type ownerType, PropertyMetadata<T> metadata = null) {
             Guard.ArgumentInRange(!string.IsNullOrEmpty(name), "name");
             Guard.ArgumentNotNull(ownerType, "ownerType");
-            return new AttachedProperty(name, ownerType, metadata ?? new PropertyMetadata());
+            return new AttachedProperty<T>(name, ownerType, metadata ?? new PropertyMetadata<T>());
         }
 
-        public AttachedProperty(string name, Type ownerType, PropertyMetadata metadata) {
+        public AttachedProperty(string name, Type ownerType, PropertyMetadata<T> metadata) {
             Metadata = metadata;
             Name = name;
             OwnerType = ownerType;
         }
         public Type OwnerType { get; private set; }
         public string Name { get; private set; }
-        public PropertyMetadata Metadata { get; private set; }
+        public PropertyMetadata<T> Metadata { get; private set; }
         internal bool Inherits { get { return (Metadata.Options & PropertyMetadataOptions.Inherits) != 0; } }
 
-        readonly Dictionary<WeakReference, PropertyEntry> dictionary = new Dictionary<WeakReference, PropertyEntry>(WeakReferenceComparer.Instance);
-        internal object GetValue(Control control) {
+        readonly Dictionary<WeakReference, PropertyEntry<T>> dictionary = new Dictionary<WeakReference, PropertyEntry<T>>(WeakReferenceComparer.Instance);
+        internal T GetValue(Control control) {
             Guard.ArgumentNotNull(control, "control");
-            PropertyEntry result;
+            PropertyEntry<T> result;
             return GetPropertyEntryCore(control, out result) ? result.PropertyValue : Metadata.DefaultValue;
         }
-        internal void SetValue(Control control, object value) {
+        internal void SetValue(Control control, T value) {
             SetValueCore(control, value, true);
         }
         internal bool HasLocalValue(Control control) {
             Guard.ArgumentNotNull(control, "control");
-            PropertyEntry entry;
+            PropertyEntry<T> entry;
             if(!GetPropertyEntryCore(control, out entry))
                 return false;
             return entry.IsValueSet && entry.IsLocalValue;
@@ -56,13 +56,13 @@ namespace WinMVVM {
             Guard.ArgumentNotNull(control, "control");
             ClearValueCore(control, true);
             if(Inherits && control.Parent != null) {
-                PropertyEntry parentEntry;
+                PropertyEntry<T> parentEntry;
                 if(GetPropertyEntryCore(control.Parent, out parentEntry))
                     parentEntry.UpdateChildValue(control);
             }
         }
         internal void ClearValueCore(Control control, bool isLocalValue) {
-            PropertyEntry entry;
+            PropertyEntry<T> entry;
             if(GetPropertyEntryCore(control, out entry)) {
                 if(entry.CanChangeValue(isLocalValue)) {
                     entry.ClearValue();
@@ -71,22 +71,22 @@ namespace WinMVVM {
                 }
             }
         }
-        internal void SetValueCore(Control control, object value, bool isLocalValue) {
+        internal void SetValueCore(Control control, T value, bool isLocalValue) {
             Guard.ArgumentNotNull(control, "control");
-            PropertyEntry entry = GetPropertyEntry(control);
+            PropertyEntry<T> entry = GetPropertyEntry(control);
             if(entry.CanChangeValue(isLocalValue)) {
                 entry.IsLocalValue = isLocalValue;
                 entry.PropertyValue = value;
             }
         }
-        internal PropertyEntry GetPropertyEntry(Control control) {
-            PropertyEntry entry;
+        internal PropertyEntry<T> GetPropertyEntry(Control control) {
+            PropertyEntry<T> entry;
             if(!GetPropertyEntryCore(control, out entry)) {
-                dictionary[GetWeakReference(control)] = (entry = new PropertyEntry(this, new WeakReference(control)));
+                dictionary[GetWeakReference(control)] = (entry = new PropertyEntry<T>(this, new WeakReference(control)));
             }
             return entry;
         }
-        bool GetPropertyEntryCore(Control control, out PropertyEntry result) {
+        bool GetPropertyEntryCore(Control control, out PropertyEntry<T> result) {
             return dictionary.TryGetValue(GetWeakReference(control), out result);
         }
         private static WeakReference GetWeakReference(Control control) {

@@ -7,39 +7,44 @@ using System.Windows.Forms;
 using WinMVVM.Utils;
 using WpfBinding = System.Windows.Data.Binding;
 namespace WinMVVM.Utils {
-    class PropertyEntry : INotifyPropertyChanged {
-        static object NotSetValue = new object();
+    class PropertyEntry<T> : INotifyPropertyChanged {
+        private bool isValueSet;
         static readonly PropertyChangedEventArgs Args = new PropertyChangedEventArgs("PropertyValue");
-        public static bool IsNotSetValue(object value) {
-            return object.Equals(value, NotSetValue);
-        }
         private Control Control { get { return (Control)controlReference.Target; } }
         private readonly WeakReference controlReference;
-        readonly AttachedProperty property;
-        private object propertyValue;
-        public object PropertyValue {
+        readonly AttachedProperty<T> property;
+        private T propertyValue;
+        public T PropertyValue {
             get {
                 return IsValueSet ? propertyValue : property.Metadata.DefaultValue;
             }
             set {
-                if(IsValueSet && propertyValue == value)
+                if(IsValueSet && object.Equals(propertyValue, value))
                     return;
+                IsValueSet = true;
                 propertyValue = value;
                 if(property.Inherits) {
                     foreach(Control child in Control.Controls) {
                         UpdateChildValue(child);
                     }
                 }
-                if(PropertyChanged != null)
-                    PropertyChanged(this, Args);
+                NotifyPropertyValueChanged();
             }
         }
-        public bool IsValueSet { get { return !IsNotSetValue(propertyValue); } }
+        public bool IsValueSet {
+            get { return isValueSet; }
+            set {
+                if(isValueSet == value)
+                    return;
+                isValueSet = value;
+                NotifyPropertyValueChanged();
+            }
+        }
         public bool IsLocalValue { get; set; }
         Dictionary<BindingExpressionKey, BindingExpression> expressions = new Dictionary<BindingExpressionKey, BindingExpression>();
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public PropertyEntry(AttachedProperty property, WeakReference controlReference) {
+        public PropertyEntry(AttachedProperty<T> property, WeakReference controlReference) {
             this.property = property;
             this.controlReference = controlReference;
             //TODO - unsubscribe
@@ -49,7 +54,11 @@ namespace WinMVVM.Utils {
                 Control.ControlRemoved += OnControlRemoved;
             }
         }
-        public void AddBinding(BindingExpressionKey key, BindingBase binding) {
+        void NotifyPropertyValueChanged() {
+            if(PropertyChanged != null)
+                PropertyChanged(this, Args);
+        }
+        public void AddBinding(BindingExpressionKey key, BindingBase binding, Func<BindingExpression> createExpression) {
             BindingExpression existingExpression;
             if(expressions.TryGetValue(key, out existingExpression)) {
                 if(!object.Equals(binding, existingExpression.Binding))
@@ -57,7 +66,7 @@ namespace WinMVVM.Utils {
                 else
                     return;
             }
-            expressions[key] = new BindingExpression(key, binding, this);
+            expressions[key] = createExpression();
         }
         public BindingExpression RemoveBinding(BindingExpressionKey key) {
             BindingExpression result;
@@ -92,7 +101,7 @@ namespace WinMVVM.Utils {
             return isLocalValue || !IsLocalValue;
         }
         public void ClearValue() {
-            PropertyValue = NotSetValue;
+            IsValueSet = false;
             IsLocalValue = false;
         }
         void ValidateChildAccess() {

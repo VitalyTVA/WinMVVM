@@ -7,7 +7,7 @@ using System.Windows.Forms;
 namespace WinMVVM.Tests {
     [TestFixture]
     public class AttachedPropertyTests {
-        public static readonly AttachedProperty TestProperty1;
+        public static readonly AttachedProperty<object> TestProperty1;
         [Test]
         public void Regisrtation() {
             Assert.That(TestPropertyContainer.TestProperty.Name, Is.EqualTo("Test"));
@@ -20,16 +20,16 @@ namespace WinMVVM.Tests {
             Assert.That(TestPropertyContainer.Test2Property.OwnerType, Is.EqualTo(typeof(TestPropertyContainer)));
 
             Assert.Throws<ArgumentException>(
-                () => AttachedProperty.Register(() => TestProperty1)
+                () => AttachedProperty<object>.Register(() => TestProperty1)
             );
             Assert.Throws<ArgumentOutOfRangeException>(
-                () => AttachedProperty.Register(null, typeof(AttachedPropertyTests))
+                () => AttachedProperty<object>.Register(null, typeof(AttachedPropertyTests))
             );
             Assert.Throws<ArgumentOutOfRangeException>(
-                () => AttachedProperty.Register(string.Empty, typeof(AttachedPropertyTests))
+                () => AttachedProperty<object>.Register(string.Empty, typeof(AttachedPropertyTests))
             );
             Assert.Throws<ArgumentNullException>(
-               () => AttachedProperty.Register("NoOwnerType", null)
+               () => AttachedProperty<object>.Register("NoOwnerType", null)
             );
         }
         [Test]
@@ -95,10 +95,10 @@ namespace WinMVVM.Tests {
         }
     }
     public static class TestPropertyContainer {
-        public static readonly AttachedProperty TestProperty = AttachedProperty.Register(() => TestProperty, new PropertyMetadata(null, PropertyMetadataOptions.Inherits));
-        public static readonly AttachedProperty TestPropertyProperty = AttachedProperty.Register(() => TestPropertyProperty);
-        public static readonly AttachedProperty Test2Property = AttachedProperty.Register("Test2", typeof(TestPropertyContainer), new PropertyMetadata(null, PropertyMetadataOptions.None));
-        public static readonly AttachedProperty DefaultValueProperty = AttachedProperty.Register(() => DefaultValueProperty, new PropertyMetadata("d"));
+        public static readonly AttachedProperty<object> TestProperty = AttachedProperty<object>.Register(() => TestProperty, new PropertyMetadata<object>(null, PropertyMetadataOptions.Inherits));
+        public static readonly AttachedProperty<object> TestPropertyProperty = AttachedProperty<object>.Register(() => TestPropertyProperty);
+        public static readonly AttachedProperty<object> Test2Property = AttachedProperty<object>.Register("Test2", typeof(TestPropertyContainer), new PropertyMetadata<object>(null, PropertyMetadataOptions.None));
+        public static readonly AttachedProperty<object> DefaultValueProperty = AttachedProperty<object>.Register(() => DefaultValueProperty, new PropertyMetadata<object>("d"));
 
     }
 }

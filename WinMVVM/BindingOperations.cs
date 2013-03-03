@@ -22,7 +22,7 @@ namespace WinMVVM {
 
             BindingExpressionKey key = new BindingExpressionKey(control, propertyName);
             var propertyEntry = DataContextProvider.DataContextProperty.GetPropertyEntry(control);
-            propertyEntry.AddBinding(key, binding);
+            propertyEntry.AddBinding(key, binding, () => new BindingExpression(key, binding, propertyEntry));
         }
 
         public static void ClearBinding(this Control control, string propertyName) {
