@@ -17,7 +17,11 @@ namespace WinMVVM.Utils {
             Binding = binding;
             this.Key = key;
             WpfBinding wpfBinding = new WpfBinding("PropertyValue." + ((Binding)binding).Path) { Source = propertyEntry };
-            listener = PropertyChangeListener.Create(wpfBinding, new Action<object>(UpdateTargetProperty));
+
+            PropertyDescriptor property = BindingOperations.GetProperty(Control, PropertyName);
+            if(property == null)
+                Guard.ArgumentException("propertyName");
+            listener = PropertyChangeListener.Create(wpfBinding, UpdateTargetProperty, property.GetValue(Control));
         }
 
         void UpdateTargetProperty(object value) {

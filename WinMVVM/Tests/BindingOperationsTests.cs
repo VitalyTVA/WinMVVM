@@ -303,6 +303,21 @@ namespace WinMVVM.Tests {
                 Assert.That(button.Text, Is.EqualTo(string.Empty));
             }
         }
+        [Test]
+        public void BindingToPathWithInheritedDataContext() {
+            var viewModel = new TestViewModel();
+            using(var form = new Form()) {
+                var button1 = new Button() { Text = "button1" };
+                form.Controls.Add(button1);
+
+                form.SetDataContext(viewModel);
+                button1.SetBinding(() => button1.Text, new Binding("StringProperty"));
+                Assert.That(button1.Text, Is.EqualTo(string.Empty));
+
+                viewModel.StringProperty = "test";
+                Assert.That(button1.Text, Is.EqualTo("test"));
+            }
+        }
         //TODO test when update comes to collected control
     }
     public class TestViewModel : BindableBase {

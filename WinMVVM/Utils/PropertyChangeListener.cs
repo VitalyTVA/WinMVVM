@@ -12,10 +12,11 @@ namespace WinMVVM.Utils {
     class PropertyChangeListener : DependencyObject {
         public static readonly DependencyProperty FakeProperty = DependencyProperty.Register("Fake", typeof(object), typeof(PropertyChangeListener), new PropertyMetadata(null, (d, e) => ((PropertyChangeListener)d).OnFakeChanged()));
         readonly Action<object> changedCallback;
-        public static PropertyChangeListener Create(WpfBinding binding, Action<object> changedCallback) {
-            return new PropertyChangeListener(binding, changedCallback);
+        public static PropertyChangeListener Create(WpfBinding binding, Action<object> changedCallback, object initialValue) {
+            return new PropertyChangeListener(binding, changedCallback, initialValue);
         }
-        PropertyChangeListener(WpfBinding binding, Action<object> changedCallback) {
+        PropertyChangeListener(WpfBinding binding, Action<object> changedCallback, object initialValue) {
+            Fake = initialValue;
             this.changedCallback = changedCallback;
             WpfBindingOperations.SetBinding(this, FakeProperty, binding);
         }
