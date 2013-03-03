@@ -335,33 +335,4 @@ namespace WinMVVM.Tests {
         }
         //TODO test when update comes to collected control
     }
-    public class TestViewModel : BindableBase {
-        string stringProperty;
-        public string StringProperty {
-            get { return stringProperty; }
-            set { SetProperty(ref stringProperty, value, () => StringProperty); }
-        }
-
-        string stringProperty2;
-        public string StringProperty2 {
-            get { return stringProperty2; }
-            set { SetProperty(ref stringProperty2, value, () => StringProperty2); }
-        }
-
-        NestedTestViewModel nestedViewModel;
-        public NestedTestViewModel NestedViewModel {
-            get { return nestedViewModel; }
-            set { SetProperty(ref nestedViewModel, value, () => NestedViewModel); }
-        }
-    }
-    public class NestedTestViewModel : BindableBase {
-
-        string nestedStringProperty;
-
-        public string NestedStringProperty {
-            get { return nestedStringProperty; }
-            set { SetProperty(ref nestedStringProperty, value, () => NestedStringProperty); }
-        }
-        
-    }
 }

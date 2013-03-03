@@ -75,6 +75,9 @@
     <Compile Include="PropertyMetadata.cs" />
     <Compile Include="PropertyMetadataOptions.cs" />
     <Compile Include="Tests\AttachedPropertyTests.cs" />
+    <Compile Include="Tests\CommandProviderTests.cs" />
+    <Compile Include="Tests\DelegateCommand.cs" />
+    <Compile Include="Tests\TestViewModel.cs" />
     <Compile Include="Utils\BindingExpression.cs" />
     <Compile Include="Utils\BindingExpressionKey.cs" />
     <Compile Include="Utils\PropertyEntry.cs" />

@@ -18,6 +18,7 @@ namespace WinMVVM.Tests {
         [Test]
         public void PublicClassesOnlyInRootNameSpace() {
             foreach(Type type in Assembly.GetExecutingAssembly().GetTypes()) {
+                Assert.That(type.Namespace.StartsWith("WinMVVM"), Is.True);
                 if(type.Namespace == "WinMVVM") {
                     if(type.IsNested)
                         Assert.That(type.IsPublic, Is.False);
