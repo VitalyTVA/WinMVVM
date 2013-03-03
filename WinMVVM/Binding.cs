@@ -7,10 +7,6 @@ using WinMVVM.Utils;
 
 namespace WinMVVM {
     public class Binding : BindingBase {
-        //public static Binding Create<T>(Expression<Func<T>> expression) {
-        //    return new Binding(ExpressionHelper.GetPropertyPath(expression));
-        //}
-
         public Binding(string path = null) {
             Path = path;
         }

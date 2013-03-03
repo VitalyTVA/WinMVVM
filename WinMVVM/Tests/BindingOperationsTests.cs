@@ -327,6 +327,11 @@ namespace WinMVVM.Tests {
                 Assert.That(button.Text, Is.EqualTo("StringProperty"));
                 button.SetBinding(() => button.Text, new Binding(() => viewModel.NestedViewModel.NestedStringProperty));
                 Assert.That(button.Text, Is.EqualTo("NestedStringProperty"));
+
+                button.SetBinding(() => new Button().Text, new Binding(() => new TestViewModel().StringProperty));
+                Assert.That(button.Text, Is.EqualTo("StringProperty"));
+                button.SetBinding(() => new Button().Text, new Binding(() => new TestViewModel().NestedViewModel.NestedStringProperty));
+                Assert.That(button.Text, Is.EqualTo("NestedStringProperty"));
             }
         }
         //TODO test when update comes to collected control
