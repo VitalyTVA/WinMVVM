@@ -9,7 +9,7 @@ using WpfBinding = System.Windows.Data.Binding;
 using WpfBindingOperations = System.Windows.Data.BindingOperations;
 
 namespace WinMVVM.Utils {
-    public class PropertyChangeListener : DependencyObject {
+    class PropertyChangeListener : DependencyObject {
         public static readonly DependencyProperty FakeProperty = DependencyProperty.Register("Fake", typeof(object), typeof(PropertyChangeListener), new PropertyMetadata(null, (d, e) => ((PropertyChangeListener)d).OnFakeChanged()));
         readonly Action<object> changedCallback;
         public static PropertyChangeListener Create(WpfBinding binding, Action<object> changedCallback) {

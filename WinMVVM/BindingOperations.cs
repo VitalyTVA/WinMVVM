@@ -10,7 +10,7 @@ using WpfBinding = System.Windows.Data.Binding;
 
 namespace WinMVVM {
     public static class BindingOperations {
-        public class BindingExpressionKey {
+        internal class BindingExpressionKey {
             //TODO clear expressions with dead references
             readonly WeakReference controlReference;
             public Control Control { get { return (Control)controlReference.Target; } }
@@ -29,7 +29,7 @@ namespace WinMVVM {
                 return other != null && other.Control == Control && other.propertyName == propertyName;
             }
         }
-        public class BindingExpression {
+        internal class BindingExpression {
             public BindingExpressionKey Key { get; private set; }
             Control Control { get { return Key.Control; } }
             string PropertyName { get { return Key.propertyName; } }
@@ -74,14 +74,14 @@ namespace WinMVVM {
 
             BindingExpressionKey key = new BindingExpressionKey(control, propertyName);
             var propertyEntry = control.GetPropertyEntry();
-            propertyEntry.AddListener(key, binding);
+            propertyEntry.AddBinding(key, binding);
         }
 
         public static void ClearBinding(this Control control, string propertyName) {
             BindingExpressionKey key = new BindingExpressionKey(control, propertyName);
 
             var propertyEntry = control.GetPropertyEntry();
-            BindingExpression expression = propertyEntry.RemoveListener(key);
+            BindingExpression expression = propertyEntry.RemoveBinding(key);
             if(expression != null) {
                 expression.Clear();
             }

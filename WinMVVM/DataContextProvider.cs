@@ -8,7 +8,7 @@ using WinMVVM.Utils;
 
 namespace WinMVVM {
     public static class DataContextProvider {
-        public class PropertyEntry : INotifyPropertyChanged {
+        internal class PropertyEntry : INotifyPropertyChanged {
             static object NotSetValue = new object();
             static readonly PropertyChangedEventArgs Args = new PropertyChangedEventArgs("PropertyValue");
             public static bool IsNotSetValue(object value) {
@@ -47,7 +47,7 @@ namespace WinMVVM {
                 Control.ControlAdded += OnControlAdded;
                 Control.ControlRemoved += OnControlRemoved;
             }
-            public void AddListener(BindingOperations.BindingExpressionKey key, BindingBase binding) {
+            public void AddBinding(BindingOperations.BindingExpressionKey key, BindingBase binding) {
                 BindingOperations.BindingExpression existingExpression;
                 if(listeners.TryGetValue(key, out existingExpression)) {
                     if(!object.Equals(binding, existingExpression.Binding))
@@ -57,7 +57,7 @@ namespace WinMVVM {
                 }
                 listeners[key] = new BindingOperations.BindingExpression(key, binding, this);
             }
-            public BindingOperations.BindingExpression RemoveListener(BindingOperations.BindingExpressionKey key) {
+            public BindingOperations.BindingExpression RemoveBinding(BindingOperations.BindingExpressionKey key) {
                 BindingOperations.BindingExpression result;
                 if(listeners.TryGetValue(key, out result)) {
                     listeners.Remove(key);

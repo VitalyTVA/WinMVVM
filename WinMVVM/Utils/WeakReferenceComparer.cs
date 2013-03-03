@@ -4,7 +4,7 @@ using System.Linq;
 using WinMVVM.Utils;
 
 namespace WinMVVM.Utils {
-    public class WeakReferenceComparer : IEqualityComparer<WeakReference> {
+    class WeakReferenceComparer : IEqualityComparer<WeakReference> {
         public static readonly IEqualityComparer<WeakReference> Instance = new WeakReferenceComparer();
         WeakReferenceComparer() { }
         bool IEqualityComparer<WeakReference>.Equals(WeakReference x, WeakReference y) {
