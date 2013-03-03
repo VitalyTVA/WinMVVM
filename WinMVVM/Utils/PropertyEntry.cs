@@ -21,14 +21,15 @@ namespace WinMVVM.Utils {
             set {
                 if(IsValueSet && object.Equals(propertyValue, value))
                     return;
-                IsValueSet = true;
+                T oldValue = PropertyValue;
+                isValueSet = true;
                 propertyValue = value;
                 if(property.Inherits) {
                     foreach(Control child in Control.Controls) {
                         UpdateChildValue(child);
                     }
                 }
-                NotifyPropertyValueChanged();
+                NotifyPropertyValueChanged(oldValue);
             }
         }
         public bool IsValueSet {
@@ -36,8 +37,9 @@ namespace WinMVVM.Utils {
             set {
                 if(isValueSet == value)
                     return;
+                T oldValue = PropertyValue;
                 isValueSet = value;
-                NotifyPropertyValueChanged();
+                NotifyPropertyValueChanged(oldValue);
             }
         }
         public bool IsLocalValue { get; set; }
@@ -54,7 +56,9 @@ namespace WinMVVM.Utils {
                 Control.ControlRemoved += OnControlRemoved;
             }
         }
-        void NotifyPropertyValueChanged() {
+        void NotifyPropertyValueChanged(T oldValue) {
+            if(property.Metadata.Callback != null)
+                property.Metadata.Callback(Control, new AttachedPropertyChangedEventArgs<T>(oldValue, PropertyValue));
             if(PropertyChanged != null)
                 PropertyChanged(this, Args);
         }

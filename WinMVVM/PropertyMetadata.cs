@@ -17,6 +17,6 @@ namespace WinMVVM {
         }
         public PropertyMetadataOptions Options { get; private set; }
         public T DefaultValue { get; private set; }
-        public AttachedPropertyChangedCallback<T> Callback { get; private set; }
+        internal AttachedPropertyChangedCallback<T> Callback { get; private set; }
     }
 }

@@ -86,11 +86,21 @@ namespace WinMVVM.Tests {
         [Test]
         public void DefaultValue() {
             using(var button = new Button()) {
+                Assert.That(TestPropertyContainer.DefaultValueChangedFireCount, Is.EqualTo(0));
                 Assert.That(button.GetValue(TestPropertyContainer.DefaultValueProperty), Is.EqualTo("d"));
+
                 button.SetValue(TestPropertyContainer.DefaultValueProperty, "button");
+                Assert.That(TestPropertyContainer.DefaultValueChangedFireCount, Is.EqualTo(1));
+                Assert.That(TestPropertyContainer.DefaultValueChangedSender, Is.EqualTo(button));
+                Assert.That(TestPropertyContainer.DefaultValueChangedArgs.OldValue, Is.EqualTo("d"));
+                Assert.That(TestPropertyContainer.DefaultValueChangedArgs.NewValue, Is.EqualTo("button"));
                 Assert.That(button.GetValue(TestPropertyContainer.DefaultValueProperty), Is.EqualTo("button"));
+
                 button.ClearValue(TestPropertyContainer.DefaultValueProperty);
+                Assert.That(TestPropertyContainer.DefaultValueChangedFireCount, Is.EqualTo(2));
                 Assert.That(button.GetValue(TestPropertyContainer.DefaultValueProperty), Is.EqualTo("d"));
+                Assert.That(TestPropertyContainer.DefaultValueChangedArgs.NewValue, Is.EqualTo("d"));
+                Assert.That(TestPropertyContainer.DefaultValueChangedArgs.OldValue, Is.EqualTo("button"));
             }
         }
     }
@@ -98,7 +108,16 @@ namespace WinMVVM.Tests {
         public static readonly AttachedProperty<object> TestProperty = AttachedProperty<object>.Register(() => TestProperty, new PropertyMetadata<object>(null, null, PropertyMetadataOptions.Inherits));
         public static readonly AttachedProperty<object> TestPropertyProperty = AttachedProperty<object>.Register(() => TestPropertyProperty);
         public static readonly AttachedProperty<object> Test2Property = AttachedProperty<object>.Register("Test2", typeof(TestPropertyContainer), new PropertyMetadata<object>(null, null, PropertyMetadataOptions.None));
-        public static readonly AttachedProperty<object> DefaultValueProperty = AttachedProperty<object>.Register(() => DefaultValueProperty, new PropertyMetadata<object>("d"));
+        public static readonly AttachedProperty<object> DefaultValueProperty = AttachedProperty<object>.Register(() => DefaultValueProperty, new PropertyMetadata<object>("d", OnDefaultValueChanged));
+
+        public static int DefaultValueChangedFireCount;
+        public static Control DefaultValueChangedSender;
+        public static AttachedPropertyChangedEventArgs<object> DefaultValueChangedArgs;
+        static void OnDefaultValueChanged(Control sender, AttachedPropertyChangedEventArgs<object> e) {
+            DefaultValueChangedFireCount++;
+            DefaultValueChangedArgs = e;
+            DefaultValueChangedSender = sender;
+        }
 
     }
 }
