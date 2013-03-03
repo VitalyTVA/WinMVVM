@@ -272,16 +272,35 @@ namespace WinMVVM.Tests {
         }
         [Test]
         public void BindingWithPath() {
-            var viewModel = new TestViewModel() { StringProperty = "test" };
+            var viewModel = new TestViewModel() { StringProperty = "test", StringProperty2 = "StringProperty2" };
             using(var button = new Button()) {
                 button.SetDataContext(viewModel);
-                //button.SetBinding(() => button.Text, new Binding("StringProperty"));
+                button.SetBinding(() => button.Text, new Binding("StringProperty"));
 
                 Assert.That(button.Text, Is.EqualTo("test"));
-                //viewModel.StringProperty = "test2";
-                //Assert.That(button.Text, Is.EqualTo("test2"));
+                viewModel.StringProperty = "test2";
+                Assert.That(button.Text, Is.EqualTo("test2"));
 
-                //button.ClearBinding(() => button.Text);
+                button.ClearBinding(() => button.Text);
+                Assert.That(button.Text, Is.EqualTo(string.Empty));
+
+                button.SetBinding(() => button.Text, new Binding("StringProperty"));
+                Assert.That(button.Text, Is.EqualTo("test2"));
+                button.SetBinding(() => button.Text, new Binding("StringProperty2"));
+                Assert.That(button.Text, Is.EqualTo("StringProperty2"));
+
+                viewModel = new TestViewModel() { StringProperty2 = "StringProperty2_", NestedViewModel = new NestedTestViewModel() { NestedStringProperty = "NestedStringProperty" } };
+                button.SetDataContext(viewModel);
+                Assert.That(button.Text, Is.EqualTo("StringProperty2_"));
+
+                button.SetBinding(() => button.Text, new Binding("NestedViewModel.NestedStringProperty"));
+                Assert.That(button.Text, Is.EqualTo("NestedStringProperty"));
+                viewModel.NestedViewModel.NestedStringProperty = "NestedStringProperty2";
+                Assert.That(button.Text, Is.EqualTo("NestedStringProperty2"));
+                viewModel.NestedViewModel = new NestedTestViewModel() { NestedStringProperty = "NestedStringProperty3" };
+                Assert.That(button.Text, Is.EqualTo("NestedStringProperty3"));
+                viewModel.NestedViewModel = null;
+                Assert.That(button.Text, Is.EqualTo(string.Empty));
             }
         }
         //TODO test when update comes to collected control
@@ -291,6 +310,27 @@ namespace WinMVVM.Tests {
         public string StringProperty {
             get { return stringProperty; }
             set { SetProperty(ref stringProperty, value, () => StringProperty); }
+        }
+
+        string stringProperty2;
+        public string StringProperty2 {
+            get { return stringProperty2; }
+            set { SetProperty(ref stringProperty2, value, () => StringProperty2); }
+        }
+
+        NestedTestViewModel nestedViewModel;
+        public NestedTestViewModel NestedViewModel {
+            get { return nestedViewModel; }
+            set { SetProperty(ref nestedViewModel, value, () => NestedViewModel); }
+        }
+    }
+    public class NestedTestViewModel : BindableBase {
+
+        string nestedStringProperty;
+
+        public string NestedStringProperty {
+            get { return nestedStringProperty; }
+            set { SetProperty(ref nestedStringProperty, value, () => NestedStringProperty); }
         }
         
     }

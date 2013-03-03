@@ -8,9 +8,12 @@ using WinMVVM.Utils;
 
 namespace WinMVVM {
     public static class DataContextProvider {
-        internal class PropertyEntry {
+        public class PropertyEntry : INotifyPropertyChanged {
             static object NotSetValue = new object();
-            static readonly PropertyChangedEventArgs Args = new PropertyChangedEventArgs(string.Empty);
+            static readonly PropertyChangedEventArgs Args = new PropertyChangedEventArgs("PropertyValue");
+            public static bool IsNotSetValue(object value) {
+                return object.Equals(value, NotSetValue);
+            }
             private Control Control { get { return (Control)controlReference.Target; } }
             private readonly WeakReference controlReference;
             private object propertyValue;
@@ -25,14 +28,17 @@ namespace WinMVVM {
                     foreach(Control child in Control.Controls) {
                         UpdateChildValue(child);
                     }
-                    foreach(BindingOperations.BindingExpression expression in listeners.Keys) {
-                        expression.UpdateTargetProperty(this);
-                    }
+                    if(PropertyChanged != null)
+                        PropertyChanged(this, Args);
+                    //foreach(BindingOperations.BindingExpression expression in listeners.Keys) {
+                    //    expression.UpdateTargetProperty(this);
+                    //}
                 }
             }
-            public bool IsValueSet { get { return !object.Equals(propertyValue, NotSetValue); } }
+            public bool IsValueSet { get { return !IsNotSetValue(propertyValue); } }
             public bool IsLocalValue { get; set; }
-            Dictionary<BindingOperations.BindingExpression, object> listeners = new Dictionary<BindingOperations.BindingExpression, object>();
+            Dictionary<BindingOperations.BindingExpressionKey, BindingOperations.BindingExpression> listeners = new Dictionary<BindingOperations.BindingExpressionKey, BindingOperations.BindingExpression>();
+            public event PropertyChangedEventHandler PropertyChanged;
 
             public PropertyEntry(WeakReference controlReference) {
                 this.controlReference = controlReference;
@@ -41,15 +47,22 @@ namespace WinMVVM {
                 Control.ControlAdded += OnControlAdded;
                 Control.ControlRemoved += OnControlRemoved;
             }
-            public bool AddListener(BindingOperations.BindingExpression expression) {
-                if(!listeners.ContainsKey(expression)) {
-                    listeners[expression] = null;
-                    return true;
+            public void AddListener(BindingOperations.BindingExpressionKey key, BindingBase binding) {
+                BindingOperations.BindingExpression existingExpression;
+                if(listeners.TryGetValue(key, out existingExpression)) {
+                    if(!object.Equals(binding, existingExpression.Binding))
+                        existingExpression.Clear();
+                    else
+                        return;
                 }
-                return false;
+                listeners[key] = new BindingOperations.BindingExpression(key, binding, this);
             }
-            public void RemoveListener(BindingOperations.BindingExpression expression) {
-                listeners.Remove(expression);
+            public BindingOperations.BindingExpression RemoveListener(BindingOperations.BindingExpressionKey key) {
+                BindingOperations.BindingExpression result;
+                if(listeners.TryGetValue(key, out result)) {
+                    listeners.Remove(key);
+                }
+                return result;
             }
             void OnControlAdded(object sender, ControlEventArgs e) {
                 UpdateChildValue(e.Control);

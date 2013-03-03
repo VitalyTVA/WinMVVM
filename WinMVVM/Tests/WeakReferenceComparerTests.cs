@@ -16,7 +16,7 @@ namespace WinMVVM.Tests {
             Assert.That(WeakReferenceComparer.Instance.Equals(new WeakReference("test"), new WeakReference("test")), Is.True);
         }
         [Test]
-        public void GetHashCode() { 
+        public void GetHashCodeTest() { 
             const string s = "test";
             WeakReference reference = new WeakReference(s);
             Assert.That(WeakReferenceComparer.Instance.GetHashCode(reference), Is.EqualTo(s.GetHashCode()));

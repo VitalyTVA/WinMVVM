@@ -47,9 +47,11 @@
     <Reference Include="nunit.framework">
       <HintPath>C:\Program Files (x86)\TestDriven.NET 3\NUnit\2.6\framework\nunit.framework.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -71,6 +73,7 @@
     <Compile Include="Tests\WeakReferenceComparerTests.cs" />
     <Compile Include="Utils\Guard.cs" />
     <Compile Include="Utils\ExpressionHelper.cs" />
+    <Compile Include="Utils\PropertyChangeListener.cs" />
     <Compile Include="Utils\WeakReferenceComparer.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

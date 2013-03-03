@@ -10,5 +10,13 @@ namespace WinMVVM {
             Path = path;
         }
         public string Path { get; private set; }
+
+        public override bool Equals(object obj) {
+            Binding other = obj as Binding;
+            return other != null && other.Path == Path;
+        }
+        public override int GetHashCode() {
+            return Path != null ? Path.GetHashCode() : base.GetHashCode();
+        }
     }
 }
