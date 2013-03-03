@@ -63,6 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AttachedProperty.cs" />
+    <Compile Include="AttachedPropertyExtensions.cs" />
     <Compile Include="Binding.cs" />
     <Compile Include="BindingBase.cs" />
     <Compile Include="BindingOperations.cs" />

@@ -45,7 +45,7 @@ namespace WinMVVM.Tests {
                 Assert.That(form.GetValue(TestPropertyContainer.TestProperty), Is.Null);
 
                 button1.SetValue(TestPropertyContainer.TestProperty, "button1");
-                //Assert.That(button1.GetValue(TestPropertyContainer.TestProperty), Is.EqualTo("test"));
+                Assert.That(button1.GetValue(TestPropertyContainer.TestProperty), Is.EqualTo("test"));
 
                 //form.SetValue(TestPropertyContainer.TestProperty, "form");
                 //Assert.That(form.GetValue(TestPropertyContainer.TestProperty), Is.EqualTo("form"));

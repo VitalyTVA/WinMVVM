@@ -33,12 +33,5 @@ namespace WinMVVM {
         public Type OwnerType { get; private set; }
         public string Name { get; private set; }
     }
-    public static class AttachedPropertyExtensions {
-        public static object GetValue(this Control control, AttachedProperty property) {
-            return null;
-        }
-        public static void SetValue(this Control control, AttachedProperty property, object value) {
-        }
-    }
     //TODO - generic attached property
 }
