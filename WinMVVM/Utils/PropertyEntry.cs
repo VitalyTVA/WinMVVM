@@ -25,8 +25,10 @@ namespace WinMVVM.Utils {
                 if(IsValueSet && propertyValue == value)
                     return;
                 propertyValue = value;
-                foreach(Control child in Control.Controls) {
-                    UpdateChildValue(child);
+                if(property.Inherits) {
+                    foreach(Control child in Control.Controls) {
+                        UpdateChildValue(child);
+                    }
                 }
                 if(PropertyChanged != null)
                     PropertyChanged(this, Args);
@@ -42,8 +44,10 @@ namespace WinMVVM.Utils {
             this.controlReference = controlReference;
             //TODO - unsubscribe
             //TODO - weak subscription??
-            Control.ControlAdded += OnControlAdded;
-            Control.ControlRemoved += OnControlRemoved;
+            if(property.Inherits) {
+                Control.ControlAdded += OnControlAdded;
+                Control.ControlRemoved += OnControlRemoved;
+            }
         }
         public void AddBinding(BindingExpressionKey key, BindingBase binding) {
             BindingExpression existingExpression;
@@ -63,18 +67,23 @@ namespace WinMVVM.Utils {
             return result;
         }
         void OnControlAdded(object sender, ControlEventArgs e) {
+            ValidateChildAccess();
             UpdateChildValue(e.Control);
         }
         void OnControlRemoved(object sender, ControlEventArgs e) {
+            ValidateChildAccess();
             ClearChildValue(e.Control);
         }
         public void UpdateChildValue(Control child) {
+            ValidateChildAccess();
             property.SetValueCore(child, PropertyValue, false);
         }
         void ClearChildValue(Control child) {
+            ValidateChildAccess();
             property.ClearValueCore(child, false);
         }
         public void ClearChildrenValue() {
+            ValidateChildAccess();
             foreach(Control child in Control.Controls) {
                 ClearChildValue(child);
             }
@@ -85,6 +94,10 @@ namespace WinMVVM.Utils {
         public void ClearValue() {
             PropertyValue = NotSetValue;
             IsLocalValue = false;
+        }
+        void ValidateChildAccess() {
+            if(!property.Inherits)
+                Guard.InvalidOperation();
         }
     }
 }

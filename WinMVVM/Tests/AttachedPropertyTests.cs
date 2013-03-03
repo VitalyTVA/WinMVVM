@@ -33,7 +33,7 @@ namespace WinMVVM.Tests {
             );
         }
         [Test]
-        public void RegisterInheritableProperty() {
+        public void RegisterInheritableAndNoInheritablPropertiesProperty() {
             using(var form = new Form()) {
                 var button1 = new Button();
                 var button2 = new Button();
@@ -45,12 +45,18 @@ namespace WinMVVM.Tests {
                 Assert.That(form.GetValue(TestPropertyContainer.TestProperty), Is.Null);
 
                 button1.SetValue(TestPropertyContainer.TestProperty, "button1");
+                button1.SetValue(TestPropertyContainer.Test2Property, "button1_");
                 Assert.That(button1.GetValue(TestPropertyContainer.TestProperty), Is.EqualTo("button1"));
+                Assert.That(button1.GetValue(TestPropertyContainer.Test2Property), Is.EqualTo("button1_"));
 
                 form.SetValue(TestPropertyContainer.TestProperty, "form");
+                form.SetValue(TestPropertyContainer.Test2Property, "form2");
                 Assert.That(form.GetValue(TestPropertyContainer.TestProperty), Is.EqualTo("form"));
                 Assert.That(button1.GetValue(TestPropertyContainer.TestProperty), Is.EqualTo("button1"));
                 Assert.That(button2.GetValue(TestPropertyContainer.TestProperty), Is.EqualTo("form"));
+                Assert.That(form.GetValue(TestPropertyContainer.Test2Property), Is.EqualTo("form2"));
+                Assert.That(button1.GetValue(TestPropertyContainer.Test2Property), Is.EqualTo("button1_"));
+                Assert.That(button2.GetValue(TestPropertyContainer.Test2Property), Is.Null);
 
                 Assert.That(button2.HasLocalValue(TestPropertyContainer.TestProperty), Is.False);
                 Assert.That(button1.HasLocalValue(TestPropertyContainer.TestProperty), Is.True);
@@ -58,13 +64,30 @@ namespace WinMVVM.Tests {
                 button1.ClearValue(TestPropertyContainer.TestProperty);
                 Assert.That(button1.GetValue(TestPropertyContainer.TestProperty), Is.EqualTo("form"));
                 Assert.That(button1.HasLocalValue(TestPropertyContainer.TestProperty), Is.False);
+
+                button1.ClearValue(TestPropertyContainer.Test2Property);
+                Assert.That(button1.GetValue(TestPropertyContainer.Test2Property), Is.Null);
+                Assert.That(button1.HasLocalValue(TestPropertyContainer.Test2Property), Is.False);
+
+                button1.SetValue(TestPropertyContainer.Test2Property, "button1_");
+                form.ClearValue(TestPropertyContainer.Test2Property);
+                Assert.That(button1.GetValue(TestPropertyContainer.Test2Property), Is.EqualTo("button1_"));
+
+                form.SetValue(TestPropertyContainer.Test2Property, "form2");
+                var button3 = new Button();
+                form.Controls.Add(button3);
+                Assert.That(button3.GetValue(TestPropertyContainer.Test2Property), Is.Null);
+
+                button3.SetValue(TestPropertyContainer.Test2Property, "button3_");
+                form.Controls.Remove(button3);
+                Assert.That(button3.GetValue(TestPropertyContainer.Test2Property), Is.EqualTo("button3_"));
             }
         }
     }
     public static class TestPropertyContainer {
-        public static readonly AttachedProperty TestProperty = AttachedProperty.Register(() => TestProperty);
+        public static readonly AttachedProperty TestProperty = AttachedProperty.Register(() => TestProperty, new PropertyMetadata(PropertyMetadataOptions.Inherits));
         public static readonly AttachedProperty TestPropertyProperty = AttachedProperty.Register(() => TestPropertyProperty);
-        public static readonly AttachedProperty Test2Property = AttachedProperty.Register("Test2", typeof(TestPropertyContainer));
+        public static readonly AttachedProperty Test2Property = AttachedProperty.Register("Test2", typeof(TestPropertyContainer), new PropertyMetadata(PropertyMetadataOptions.None));
 
     }
 }

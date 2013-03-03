@@ -9,8 +9,8 @@ using System.Windows.Forms;
 using WinMVVM.Utils;
 
 namespace WinMVVM {
-    public class AttachedProperty {
-        public static AttachedProperty Register(Expression<Func<AttachedProperty>> property) {
+    public sealed class AttachedProperty {
+        public static AttachedProperty Register(Expression<Func<AttachedProperty>> property, PropertyMetadata metadata = null) {
             MemberInfo mi = ExpressionHelper.GetMemberInfo(property, MemberTypes.Field);
             //TODO check string not empty, check existing properties
             const string Suffix = "Property";
@@ -18,20 +18,23 @@ namespace WinMVVM {
                 Guard.ArgumentException("property");
             }
             int index = mi.Name.Length - Suffix.Length;
-            return Register(mi.Name.Remove(index, Suffix.Length), mi.DeclaringType);
+            return Register(mi.Name.Remove(index, Suffix.Length), mi.DeclaringType, metadata);
         }
-        public static AttachedProperty Register(string name, Type ownerType) {
+        public static AttachedProperty Register(string name, Type ownerType, PropertyMetadata metadata = null) {
             Guard.ArgumentInRange(!string.IsNullOrEmpty(name), "name");
             Guard.ArgumentNotNull(ownerType, "ownerType");
-            return new AttachedProperty(name, ownerType);
+            return new AttachedProperty(name, ownerType, metadata ?? new PropertyMetadata(PropertyMetadataOptions.None));
         }
 
-        public AttachedProperty(string name, Type ownerType) {
+        public AttachedProperty(string name, Type ownerType, PropertyMetadata metadata) {
+            Metadata = metadata;
             Name = name;
             OwnerType = ownerType;
         }
         public Type OwnerType { get; private set; }
         public string Name { get; private set; }
+        public PropertyMetadata Metadata { get; private set; }
+        internal bool Inherits { get { return (Metadata.Options & PropertyMetadataOptions.Inherits) != 0; } }
 
         readonly Dictionary<WeakReference, PropertyEntry> dictionary = new Dictionary<WeakReference, PropertyEntry>(WeakReferenceComparer.Instance);
         internal object GetValue(Control control) {
@@ -52,7 +55,7 @@ namespace WinMVVM {
         internal void ClearValue(Control control) {
             Guard.ArgumentNotNull(control, "control");
             ClearValueCore(control, true);
-            if(control.Parent != null) {
+            if(Inherits && control.Parent != null) {
                 PropertyEntry parentEntry;
                 if(GetPropertyEntryCore(control.Parent, out parentEntry))
                     parentEntry.UpdateChildValue(control);
@@ -63,8 +66,8 @@ namespace WinMVVM {
             if(GetPropertyEntryCore(control, out entry)) {
                 if(entry.CanChangeValue(isLocalValue)) {
                     entry.ClearValue();
-                    entry.ClearChildrenValue();
-                    //dictionary.Remove(GetWeakReference(control));
+                    if(Inherits)
+                        entry.ClearChildrenValue();
                 }
             }
         }

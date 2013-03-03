@@ -8,7 +8,7 @@ using WinMVVM.Utils;
 
 namespace WinMVVM {
     public static class DataContextProvider {
-        public static readonly AttachedProperty DataContextProperty = AttachedProperty.Register(() => DataContextProperty);
+        public static readonly AttachedProperty DataContextProperty = AttachedProperty.Register(() => DataContextProperty, new PropertyMetadata(PropertyMetadataOptions.Inherits));
         public static object GetDataContext(this Control control) {
             return control.GetValue(DataContextProperty);
         }
