@@ -21,14 +21,14 @@ namespace WinMVVM {
                 Guard.ArgumentException("propertyName");
 
             BindingExpressionKey key = new BindingExpressionKey(control, propertyName);
-            var propertyEntry = control.GetPropertyEntry();
+            var propertyEntry = DataContextProvider.DataContextProperty.GetPropertyEntry(control);
             propertyEntry.AddBinding(key, binding);
         }
 
         public static void ClearBinding(this Control control, string propertyName) {
             BindingExpressionKey key = new BindingExpressionKey(control, propertyName);
 
-            var propertyEntry = control.GetPropertyEntry();
+            var propertyEntry = DataContextProvider.DataContextProperty.GetPropertyEntry(control);
             BindingExpression expression = propertyEntry.RemoveBinding(key);
             if(expression != null) {
                 expression.Clear();

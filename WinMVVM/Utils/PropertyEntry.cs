@@ -15,6 +15,7 @@ namespace WinMVVM.Utils {
         }
         private Control Control { get { return (Control)controlReference.Target; } }
         private readonly WeakReference controlReference;
+        readonly AttachedProperty property;
         private object propertyValue;
         public object PropertyValue {
             get {
@@ -36,7 +37,8 @@ namespace WinMVVM.Utils {
         Dictionary<BindingExpressionKey, BindingExpression> expressions = new Dictionary<BindingExpressionKey, BindingExpression>();
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public PropertyEntry(WeakReference controlReference) {
+        public PropertyEntry(AttachedProperty property, WeakReference controlReference) {
+            this.property = property;
             this.controlReference = controlReference;
             //TODO - unsubscribe
             //TODO - weak subscription??
@@ -67,12 +69,12 @@ namespace WinMVVM.Utils {
             ClearChildValue(e.Control);
         }
         public void UpdateChildValue(Control child) {
-            child.SetDataContextCore(PropertyValue, false);
+            property.SetValueCore(child, PropertyValue, false);
         }
         void ClearChildValue(Control child) {
-            child.ClearDataContextCore(false);
+            property.ClearValueCore(child, false);
         }
-        public void ClearChildrenDataContext() {
+        public void ClearChildrenValue() {
             foreach(Control child in Control.Controls) {
                 ClearChildValue(child);
             }

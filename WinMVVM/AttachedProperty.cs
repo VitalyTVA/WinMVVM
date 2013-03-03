@@ -32,6 +32,64 @@ namespace WinMVVM {
         }
         public Type OwnerType { get; private set; }
         public string Name { get; private set; }
+
+        readonly Dictionary<WeakReference, PropertyEntry> dictionary = new Dictionary<WeakReference, PropertyEntry>(WeakReferenceComparer.Instance);
+        internal object GetValue(Control control) {
+            Guard.ArgumentNotNull(control, "control");
+            PropertyEntry result;
+            return GetPropertyEntryCore(control, out result) ? result.PropertyValue : null;
+        }
+        internal void SetValue(Control control, object value) {
+            SetValueCore(control, value, true);
+        }
+        internal bool HasLocalValue(Control control) {
+            Guard.ArgumentNotNull(control, "control");
+            PropertyEntry entry;
+            if(!GetPropertyEntryCore(control, out entry))
+                return false;
+            return entry.IsValueSet && entry.IsLocalValue;
+        }
+        internal void ClearValue(Control control) {
+            Guard.ArgumentNotNull(control, "control");
+            ClearValueCore(control, true);
+            if(control.Parent != null) {
+                PropertyEntry parentEntry;
+                if(GetPropertyEntryCore(control.Parent, out parentEntry))
+                    parentEntry.UpdateChildValue(control);
+            }
+        }
+        internal void ClearValueCore(Control control, bool isLocalValue) {
+            PropertyEntry entry;
+            if(GetPropertyEntryCore(control, out entry)) {
+                if(entry.CanChangeValue(isLocalValue)) {
+                    entry.ClearValue();
+                    entry.ClearChildrenValue();
+                    //dictionary.Remove(GetWeakReference(control));
+                }
+            }
+        }
+        internal void SetValueCore(Control control, object value, bool isLocalValue) {
+            Guard.ArgumentNotNull(control, "control");
+            PropertyEntry entry = GetPropertyEntry(control);
+            if(entry.CanChangeValue(isLocalValue)) {
+                entry.IsLocalValue = isLocalValue;
+                entry.PropertyValue = value;
+            }
+        }
+        internal PropertyEntry GetPropertyEntry(Control control) {
+            PropertyEntry entry;
+            if(!GetPropertyEntryCore(control, out entry)) {
+                dictionary[GetWeakReference(control)] = (entry = new PropertyEntry(this, new WeakReference(control)));
+            }
+            return entry;
+        }
+        bool GetPropertyEntryCore(Control control, out PropertyEntry result) {
+            return dictionary.TryGetValue(GetWeakReference(control), out result);
+        }
+        private static WeakReference GetWeakReference(Control control) {
+            return new WeakReference(control);
+        }
+
     }
     //TODO - generic attached property
 }

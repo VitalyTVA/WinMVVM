@@ -45,12 +45,19 @@ namespace WinMVVM.Tests {
                 Assert.That(form.GetValue(TestPropertyContainer.TestProperty), Is.Null);
 
                 button1.SetValue(TestPropertyContainer.TestProperty, "button1");
-                Assert.That(button1.GetValue(TestPropertyContainer.TestProperty), Is.EqualTo("test"));
+                Assert.That(button1.GetValue(TestPropertyContainer.TestProperty), Is.EqualTo("button1"));
 
-                //form.SetValue(TestPropertyContainer.TestProperty, "form");
-                //Assert.That(form.GetValue(TestPropertyContainer.TestProperty), Is.EqualTo("form"));
-                //Assert.That(button1.GetValue(TestPropertyContainer.TestProperty), Is.EqualTo("test"));
-                //Assert.That(button2.GetValue(TestPropertyContainer.TestProperty), Is.EqualTo("form"));
+                form.SetValue(TestPropertyContainer.TestProperty, "form");
+                Assert.That(form.GetValue(TestPropertyContainer.TestProperty), Is.EqualTo("form"));
+                Assert.That(button1.GetValue(TestPropertyContainer.TestProperty), Is.EqualTo("button1"));
+                Assert.That(button2.GetValue(TestPropertyContainer.TestProperty), Is.EqualTo("form"));
+
+                Assert.That(button2.HasLocalValue(TestPropertyContainer.TestProperty), Is.False);
+                Assert.That(button1.HasLocalValue(TestPropertyContainer.TestProperty), Is.True);
+
+                button1.ClearValue(TestPropertyContainer.TestProperty);
+                Assert.That(button1.GetValue(TestPropertyContainer.TestProperty), Is.EqualTo("form"));
+                Assert.That(button1.HasLocalValue(TestPropertyContainer.TestProperty), Is.False);
             }
         }
     }
