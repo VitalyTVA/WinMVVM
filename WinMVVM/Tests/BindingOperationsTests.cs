@@ -318,6 +318,17 @@ namespace WinMVVM.Tests {
                 Assert.That(button1.Text, Is.EqualTo("test"));
             }
         }
+        [Test]
+        public void ExtractPathFromLambdaExpression() {
+            var viewModel = new TestViewModel() { StringProperty = "StringProperty", NestedViewModel = new NestedTestViewModel() { NestedStringProperty = "NestedStringProperty" } };
+            using(var button = new Button()) {
+                button.SetDataContext(viewModel);
+                button.SetBinding(() => button.Text, new Binding(() => viewModel.StringProperty));
+                Assert.That(button.Text, Is.EqualTo("StringProperty"));
+                button.SetBinding(() => button.Text, new Binding(() => viewModel.NestedViewModel.NestedStringProperty));
+                Assert.That(button.Text, Is.EqualTo("NestedStringProperty"));
+            }
+        }
         //TODO test when update comes to collected control
     }
     public class TestViewModel : BindableBase {

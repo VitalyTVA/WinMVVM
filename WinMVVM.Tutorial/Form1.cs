@@ -16,7 +16,7 @@ namespace WinMVVM.Tutorial {
             InitializeComponent();
 
             this.SetDataContext(viewModel);
-            button1.SetBinding(() => button1.Text, new Binding("MessageText"));
+            button1.SetBinding(() => button1.Text, new Binding(() => viewModel.MessageText));
         }
 
         private void button1_Click(object sender, EventArgs e) {
