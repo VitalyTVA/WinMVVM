@@ -8,12 +8,14 @@ using System.Threading.Tasks;
 
 namespace WinMVVM.Utils {
     static class ExpressionHelper {
-        public static string GetPropertyName<T>(Expression<Func<T>> expression) {
-            Guard.ArgumentNotNull(expression, "expression");
-            MemberExpression memberExpression = expression.Body as MemberExpression;
-            if(memberExpression == null) {
+        public static MemberInfo GetMemberInfo<T>(Expression<Func<T>> expression, MemberTypes memberType) {
+            MemberExpression memberExpression = GetMemberExpression(expression);
+            if(memberType != memberExpression.Member.MemberType)
                 Guard.ArgumentException("expression");
-            }
+            return memberExpression.Member;
+        }
+        public static string GetPropertyName<T>(Expression<Func<T>> expression) {
+            MemberExpression memberExpression = GetMemberExpression(expression);
             MemberExpression nextMemberExpression = memberExpression.Expression as MemberExpression;
             if(IsPropertyExpression(nextMemberExpression)) {
                 Guard.ArgumentException("expression");
@@ -22,12 +24,7 @@ namespace WinMVVM.Utils {
         }
 
         public static string GetPropertyPath<T>(Expression<Func<T>> expression) {
-            Guard.ArgumentNotNull(expression, "expression");
-            MemberExpression memberExpression = expression.Body as MemberExpression;
-            if(memberExpression == null) {
-                Guard.ArgumentException("expression");
-            }
-
+            MemberExpression memberExpression = GetMemberExpression(expression);
             return GetPropertyPathCore(memberExpression);
         }
         static string GetPropertyPathCore(MemberExpression memberExpression) {
@@ -40,6 +37,14 @@ namespace WinMVVM.Utils {
         }
         static bool IsPropertyExpression(MemberExpression expression) {
             return expression != null && expression.Member.MemberType == MemberTypes.Property;
+        }
+        static MemberExpression GetMemberExpression<T>(Expression<Func<T>> expression) {
+            Guard.ArgumentNotNull(expression, "expression");
+            MemberExpression memberExpression = expression.Body as MemberExpression;
+            if(memberExpression == null) {
+                Guard.ArgumentException("expression");
+            }
+            return memberExpression;
         }
     }
 }
