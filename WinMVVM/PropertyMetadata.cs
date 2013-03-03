@@ -10,9 +10,11 @@ using WinMVVM.Utils;
 
 namespace WinMVVM {
     public sealed class PropertyMetadata {
-        public PropertyMetadata(PropertyMetadataOptions options) {
+        public PropertyMetadata(object defaultValue = null, PropertyMetadataOptions options = PropertyMetadataOptions.None) {
+            DefaultValue = defaultValue;
             Options = options;
         }
         public PropertyMetadataOptions Options { get; private set; }
+        public object DefaultValue { get; private set; }
     }
 }

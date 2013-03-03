@@ -19,7 +19,7 @@ namespace WinMVVM.Utils {
         private object propertyValue;
         public object PropertyValue {
             get {
-                return IsValueSet ? propertyValue : null;
+                return IsValueSet ? propertyValue : property.Metadata.DefaultValue;
             }
             set {
                 if(IsValueSet && propertyValue == value)

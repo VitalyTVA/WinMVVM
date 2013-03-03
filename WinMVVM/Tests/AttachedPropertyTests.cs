@@ -83,11 +83,22 @@ namespace WinMVVM.Tests {
                 Assert.That(button3.GetValue(TestPropertyContainer.Test2Property), Is.EqualTo("button3_"));
             }
         }
+        [Test]
+        public void DefaultValue() {
+            using(var button = new Button()) {
+                Assert.That(button.GetValue(TestPropertyContainer.DefaultValueProperty), Is.EqualTo("d"));
+                button.SetValue(TestPropertyContainer.DefaultValueProperty, "button");
+                Assert.That(button.GetValue(TestPropertyContainer.DefaultValueProperty), Is.EqualTo("button"));
+                button.ClearValue(TestPropertyContainer.DefaultValueProperty);
+                Assert.That(button.GetValue(TestPropertyContainer.DefaultValueProperty), Is.EqualTo("d"));
+            }
+        }
     }
     public static class TestPropertyContainer {
-        public static readonly AttachedProperty TestProperty = AttachedProperty.Register(() => TestProperty, new PropertyMetadata(PropertyMetadataOptions.Inherits));
+        public static readonly AttachedProperty TestProperty = AttachedProperty.Register(() => TestProperty, new PropertyMetadata(null, PropertyMetadataOptions.Inherits));
         public static readonly AttachedProperty TestPropertyProperty = AttachedProperty.Register(() => TestPropertyProperty);
-        public static readonly AttachedProperty Test2Property = AttachedProperty.Register("Test2", typeof(TestPropertyContainer), new PropertyMetadata(PropertyMetadataOptions.None));
+        public static readonly AttachedProperty Test2Property = AttachedProperty.Register("Test2", typeof(TestPropertyContainer), new PropertyMetadata(null, PropertyMetadataOptions.None));
+        public static readonly AttachedProperty DefaultValueProperty = AttachedProperty.Register(() => DefaultValueProperty, new PropertyMetadata("d"));
 
     }
 }

@@ -23,7 +23,7 @@ namespace WinMVVM {
         public static AttachedProperty Register(string name, Type ownerType, PropertyMetadata metadata = null) {
             Guard.ArgumentInRange(!string.IsNullOrEmpty(name), "name");
             Guard.ArgumentNotNull(ownerType, "ownerType");
-            return new AttachedProperty(name, ownerType, metadata ?? new PropertyMetadata(PropertyMetadataOptions.None));
+            return new AttachedProperty(name, ownerType, metadata ?? new PropertyMetadata());
         }
 
         public AttachedProperty(string name, Type ownerType, PropertyMetadata metadata) {
@@ -40,7 +40,7 @@ namespace WinMVVM {
         internal object GetValue(Control control) {
             Guard.ArgumentNotNull(control, "control");
             PropertyEntry result;
-            return GetPropertyEntryCore(control, out result) ? result.PropertyValue : null;
+            return GetPropertyEntryCore(control, out result) ? result.PropertyValue : Metadata.DefaultValue;
         }
         internal void SetValue(Control control, object value) {
             SetValueCore(control, value, true);
