@@ -95,9 +95,9 @@ namespace WinMVVM.Tests {
         }
     }
     public static class TestPropertyContainer {
-        public static readonly AttachedProperty<object> TestProperty = AttachedProperty<object>.Register(() => TestProperty, new PropertyMetadata<object>(null, PropertyMetadataOptions.Inherits));
+        public static readonly AttachedProperty<object> TestProperty = AttachedProperty<object>.Register(() => TestProperty, new PropertyMetadata<object>(null, null, PropertyMetadataOptions.Inherits));
         public static readonly AttachedProperty<object> TestPropertyProperty = AttachedProperty<object>.Register(() => TestPropertyProperty);
-        public static readonly AttachedProperty<object> Test2Property = AttachedProperty<object>.Register("Test2", typeof(TestPropertyContainer), new PropertyMetadata<object>(null, PropertyMetadataOptions.None));
+        public static readonly AttachedProperty<object> Test2Property = AttachedProperty<object>.Register("Test2", typeof(TestPropertyContainer), new PropertyMetadata<object>(null, null, PropertyMetadataOptions.None));
         public static readonly AttachedProperty<object> DefaultValueProperty = AttachedProperty<object>.Register(() => DefaultValueProperty, new PropertyMetadata<object>("d"));
 
     }

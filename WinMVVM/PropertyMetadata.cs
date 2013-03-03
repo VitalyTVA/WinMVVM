@@ -10,11 +10,13 @@ using WinMVVM.Utils;
 
 namespace WinMVVM {
     public sealed class PropertyMetadata<T> {
-        public PropertyMetadata(T defaultValue = default(T), PropertyMetadataOptions options = PropertyMetadataOptions.None) {
+        public PropertyMetadata(T defaultValue = default(T), AttachedPropertyChangedCallback<T> callback = null, PropertyMetadataOptions options = PropertyMetadataOptions.None) {
+            Callback = callback;
             DefaultValue = defaultValue;
             Options = options;
         }
         public PropertyMetadataOptions Options { get; private set; }
         public T DefaultValue { get; private set; }
+        public AttachedPropertyChangedCallback<T> Callback { get; private set; }
     }
 }

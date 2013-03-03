@@ -4,11 +4,12 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Forms;
+using System.Windows.Input;
 using WinMVVM.Utils;
 
 namespace WinMVVM {
     public static class DataContextProvider {
-        public static readonly AttachedProperty<object> DataContextProperty = AttachedProperty<object>.Register(() => DataContextProperty, new PropertyMetadata<object>(null, PropertyMetadataOptions.Inherits));
+        public static readonly AttachedProperty<object> DataContextProperty = AttachedProperty<object>.Register(() => DataContextProperty, new PropertyMetadata<object>(null, null, PropertyMetadataOptions.Inherits));
         public static object GetDataContext(this Control control) {
             return control.GetValue(DataContextProperty);
         }
