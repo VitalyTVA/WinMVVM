@@ -20,13 +20,13 @@ namespace WinMVVM {
             if(GetProperty(control, propertyName) == null)
                 Guard.ArgumentException("propertyName");
 
-            BindingExpressionKey key = new BindingExpressionKey(control, propertyName);
+            BindingExpressionKey key = new BindingExpressionKey(control, GetProperty(control, propertyName));
             var propertyEntry = DataContextProvider.DataContextProperty.GetPropertyEntry(control);
             propertyEntry.AddBinding(key, binding, () => new BindingExpression(key, binding, propertyEntry));
         }
 
         public static void ClearBinding(this Control control, string propertyName) {
-            BindingExpressionKey key = new BindingExpressionKey(control, propertyName);
+            BindingExpressionKey key = new BindingExpressionKey(control, GetProperty(control, propertyName));
 
             var propertyEntry = DataContextProvider.DataContextProperty.GetPropertyEntry(control);
             BindingExpression expression = propertyEntry.RemoveBinding(key);
@@ -40,7 +40,7 @@ namespace WinMVVM {
         //public static void ClearAllBinding(this Control control, string propertyName) {
         //}
 
-        internal static PropertyDescriptor GetProperty(Control control, string propertyName) {
+        static PropertyDescriptor GetProperty(Control control, string propertyName) {
             return TypeDescriptor.GetProperties(control)[propertyName];
         }
 

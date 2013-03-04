@@ -10,7 +10,7 @@ namespace WinMVVM.Utils {
     class BindingExpression {
         public BindingExpressionKey Key { get; private set; }
         Control Control { get { return Key.Control; } }
-        string PropertyName { get { return Key.propertyName; } }
+        PropertyDescriptor Property { get { return Key.property; } }
         public BindingBase Binding { get; private set; }
         PropertyChangeListener listener;
         readonly PropertyEntry<object> propertyEntry;
@@ -20,25 +20,23 @@ namespace WinMVVM.Utils {
             this.Key = key;
             WpfBinding wpfBinding = new WpfBinding("PropertyValue." + ((Binding)binding).Path) { Source = propertyEntry };
 
-            PropertyDescriptor property = BindingOperations.GetProperty(Control, PropertyName);
-            if(property == null)
+            if(Property == null)
                 Guard.ArgumentException("propertyName");
-            listener = PropertyChangeListener.Create(wpfBinding, UpdateTargetProperty, property.GetValue(Control));
+            listener = PropertyChangeListener.Create(wpfBinding, UpdateTargetProperty, Property.GetValue(Control));
         }
 
         void UpdateTargetProperty(object value) {
-            PropertyDescriptor property = BindingOperations.GetProperty(Control, PropertyName);
-            if(property == null)
+            if(Property == null)
                 Guard.ArgumentException("propertyName");
             if(propertyEntry.IsValueSet) {
-                property.SetValue(Control, value);
+                Property.SetValue(Control, value);
             } else {
-                ClearTargetProperty(property);
+                ClearTargetProperty();
             }
         }
-        void ClearTargetProperty(PropertyDescriptor property) {
+        void ClearTargetProperty() {
             //TODO  CanResetValue
-            property.ResetValue(Control);
+            Property.ResetValue(Control);
         }
 
         internal void Clear() {

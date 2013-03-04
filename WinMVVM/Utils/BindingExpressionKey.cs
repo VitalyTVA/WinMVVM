@@ -11,19 +11,19 @@ namespace WinMVVM.Utils {
         //TODO clear expressions with dead references
         readonly WeakReference controlReference;
         public Control Control { get { return (Control)controlReference.Target; } }
-        public readonly string propertyName;
-        public BindingExpressionKey(Control control, string propertyName) {
-            this.propertyName = propertyName;
+        public readonly PropertyDescriptor property;
+        public BindingExpressionKey(Control control, PropertyDescriptor property) {
+            this.property = property;
             this.controlReference = new WeakReference(control);
 
         }
         //TODO - check wheter target is alive
         public override int GetHashCode() {
-            return Control.GetHashCode() ^ propertyName.GetHashCode();
+            return Control.GetHashCode() ^ property.GetHashCode();
         }
         public override bool Equals(object obj) {
             var other = obj as BindingExpressionKey;
-            return other != null && other.Control == Control && other.propertyName == propertyName;
+            return other != null && other.Control == Control && object.Equals(other.property, property);
         }
     }
 }
