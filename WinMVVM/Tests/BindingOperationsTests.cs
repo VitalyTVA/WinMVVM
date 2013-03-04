@@ -1,8 +1,10 @@
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
+using WinMVVM.Utils;
 
 namespace WinMVVM.Tests {
     [TestFixture]
@@ -19,6 +21,11 @@ namespace WinMVVM.Tests {
                 Assert.Throws<ArgumentOutOfRangeException>(() => BindingOperations.ClearBinding(button, null));
                 Assert.Throws<ArgumentOutOfRangeException>(() => BindingOperations.ClearBinding(button, string.Empty));
                 Assert.Throws<ArgumentException>(() => BindingOperations.ClearBinding(button, "Foo"));
+                AttachedProperty<object> p = null;
+                Assert.Throws<ArgumentNullException>(() => BindingOperations.SetBinding(button, p, new Binding()));
+                Assert.Throws<ArgumentNullException>(() => BindingOperations.SetBinding(null, TextProperty, new Binding()));
+                Assert.Throws<ArgumentNullException>(() => BindingOperations.ClearBinding(null, TextProperty));
+                Assert.Throws<ArgumentNullException>(() => BindingOperations.ClearBinding(button, p));
             }
         }
         [Test]
@@ -58,6 +65,66 @@ namespace WinMVVM.Tests {
                 button.ClearBinding(() => button.Text);
                 Assert.That(button.Text, Is.EqualTo(string.Empty));
             }
+        }
+        static readonly AttachedProperty<string> TextProperty = AttachedProperty<string>.Register(() => TextProperty);
+        [Test]
+        public void BindAttachedProperty() {
+            var viewModel = new TestViewModel();
+            using(var button = new Button()) {
+                button.SetValue(TextProperty, "button1");
+                button.SetDataContext(viewModel);
+                button.SetBinding(TextProperty, new Binding(() => new TestViewModel().StringProperty));
+                button.SetBinding(() => new Button().Text, new Binding(() => new TestViewModel().StringProperty2));
+                Assert.That(button.GetValue(TextProperty), Is.EqualTo(null));
+                Assert.That(button.Text, Is.EqualTo(string.Empty));
+
+                viewModel.StringProperty = "test";
+                Assert.That(button.GetValue(TextProperty), Is.EqualTo("test"));
+                Assert.That(button.Text, Is.EqualTo(string.Empty));
+
+                viewModel.StringProperty2 = "test2";
+                Assert.That(button.GetValue(TextProperty), Is.EqualTo("test"));
+                Assert.That(button.Text, Is.EqualTo("test2"));
+
+                button.ClearBinding(TextProperty);
+                Assert.That(button.GetValue(TextProperty), Is.Null);
+            }
+        }
+        [Test]
+        public void BindAttachedProperty2() {
+            var viewModel = new TestViewModel();
+            using(var button = new Button()) {
+                button.SetValue(TextProperty, "button1");
+                button.SetDataContext(viewModel);
+                button.SetBinding(() => new Button().Text, new Binding(() => new TestViewModel().StringProperty2));
+                button.SetBinding(TextProperty, new Binding(() => new TestViewModel().StringProperty));
+                Assert.That(button.GetValue(TextProperty), Is.EqualTo(null));
+                Assert.That(button.Text, Is.EqualTo(string.Empty));
+
+                viewModel.StringProperty = "test";
+                Assert.That(button.GetValue(TextProperty), Is.EqualTo("test"));
+                Assert.That(button.Text, Is.EqualTo(string.Empty));
+
+                viewModel.StringProperty2 = "test2";
+                Assert.That(button.GetValue(TextProperty), Is.EqualTo("test"));
+                Assert.That(button.Text, Is.EqualTo("test2"));
+
+                button.ClearBinding(TextProperty);
+                Assert.That(button.GetValue(TextProperty), Is.Null);
+            }
+        }
+        [Test]
+        public void AttachedPropertyDescriptorTests() {
+            var pd1 = new AttachedPropertyDescriptor<string>(TextProperty);
+            var pd2 = new AttachedPropertyDescriptor<string>(TextProperty);
+            var pd3 = new AttachedPropertyDescriptor<object>(DataContextProvider.DataContextProperty);
+            Assert.That(pd1.PropertyType, Is.EqualTo(typeof(string)));
+            Assert.That(object.Equals(pd1, pd2), Is.True);
+            Assert.That(object.Equals(pd1.GetHashCode(), pd2.GetHashCode()), Is.True);//TODO - how does it works???
+            Assert.That(object.Equals(pd1, pd3), Is.False);
+            Assert.That(object.Equals(pd1, TypeDescriptor.GetProperties(typeof(Button))["Text"]), Is.False);
+            //TODO - when setting bindings for simple and attached properties with same name, it works only because hascodes are differrent...
+            //Assert.That(object.Equals(TypeDescriptor.GetProperties(typeof(Button))["Text"], pd1), Is.False); 
         }
         [Test]
         public void SetSimpleBindingAfterSetDataContext() {

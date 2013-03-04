@@ -74,6 +74,7 @@
     <Compile Include="Tests\CommandProviderTests.cs" />
     <Compile Include="Tests\DelegateCommand.cs" />
     <Compile Include="Tests\TestViewModel.cs" />
+    <Compile Include="Utils\AttachedPropertyDescriptor.cs" />
     <Compile Include="Utils\BindingExpression.cs" />
     <Compile Include="Utils\BindingExpressionKey.cs" />
     <Compile Include="Utils\PropertyEntry.cs" />
