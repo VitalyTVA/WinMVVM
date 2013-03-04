@@ -17,10 +17,21 @@ namespace WinMVVM.Tutorial {
             set { Set(() => MessageText, ref messageText, value); }
         }
 
+        public List<Customer> Customers { get { return Customer.Customers; } }
+
         public RelayCommand ShowMessageCommand { get; private set; }
 
         public MainViewModel() {
             ShowMessageCommand = new RelayCommand(() => MessageBox.Show("Test"));
         }
+    }
+    public class Customer {
+        public static List<Customer> Customers = new List<Customer>() {
+            new Customer() { FirstName = "Nancy", LastName = "Davoio" },
+            new Customer() { FirstName = "Andrew", LastName = "Fuller" },
+            new Customer() { FirstName = "Ann", LastName = "Dodsworth" },
+        };
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
     }
 }

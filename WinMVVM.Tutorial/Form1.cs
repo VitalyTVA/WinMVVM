@@ -18,10 +18,15 @@ namespace WinMVVM.Tutorial {
             this.SetDataContext(viewModel);
             button1.SetBinding(() => new Button().Text, new Binding(() => new MainViewModel().MessageText));
             button1.SetBinding(CommandProvider.CommandProperty, new Binding(() => new MainViewModel().ShowMessageCommand));
+
+            //listBox1.SelectedIndex = -1;
+            bindingSource1.DataSource = viewModel;
         }
 
         private void button1_Click(object sender, EventArgs e) {
             viewModel.MessageText += "+";
         }
+    }
+    public class MyBindingSource : BindingSource { 
     }
 }
