@@ -10,11 +10,15 @@ namespace WinMVVM.Tests {
         [Test]
         public void NullControl() {
             Assert.Throws<ArgumentNullException>(() => BindingOperations.SetBinding(null, "Test", new Binding()));
+            Assert.Throws<ArgumentNullException>(() => BindingOperations.ClearBinding(null, "Test"));
             using(var button = new Button()) {
                 Assert.Throws<ArgumentOutOfRangeException>(() => BindingOperations.SetBinding(button, null, new Binding()));
                 Assert.Throws<ArgumentOutOfRangeException>(() => BindingOperations.SetBinding(button, string.Empty, new Binding()));
                 Assert.Throws<ArgumentException>(() => BindingOperations.SetBinding(button, "Foo", new Binding()));
                 Assert.Throws<ArgumentNullException>(() => BindingOperations.SetBinding(button, "Text", null));
+                Assert.Throws<ArgumentOutOfRangeException>(() => BindingOperations.ClearBinding(button, null));
+                Assert.Throws<ArgumentOutOfRangeException>(() => BindingOperations.ClearBinding(button, string.Empty));
+                Assert.Throws<ArgumentException>(() => BindingOperations.ClearBinding(button, "Foo"));
             }
         }
         [Test]

@@ -14,19 +14,26 @@ namespace WinMVVM {
             control.SetBinding(ExpressionHelper.GetPropertyName(expression), binding);
         }
         public static void SetBinding(this Control control, string propertyName, BindingBase binding) {
-            Guard.ArgumentNotNull(control, "control");
-            Guard.ArgumentInRange(!string.IsNullOrEmpty(propertyName), "propertyName");
+            PropertyDescriptor property = ValidateParameters(control, propertyName);
+            control.SetBindingCore(property, binding);
+        }
+        static void SetBindingCore(this Control control, PropertyDescriptor property, BindingBase binding) {
             Guard.ArgumentNotNull(binding, "binding");
-            if(GetProperty(control, propertyName) == null)
-                Guard.ArgumentException("propertyName");
 
-            BindingExpressionKey key = new BindingExpressionKey(control, GetProperty(control, propertyName));
+            BindingExpressionKey key = new BindingExpressionKey(control, property);
             var propertyEntry = DataContextProvider.DataContextProperty.GetPropertyEntry(control);
             propertyEntry.AddBinding(key, binding, () => new BindingExpression(key, binding, propertyEntry));
         }
 
         public static void ClearBinding(this Control control, string propertyName) {
-            BindingExpressionKey key = new BindingExpressionKey(control, GetProperty(control, propertyName));
+            PropertyDescriptor property = ValidateParameters(control, propertyName);
+            control.ClearBindingCore(property);
+        }
+        public static void ClearBinding<T>(this Control control, Expression<Func<T>> expression) {
+            control.ClearBinding(ExpressionHelper.GetPropertyName(expression));
+        }
+        static void ClearBindingCore(this Control control, PropertyDescriptor property) {
+            BindingExpressionKey key = new BindingExpressionKey(control, property);
 
             var propertyEntry = DataContextProvider.DataContextProperty.GetPropertyEntry(control);
             BindingExpression expression = propertyEntry.RemoveBinding(key);
@@ -34,15 +41,19 @@ namespace WinMVVM {
                 expression.Clear();
             }
         }
-        public static void ClearBinding<T>(this Control control, Expression<Func<T>> expression) {
-            control.ClearBinding(ExpressionHelper.GetPropertyName(expression));
-        }
-        //public static void ClearAllBinding(this Control control, string propertyName) {
+        //public static void ClearAllBinding(this Control control, string propertyName) { //TODO
         //}
 
         static PropertyDescriptor GetProperty(Control control, string propertyName) {
             return TypeDescriptor.GetProperties(control)[propertyName];
         }
-
+        static PropertyDescriptor ValidateParameters(Control control, string propertyName) {
+            Guard.ArgumentNotNull(control, "control");
+            Guard.ArgumentInRange(!string.IsNullOrEmpty(propertyName), "propertyName");
+            PropertyDescriptor property = GetProperty(control, propertyName);
+            if(property == null)
+                Guard.ArgumentException("propertyName");
+            return property;
+        }
     }
 }
