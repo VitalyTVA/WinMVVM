@@ -7,7 +7,7 @@
     <ProjectGuid>{BA4B003C-395D-474F-86F6-D90058E163B5}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>WinMVVM.Sample.DevExpress</RootNamespace>
+    <RootNamespace>WinMVVM.Sample.DevExpress_</RootNamespace>
     <AssemblyName>WinMVVM.Sample.DevExpress</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -32,6 +32,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DevExpress.Data.v13.1, Version=13.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4" />
+    <Reference Include="DevExpress.Printing.v13.1.Core, Version=13.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4" />
+    <Reference Include="DevExpress.Utils.v13.1, Version=13.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4" />
+    <Reference Include="DevExpress.XtraEditors.v13.1, Version=13.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4" />
+    <Reference Include="DevExpress.XtraGrid.v13.1, Version=13.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraLayout.v13.1, Version=13.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4" />
+    <Reference Include="nunit.framework, Version=2.4.7.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -63,6 +70,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
