@@ -7,7 +7,55 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace WinMVVM.Design {
+    public class BindingManagerActionList : DesignerActionList {
+        public BindingManagerActionList(IComponent component)
+            : base(component) {
+        }
+        public override DesignerActionItemCollection GetSortedActionItems() {
+            DesignerActionItemCollection result = new DesignerActionItemCollection();
+            result.Add(new DesignerActionMethodItem(this, "RunDesigner", "Show designer"));
+            return result;
+        }
+
+        public void RunDesigner() {
+            System.Windows.Forms.MessageBox.Show("Run designer");
+        }
+        public override bool AutoShow {
+            get {
+                return true;
+            }
+            set {
+                //base.AutoShow = value;
+            }
+        }
+    }
     public class BindingManagerDesigner : System.ComponentModel.Design.ComponentDesigner {
+        DesignerVerbCollection verbs;
+        public override DesignerVerbCollection Verbs {
+            get {
+                if(verbs == null) {
+                    verbs = new DesignerVerbCollection(new DesignerVerb[] {
+                        new DesignerVerb("Run Designer", new EventHandler(OnRunDesigner))
+                    });
+                }
+                return verbs;
+            }
+        }
+
+        private void OnRunDesigner(object sender, EventArgs e) {
+            System.Windows.Forms.MessageBox.Show("Run designer");
+        }
+
+        DesignerActionListCollection actionLists;
+        public override DesignerActionListCollection ActionLists {
+            get {
+                if(actionLists == null) {
+                    actionLists = new DesignerActionListCollection();
+                    actionLists.Add(new BindingManagerActionList(Component));
+                }
+                return actionLists;
+            }
+        }
         protected override void Dispose(bool disposing) {
             if(disposing) {
                 IComponentChangeService service = (IComponentChangeService)this.GetService(typeof(IComponentChangeService));
