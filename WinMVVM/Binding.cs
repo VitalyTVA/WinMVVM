@@ -1,13 +1,18 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Windows.Forms;
 using WinMVVM.Utils;
 
 namespace WinMVVM {
+    [TypeConverter(typeof(BindingConverter))]
     public class Binding : BindingBase {
-        public Binding(string path = null) {
+        public Binding() //TODO this is for serialization, how can we test it? (may just chack constructor exists)
+            : this((string)null) {
+        }
+        public Binding(string path) {
             Path = path;
         }
         public Binding(Expression<Func<object>> expression)
