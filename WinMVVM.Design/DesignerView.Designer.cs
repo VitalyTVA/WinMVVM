@@ -25,12 +25,12 @@
         private void InitializeComponent() {
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.lbComponentList = new System.Windows.Forms.ListBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.lbBoundProperties = new System.Windows.Forms.ListBox();
             this.lbUnboundProperties = new System.Windows.Forms.ListBox();
-            this.lbComponentList = new System.Windows.Forms.ListBox();
             this.label1 = new System.Windows.Forms.Label();
             this.tbPath = new System.Windows.Forms.TextBox();
             this.bBind = new System.Windows.Forms.Button();
@@ -60,12 +60,21 @@
             this.tabPage1.Text = "List";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // lbComponentList
+            // 
+            this.lbComponentList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lbComponentList.FormattingEnabled = true;
+            this.lbComponentList.Location = new System.Drawing.Point(3, 3);
+            this.lbComponentList.Name = "lbComponentList";
+            this.lbComponentList.Size = new System.Drawing.Size(190, 285);
+            this.lbComponentList.TabIndex = 0;
+            // 
             // tabPage2
             // 
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(196, 264);
+            this.tabPage2.Size = new System.Drawing.Size(196, 291);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Tree";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -93,7 +102,7 @@
             this.lbBoundProperties.FormattingEnabled = true;
             this.lbBoundProperties.Location = new System.Drawing.Point(253, 49);
             this.lbBoundProperties.Name = "lbBoundProperties";
-            this.lbBoundProperties.Size = new System.Drawing.Size(160, 121);
+            this.lbBoundProperties.Size = new System.Drawing.Size(160, 95);
             this.lbBoundProperties.TabIndex = 3;
             // 
             // lbUnboundProperties
@@ -103,15 +112,6 @@
             this.lbUnboundProperties.Name = "lbUnboundProperties";
             this.lbUnboundProperties.Size = new System.Drawing.Size(160, 160);
             this.lbUnboundProperties.TabIndex = 4;
-            // 
-            // lbComponentList
-            // 
-            this.lbComponentList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lbComponentList.FormattingEnabled = true;
-            this.lbComponentList.Location = new System.Drawing.Point(3, 3);
-            this.lbComponentList.Name = "lbComponentList";
-            this.lbComponentList.Size = new System.Drawing.Size(190, 285);
-            this.lbComponentList.TabIndex = 0;
             // 
             // label1
             // 
