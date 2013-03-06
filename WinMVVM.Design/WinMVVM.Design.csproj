@@ -49,6 +49,7 @@
   <ItemGroup>
     <Compile Include="BindingManagerDesigner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SR_Design.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WinMVVM\WinMVVM.csproj">
