@@ -13,5 +13,8 @@ namespace WinMVVM.Design {
         public DesignerForm() {
             InitializeComponent();
         }
+        public void SetDesigner(BindingManagerDesigner designer) {
+            designerView1.SetDesigner(designer);
+        }
     }
 }

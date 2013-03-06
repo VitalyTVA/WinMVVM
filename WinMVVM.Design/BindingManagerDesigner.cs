@@ -44,6 +44,7 @@ namespace WinMVVM.Design {
         }
         void RunDesigner() {
             using(var form = new DesignerForm()) {
+                form.SetDesigner(this);
                 form.ShowDialog(NativeWindow.FromHandle(NativeHelper.GetActiveWindow()));
             }
         }
@@ -75,20 +76,25 @@ namespace WinMVVM.Design {
             }
         }
         private void OnComponentRemoving(object sender, ComponentEventArgs e) {
-            BindingManager component = base.Component as BindingManager;
-            if(component != null) {
-                IComponentChangeService service = (IComponentChangeService)this.GetService(typeof(IComponentChangeService));
-                PropertyDescriptorCollection properties = TypeDescriptor.GetProperties(component);
-                if((service != null) /*&& (member != null)*/) {
-                    service.OnComponentChanging(component, null);
-                }
+            ChangeComponent(() => {
+                BindingManager component = base.Component as BindingManager;
                 foreach(SetBindingAction action in component.Collection.Where(action => object.Equals(action.Control, e.Component)).ToArray()) {
                     component.Collection.Remove(action);
                 }
-                if((service != null)) {
-                    service.OnComponentChanged(component, null, null, null);
-                }
-            }
+            });
+        }
+        public void ChangeComponent(Action changeAction) {
+                        BindingManager component = base.Component as BindingManager;
+                        if(component != null) {
+                            IComponentChangeService service = (IComponentChangeService)this.GetService(typeof(IComponentChangeService));
+                            if((service != null)) {
+                                service.OnComponentChanging(component, null);
+                            }
+                            changeAction();
+                            if((service != null)) {
+                                service.OnComponentChanged(component, null, null, null);
+                            }
+                        }
         }
     }
 }
