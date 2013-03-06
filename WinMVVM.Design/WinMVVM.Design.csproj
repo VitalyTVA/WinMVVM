@@ -61,6 +61,7 @@
     <Compile Include="DesignerView.Designer.cs">
       <DependentUpon>DesignerView.cs</DependentUpon>
     </Compile>
+    <Compile Include="NativeHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SR_Design.cs" />
   </ItemGroup>

@@ -6,6 +6,8 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Runtime.InteropServices;
+using System.Windows.Forms;
 
 namespace WinMVVM.Design {
     public class BindingManagerDesigner : System.ComponentModel.Design.ComponentDesigner {
@@ -17,7 +19,7 @@ namespace WinMVVM.Design {
             }
             public override DesignerActionItemCollection GetSortedActionItems() {
                 DesignerActionItemCollection result = new DesignerActionItemCollection();
-                result.Add(new DesignerActionMethodItem(this, "RunDesigner", SR_Design.RunDesigner)); //TODO  use lambda to method name
+                result.Add(new DesignerActionMethodItem(this, "RunDesigner", SR_Design.RunDesigner)); //TODO  use lambda to get method name
                 return result;
             }
 
@@ -41,7 +43,9 @@ namespace WinMVVM.Design {
             RunDesigner();
         }
         void RunDesigner() {
-            System.Windows.Forms.MessageBox.Show("Run designer");
+            using(var form = new DesignerForm()) {
+                form.ShowDialog(NativeWindow.FromHandle(NativeHelper.GetActiveWindow()));
+            }
         }
         DesignerActionListCollection actionLists;
         public override DesignerActionListCollection ActionLists {
@@ -63,7 +67,7 @@ namespace WinMVVM.Design {
             base.Dispose(disposing);
         }
         public override void Initialize(System.ComponentModel.IComponent component) {
-            System.Windows.Forms.MessageBox.Show("Designer");
+            //System.Windows.Forms.MessageBox.Show("Designer");
             base.Initialize(component);
             IComponentChangeService service = (IComponentChangeService)this.GetService(typeof(IComponentChangeService));
             if(service != null) {
