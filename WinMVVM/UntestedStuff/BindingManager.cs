@@ -38,14 +38,19 @@ namespace WinMVVM {
             else
                 Actions.Add(newAction);
         }
-        public IEnumerable<SetBindingAction> GetActions() {
-            return Actions;
-        }
         public void SetBinding(Control control, string propertyName, BindingBase binding) {
-            //BindingOperations.SetBinding(control, propertyName, binding);
+            BindingOperations.SetBinding(control, propertyName, binding);
             //TODO  all SetBinding variants and test it
             //TODO  do all this only in design time
             this.AddOrReplace(control, propertyName, (Binding)binding); 
+        }
+        public void RemoveControlActions(Control control) {
+            foreach(SetBindingAction action in GetActions().Where(action => object.Equals(action.Control, control)).ToArray()) {
+                Remove(action.Control, action.Property);
+            }
+        }
+        internal IEnumerable<SetBindingAction> GetActions() {
+            return Actions;
         }
     }
 }

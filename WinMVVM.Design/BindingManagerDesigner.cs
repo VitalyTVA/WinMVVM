@@ -68,7 +68,6 @@ namespace WinMVVM.Design {
             base.Dispose(disposing);
         }
         public override void Initialize(System.ComponentModel.IComponent component) {
-            //System.Windows.Forms.MessageBox.Show("Designer");
             base.Initialize(component);
             IComponentChangeService service = (IComponentChangeService)this.GetService(typeof(IComponentChangeService));
             if(service != null) {
@@ -78,23 +77,21 @@ namespace WinMVVM.Design {
         private void OnComponentRemoving(object sender, ComponentEventArgs e) {
             ChangeComponent(() => {
                 BindingManager component = base.Component as BindingManager;
-                foreach(SetBindingAction action in component.GetActions().Where(action => object.Equals(action.Control, e.Component)).ToArray()) {
-                    component.Remove(action.Control, action.Property);
-                }
+                component.RemoveControlActions(e.Component as Control);
             });
         }
         public void ChangeComponent(Action changeAction) {
-                        BindingManager component = base.Component as BindingManager;
-                        if(component != null) {
-                            IComponentChangeService service = (IComponentChangeService)this.GetService(typeof(IComponentChangeService));
-                            if((service != null)) {
-                                service.OnComponentChanging(component, null);
-                            }
-                            changeAction();
-                            if((service != null)) {
-                                service.OnComponentChanged(component, null, null, null);
-                            }
-                        }
+            BindingManager component = base.Component as BindingManager;
+            if(component != null) {
+                IComponentChangeService service = (IComponentChangeService)this.GetService(typeof(IComponentChangeService));
+                if((service != null)) {
+                    service.OnComponentChanging(component, null);
+                }
+                changeAction();
+                if((service != null)) {
+                    service.OnComponentChanged(component, null, null, null);
+                }
+            }
         }
     }
 }

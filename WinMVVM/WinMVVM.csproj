@@ -70,6 +70,7 @@
     <Compile Include="AttachedPropertyExtensions.cs" />
     <Compile Include="Binding.cs" />
     <Compile Include="BindingBase.cs" />
+    <Compile Include="Tests\BindingManagerTest.cs" />
     <Compile Include="UntestedStuff\BindingManager.cs">
       <SubType>Component</SubType>
     </Compile>
