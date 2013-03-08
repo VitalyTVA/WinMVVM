@@ -22,10 +22,12 @@ namespace WinMVVM {
         void ISupportInitialize.EndInit() {
         }
         public void Remove(Control control, string property) {
-            Find(control, property).Do(x => Actions.Remove(x));
             BindingOperations.ClearBinding(control, property);
+            Find(control, property).Do(x => Actions.Remove(x));
         }
         public SetBindingAction Find(Control control, string property) {
+            Guard.ArgumentNotNull(control, "control");
+            Guard.ArgumentInRange(!string.IsNullOrEmpty(property), "property");
             return Actions.FirstOrDefault(x => x.IsMatchedAction(control, property));
         }
         public void SetBinding(Control control, string propertyName, BindingBase binding) {
@@ -35,6 +37,7 @@ namespace WinMVVM {
             this.AddOrReplace(control, propertyName, (Binding)binding);
         }
         public void RemoveControlActions(Control control) {
+            Guard.ArgumentNotNull(control, "control");
             foreach(SetBindingAction action in GetActions().Where(action => object.Equals(action.Control, control)).ToArray()) {
                 Remove(action.Control, action.Property);
             }

@@ -66,5 +66,45 @@ namespace WinMVVM.Tests {
                 Assert.That(action.Property, Is.EqualTo("Text"));
             }
         }
+        [Test]
+        public void NullParameters() {
+            using(var form = new Form()) {
+                BindingManager manager = new BindingManager();
+
+                Assert.Throws<ArgumentNullException>(
+                    () => manager.SetBinding(null, "Text", new Binding())
+                );
+                Assert.Throws<ArgumentOutOfRangeException>(
+                    () => manager.SetBinding(form, null, new Binding())
+                );
+                Assert.Throws<ArgumentOutOfRangeException>(
+                    () => manager.SetBinding(form, string.Empty, new Binding())
+                );
+                Assert.Throws<ArgumentNullException>(
+                    () => manager.SetBinding(form, "Text", null)
+                );
+
+                Assert.Throws<ArgumentNullException>(
+                    () => manager.Remove(null, "Text")
+                );
+                Assert.Throws<ArgumentOutOfRangeException>(
+                    () => manager.Remove(form, null)
+                );
+                Assert.Throws<ArgumentOutOfRangeException>(
+                    () => manager.Remove(form, string.Empty)
+                );
+
+                Assert.Throws<ArgumentNullException>(
+                    () => manager.RemoveControlActions(null)
+                );
+
+                Assert.Throws<ArgumentNullException>(
+                    () => manager.Find(null, "Text")
+                );
+                Assert.Throws<ArgumentOutOfRangeException>(
+                    () => manager.Find(form, null)
+                );
+            }
+        }
     }
 }
