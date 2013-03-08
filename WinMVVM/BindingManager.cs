@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.ComponentModel.Design;
 using System.ComponentModel.Design.Serialization;
@@ -13,9 +14,12 @@ namespace WinMVVM {
     [DesignerSerializer(SR.BindingManagerSerializerAssemblyQualifiedName, SR.CodeDomSerializerAssemblyQualifiedName)]
     [Designer(SR.BindingManagerDesignerAssemblyQualifiedName)]
     public class BindingManager : Component, ISupportInitialize {
+        class SetBindingActionCollection : Collection<SetBindingAction> { 
+        }
+
         SetBindingActionCollection Actions { get; set; }
         public BindingManager() {
-            Actions = new SetBindingActionCollection(this);
+            Actions = new SetBindingActionCollection();
         }
         void ISupportInitialize.BeginInit() {
         }

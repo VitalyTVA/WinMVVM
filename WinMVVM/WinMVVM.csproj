@@ -71,7 +71,7 @@
     <Compile Include="Binding.cs" />
     <Compile Include="BindingBase.cs" />
     <Compile Include="Tests\BindingManagerTest.cs" />
-    <Compile Include="UntestedStuff\BindingManager.cs">
+    <Compile Include="BindingManager.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="BindingOperations.cs" />
@@ -80,8 +80,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PropertyMetadata.cs" />
     <Compile Include="PropertyMetadataOptions.cs" />
-    <Compile Include="UntestedStuff\SetBindingAction.cs" />
-    <Compile Include="UntestedStuff\SetBindingActionCollection.cs" />
+    <Compile Include="SetBindingAction.cs" />
     <Compile Include="Tests\AttachedPropertyTests.cs" />
     <Compile Include="Tests\CommandProviderTests.cs" />
     <Compile Include="Tests\DelegateCommand.cs" />
