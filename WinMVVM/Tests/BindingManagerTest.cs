@@ -42,6 +42,28 @@ namespace WinMVVM.Tests {
                 Assert.That(action.Control, Is.EqualTo(form));
                 Assert.That(action.Property, Is.EqualTo("Text"));
                 Assert.That(((Binding)action.Binding).Path, Is.EqualTo("StringProperty2"));
+
+                Assert.That(manager.Find(form, "Text"), Is.EqualTo(manager.GetActions().First()));
+                Assert.That(manager.Find(button, "Text"), Is.EqualTo(manager.GetActions().ElementAt(1)));
+                Assert.That(manager.Find(form, "Tag"), Is.Null);
+
+                manager.Remove(form, "Text");
+                Assert.That(form.Text, Is.EqualTo(string.Empty));
+                Assert.That(manager.GetActions().Count(), Is.EqualTo(1));
+
+                action = manager.GetActions().First();
+                Assert.That(action.Control, Is.EqualTo(button));
+                Assert.That(action.Property, Is.EqualTo("Text"));
+
+                manager.SetBinding(form, "Text", new Binding("StringProperty"));
+                manager.SetBinding(form, "Tag", new Binding("StringProperty"));
+                Assert.That(manager.GetActions().Count(), Is.EqualTo(3));
+                manager.RemoveControlActions(form);
+                Assert.That(manager.GetActions().Count(), Is.EqualTo(1));
+
+                action = manager.GetActions().First();
+                Assert.That(action.Control, Is.EqualTo(button));
+                Assert.That(action.Property, Is.EqualTo("Text"));
             }
         }
     }

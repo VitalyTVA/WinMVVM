@@ -23,10 +23,27 @@ namespace WinMVVM {
         }
         public void Remove(Control control, string property) {
             Find(control, property).Do(x => Actions.Remove(x));
+            BindingOperations.ClearBinding(control, property);
         }
         public SetBindingAction Find(Control control, string property) {
             return Actions.FirstOrDefault(x => x.IsMatchedAction(control, property));
         }
+        public void SetBinding(Control control, string propertyName, BindingBase binding) {
+            BindingOperations.SetBinding(control, propertyName, binding);
+            //TODO  all SetBinding variants and test it
+            //TODO  do all this only in design time
+            this.AddOrReplace(control, propertyName, (Binding)binding);
+        }
+        public void RemoveControlActions(Control control) {
+            foreach(SetBindingAction action in GetActions().Where(action => object.Equals(action.Control, control)).ToArray()) {
+                Remove(action.Control, action.Property);
+            }
+        }
+
+        internal IEnumerable<SetBindingAction> GetActions() {
+            return Actions;
+        }
+
         void AddOrReplace(Control control, string property, Binding binding) {
             SetBindingAction newAction = new SetBindingAction(control, property, binding);
             int index = -1;
@@ -37,20 +54,6 @@ namespace WinMVVM {
                 Actions[index] = newAction;
             else
                 Actions.Add(newAction);
-        }
-        public void SetBinding(Control control, string propertyName, BindingBase binding) {
-            BindingOperations.SetBinding(control, propertyName, binding);
-            //TODO  all SetBinding variants and test it
-            //TODO  do all this only in design time
-            this.AddOrReplace(control, propertyName, (Binding)binding); 
-        }
-        public void RemoveControlActions(Control control) {
-            foreach(SetBindingAction action in GetActions().Where(action => object.Equals(action.Control, control)).ToArray()) {
-                Remove(action.Control, action.Property);
-            }
-        }
-        internal IEnumerable<SetBindingAction> GetActions() {
-            return Actions;
         }
     }
 }
