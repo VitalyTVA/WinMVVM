@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using WinMVVM.Utils;
 
 namespace WinMVVM.Design {
     public partial class DesignerView : UserControl {
@@ -37,14 +38,7 @@ namespace WinMVVM.Design {
             if(SelectedProperty == null || SelectedComponent == null)
                 return;
             designer.ChangeComponent(() => {
-                SetBindingAction oldAction = GetSelectedAction();
-                SetBindingAction newAction = new SetBindingAction(SelectedComponent, SelectedProperty.Name, new Binding(tbPath.Text));
-                if(oldAction != null) {
-                    int index = Manager.Collection.IndexOf(oldAction);
-                    Manager.Collection[index] = newAction;
-                } else {
-                    Manager.Collection.Add(newAction);
-                }
+                Manager.AddOrReplace(SelectedComponent, SelectedProperty.Name, new Binding(tbPath.Text));
                 RepopulateProperties();
             });
 
@@ -53,11 +47,8 @@ namespace WinMVVM.Design {
         void bClear_Click(object sender, EventArgs e) {
             if(SelectedProperty == null || SelectedComponent == null)
                 return;
-            SetBindingAction oldAction = GetSelectedAction();
-            if(oldAction == null)
-                return;
             designer.ChangeComponent(() => {
-                Manager.Collection.Remove(oldAction);
+                Manager.Remove(SelectedComponent, SelectedProperty.Name);
                 RepopulateProperties();
             });
         }
@@ -72,20 +63,13 @@ namespace WinMVVM.Design {
 
             tbPath.Text = null;
             if(SelectedProperty != null) { //TODO - use MayBe
-                SetBindingAction action = GetSelectedAction();
+                SetBindingAction action = Manager.Find(SelectedComponent, SelectedProperty.Name);
                 if(action != null) {
                     Binding binding = action.Binding as Binding;
                     if(binding != null)
                         tbPath.Text = binding.Path;
                 }
             }
-        }
-
-        SetBindingAction GetSelectedAction() {
-            return GetExistingAction(SelectedComponent, SelectedProperty.Name);
-        }
-        SetBindingAction GetExistingAction(Control control, string propertyName) {
-            return Manager.Collection.FirstOrDefault(a => a.Control == control && a.Property == propertyName);
         }
         void lbComponentList_SelectedIndexChanged(object sender, EventArgs e) {
 
@@ -98,7 +82,7 @@ namespace WinMVVM.Design {
             tbPath.Text = null;
             if(SelectedComponent != null) {
                 foreach(PropertyDescriptor property in TypeDescriptor.GetProperties(SelectedComponent).Cast<PropertyDescriptor>().OrderBy(pd => pd.Name)) {
-                    SetBindingAction existingAction = GetExistingAction(SelectedComponent, property.Name);
+                    SetBindingAction existingAction = Manager.Find(SelectedComponent, property.Name);
                     if(existingAction == null)
                         lbUnboundProperties.Items.Add(property);
                     else

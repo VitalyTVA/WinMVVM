@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BindingManagerDesigner.cs" />
+    <Compile Include="BindingManagerCodeDomSerializer.cs" />
     <Compile Include="DesignerForm.cs">
       <SubType>Form</SubType>
     </Compile>

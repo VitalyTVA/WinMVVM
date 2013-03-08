@@ -6,5 +6,8 @@ using WinMVVM.Utils;
 
 namespace WinMVVM {
     public abstract class BindingBase {
+        internal BindingBase() {
+            
+        }
     }
 }

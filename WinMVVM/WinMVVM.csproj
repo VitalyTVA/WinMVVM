@@ -85,10 +85,10 @@
     <Compile Include="Tests\CommandProviderTests.cs" />
     <Compile Include="Tests\DelegateCommand.cs" />
     <Compile Include="Tests\TestViewModel.cs" />
-    <Compile Include="UntestedStuff\SetBindingActionConverter.cs" />
     <Compile Include="Utils\AttachedPropertyDescriptor.cs" />
     <Compile Include="Utils\BindingExpression.cs" />
     <Compile Include="Utils\BindingExpressionKey.cs" />
+    <Compile Include="Utils\MayBe.cs" />
     <Compile Include="Utils\PropertyEntry.cs" />
     <Compile Include="Tests\BindableBase.cs" />
     <Compile Include="Tests\BindingOperationsTests.cs" />

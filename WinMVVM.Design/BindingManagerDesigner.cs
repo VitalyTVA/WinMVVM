@@ -78,8 +78,8 @@ namespace WinMVVM.Design {
         private void OnComponentRemoving(object sender, ComponentEventArgs e) {
             ChangeComponent(() => {
                 BindingManager component = base.Component as BindingManager;
-                foreach(SetBindingAction action in component.Collection.Where(action => object.Equals(action.Control, e.Component)).ToArray()) {
-                    component.Collection.Remove(action);
+                foreach(SetBindingAction action in component.GetActions().Where(action => object.Equals(action.Control, e.Component)).ToArray()) {
+                    component.Remove(action.Control, action.Property);
                 }
             });
         }

@@ -7,7 +7,6 @@ using System.Windows.Forms;
 using WinMVVM.Utils;
 
 namespace WinMVVM {
-    [TypeConverter(typeof(BindingConverter))]
     public class Binding : BindingBase {
         public Binding() //TODO this is for serialization, how can we test it? (may just chack constructor exists)
             : this((string)null) {
