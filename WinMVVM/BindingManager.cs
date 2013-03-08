@@ -40,6 +40,9 @@ namespace WinMVVM {
             //TODO  do all this only in design time
             this.AddOrReplace(control, propertyName, (Binding)binding);
         }
+        public void SetBinding(Control control, AttachedPropertyBase property, BindingBase binding) {
+        }
+
         public void RemoveControlActions(Control control) {
             Guard.ArgumentNotNull(control, "control");
             foreach(SetBindingAction action in GetActions().Where(action => object.Equals(action.Control, control)).ToArray()) {

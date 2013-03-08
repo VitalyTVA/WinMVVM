@@ -65,6 +65,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AttachedProperty.cs" />
+    <Compile Include="AttachedPropertyBase.cs" />
     <Compile Include="AttachedPropertyChangedCallback.cs" />
     <Compile Include="AttachedPropertyChangedEventArgs.cs" />
     <Compile Include="AttachedPropertyExtensions.cs" />

@@ -75,7 +75,7 @@ namespace WinMVVM.Tests {
                     () => manager.SetBinding(null, "Text", new Binding())
                 );
                 Assert.Throws<ArgumentOutOfRangeException>(
-                    () => manager.SetBinding(form, null, new Binding())
+                    () => manager.SetBinding(form, (string)null, new Binding())
                 );
                 Assert.Throws<ArgumentOutOfRangeException>(
                     () => manager.SetBinding(form, string.Empty, new Binding())

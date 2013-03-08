@@ -9,7 +9,7 @@ using System.Windows.Forms;
 using WinMVVM.Utils;
 
 namespace WinMVVM {
-    public sealed class AttachedProperty<T> {
+    public sealed class AttachedProperty<T> : AttachedPropertyBase {
         public static AttachedProperty<T> Register(Expression<Func<AttachedProperty<T>>> property, PropertyMetadata<T> metadata = null) {
             MemberInfo mi = ExpressionHelper.GetMemberInfo(property, MemberTypes.Field);
             //TODO check existing properties
