@@ -38,7 +38,7 @@ namespace WinMVVM.Design {
             if(SelectedProperty == null || SelectedComponent == null)
                 return;
             designer.ChangeComponent(() => {
-                Manager.AddOrReplace(SelectedComponent, SelectedProperty.Name, new Binding(tbPath.Text));
+                Manager.SetBinding(SelectedComponent, SelectedProperty.Name, new Binding(tbPath.Text));
                 RepopulateProperties();
             });
 

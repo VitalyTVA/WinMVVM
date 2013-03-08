@@ -27,7 +27,7 @@ namespace WinMVVM {
         public SetBindingAction Find(Control control, string property) {
             return Actions.FirstOrDefault(x => x.IsMatchedAction(control, property));
         }
-        public void AddOrReplace(Control control, string property, Binding binding) {
+        void AddOrReplace(Control control, string property, Binding binding) {
             SetBindingAction newAction = new SetBindingAction(control, property, binding);
             int index = -1;
             SetBindingAction oldAction = Find(control, property);
