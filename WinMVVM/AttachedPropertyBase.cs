@@ -10,6 +10,7 @@ using WinMVVM.Utils;
 
 namespace WinMVVM {
     public abstract class AttachedPropertyBase {
+        public abstract Type PropertyType { get; }
         internal AttachedPropertyBase() { }
 
     }

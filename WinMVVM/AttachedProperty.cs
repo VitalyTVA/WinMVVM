@@ -29,9 +29,11 @@ namespace WinMVVM {
         public AttachedProperty(string name, Type ownerType, PropertyMetadata<T> metadata) {
             Metadata = metadata;
             Name = name;
-            OwnerType = ownerType;
+            this.ownerType = ownerType;
         }
-        public Type OwnerType { get; private set; }
+        public override Type PropertyType { get { return typeof(T); } }
+        readonly Type ownerType;
+        public Type OwnerType { get { return ownerType; } }
         public string Name { get; private set; }
         public PropertyMetadata<T> Metadata { get; private set; }
         internal bool Inherits { get { return (Metadata.Options & PropertyMetadataOptions.Inherits) != 0; } }
