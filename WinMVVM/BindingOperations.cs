@@ -40,7 +40,7 @@ namespace WinMVVM {
         public static void ClearBinding<T>(this Control control, Expression<Func<T>> expression) {
             control.ClearBinding(ExpressionHelper.GetPropertyName(expression));
         }
-        static void ClearBindingCore(this Control control, PropertyDescriptorBase property) {
+        internal static void ClearBindingCore(this Control control, PropertyDescriptorBase property) {
             BindingExpressionKey key = new BindingExpressionKey(control, property);
 
             var propertyEntry = DataContextProvider.DataContextProperty.GetPropertyEntry(control);

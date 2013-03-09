@@ -27,11 +27,11 @@ namespace WinMVVM.Design {
             return codeObject;
         }
 
-        CodeMethodInvokeExpression GetSetBindingExpression(IDesignerSerializationManager manager, BindingManager bindingManager, WinMVVM.SetBindingAction action) {
+        CodeMethodInvokeExpression GetSetBindingExpression(IDesignerSerializationManager manager, BindingManager bindingManager, SetBindingAction action) {
             CodeExpression controlExpression = base.SerializeToExpression(manager, action.Control);
             if(controlExpression == null)
                 return null;
-            CodeExpression[] parameters = new CodeExpression[] { controlExpression, new CodePrimitiveExpression(action.Property), GetBindingCreateExpression(action.Binding) };
+            CodeExpression[] parameters = new CodeExpression[] { controlExpression, new CodePrimitiveExpression(action.Property.Name), GetBindingCreateExpression(action.Binding) };
             CodeExpression managerReferenceExpression = base.GetExpression(manager, bindingManager);
             return new CodeMethodInvokeExpression(managerReferenceExpression, "SetBinding", parameters);
         }

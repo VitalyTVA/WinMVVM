@@ -13,9 +13,9 @@ namespace WinMVVM.Design {
     public partial class DesignerView : UserControl {
         BindingManagerDesigner designer;
         BindingManager Manager { get { return (BindingManager)designer.Component; } }
-        private PropertyDescriptor SelectedProperty {
+        private PropertyDescriptorBase SelectedProperty {
             get {
-                return (lbUnboundProperties.SelectedItem ?? lbBoundProperties.SelectedItem) as PropertyDescriptor;
+                return (lbUnboundProperties.SelectedItem ?? lbBoundProperties.SelectedItem) as PropertyDescriptorBase;
             }
         }
         private Control SelectedComponent {
@@ -63,7 +63,7 @@ namespace WinMVVM.Design {
 
             tbPath.Text = null;
             if(SelectedProperty != null) { //TODO - use MayBe
-                SetBindingAction action = Manager.Find(SelectedComponent, SelectedProperty.Name);
+                SetBindingAction action = Manager.Find(SelectedComponent, SelectedProperty);
                 if(action != null) {
                     Binding binding = action.Binding as Binding;
                     if(binding != null)
@@ -81,8 +81,9 @@ namespace WinMVVM.Design {
             lbBoundProperties.Items.Clear();
             tbPath.Text = null;
             if(SelectedComponent != null) {
-                foreach(PropertyDescriptor property in TypeDescriptor.GetProperties(SelectedComponent).Cast<PropertyDescriptor>().OrderBy(pd => pd.Name)) {
-                    SetBindingAction existingAction = Manager.Find(SelectedComponent, property.Name);
+                IEnumerable<PropertyDescriptorBase> orderedProperties = TypeDescriptor.GetProperties(SelectedComponent).Cast<PropertyDescriptor>().Select(x => StandardPropertyDescriptor.FromPropertyName(SelectedComponent, x.Name)).OrderBy(pd => pd.Name);
+                foreach(PropertyDescriptorBase property in orderedProperties) {
+                    SetBindingAction existingAction = Manager.Find(SelectedComponent, property);
                     if(existingAction == null)
                         lbUnboundProperties.Items.Add(property);
                     else

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
+using WinMVVM.Utils;
 
 namespace WinMVVM.Tests {
     [TestFixture]
@@ -23,7 +24,7 @@ namespace WinMVVM.Tests {
 
                 SetBindingAction action = manager.GetActions().First();
                 Assert.That(action.Control, Is.EqualTo(form));
-                Assert.That(action.Property, Is.EqualTo("Text"));
+                Assert.That(action.Property.Name, Is.EqualTo("Text"));
                 Assert.That(((Binding)action.Binding).Path, Is.EqualTo("StringProperty"));
 
                 manager.SetBinding(button, "Text", new Binding("StringProperty2"));
@@ -32,7 +33,7 @@ namespace WinMVVM.Tests {
 
                 action = manager.GetActions().ElementAt(1);
                 Assert.That(action.Control, Is.EqualTo(button));
-                Assert.That(action.Property, Is.EqualTo("Text"));
+                Assert.That(action.Property.Name, Is.EqualTo("Text"));
 
                 manager.SetBinding(form, "Text", new Binding("StringProperty2"));
                 Assert.That(form.Text, Is.EqualTo("test2"));
@@ -40,12 +41,8 @@ namespace WinMVVM.Tests {
 
                 action = manager.GetActions().First();
                 Assert.That(action.Control, Is.EqualTo(form));
-                Assert.That(action.Property, Is.EqualTo("Text"));
+                Assert.That(action.Property.Name, Is.EqualTo("Text"));
                 Assert.That(((Binding)action.Binding).Path, Is.EqualTo("StringProperty2"));
-
-                Assert.That(manager.Find(form, "Text"), Is.EqualTo(manager.GetActions().First()));
-                Assert.That(manager.Find(button, "Text"), Is.EqualTo(manager.GetActions().ElementAt(1)));
-                Assert.That(manager.Find(form, "Tag"), Is.Null);
 
                 manager.Remove(form, "Text");
                 Assert.That(form.Text, Is.EqualTo(string.Empty));
@@ -53,7 +50,7 @@ namespace WinMVVM.Tests {
 
                 action = manager.GetActions().First();
                 Assert.That(action.Control, Is.EqualTo(button));
-                Assert.That(action.Property, Is.EqualTo("Text"));
+                Assert.That(action.Property.Name, Is.EqualTo("Text"));
 
                 manager.SetBinding(form, "Text", new Binding("StringProperty"));
                 manager.SetBinding(form, "Tag", new Binding("StringProperty"));
@@ -63,7 +60,7 @@ namespace WinMVVM.Tests {
 
                 action = manager.GetActions().First();
                 Assert.That(action.Control, Is.EqualTo(button));
-                Assert.That(action.Property, Is.EqualTo("Text"));
+                Assert.That(action.Property.Name, Is.EqualTo("Text"));
 
                 manager.SetBinding(form, TextProperty, new Binding("StringProperty"));
                 Assert.That(form.GetValue(TextProperty), Is.EqualTo("test"));
@@ -88,25 +85,18 @@ namespace WinMVVM.Tests {
                     () => manager.SetBinding(form, "Text", null)
                 );
 
-                Assert.Throws<ArgumentNullException>(
+                Assert.Throws<ArgumentException>(
                     () => manager.Remove(null, "Text")
                 );
-                Assert.Throws<ArgumentOutOfRangeException>(
+                Assert.Throws<ArgumentNullException>(
                     () => manager.Remove(form, null)
                 );
-                Assert.Throws<ArgumentOutOfRangeException>(
+                Assert.Throws<ArgumentException>(
                     () => manager.Remove(form, string.Empty)
                 );
 
                 Assert.Throws<ArgumentNullException>(
                     () => manager.RemoveControlActions(null)
-                );
-
-                Assert.Throws<ArgumentNullException>(
-                    () => manager.Find(null, "Text")
-                );
-                Assert.Throws<ArgumentOutOfRangeException>(
-                    () => manager.Find(form, null)
                 );
             }
         }

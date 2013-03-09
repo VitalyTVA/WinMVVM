@@ -27,20 +27,14 @@ namespace WinMVVM {
         }
         void ISupportInitialize.EndInit() {
         }
-        public void Remove(Control control, string stringProperty) {
-            BindingOperations.ClearBinding(control, stringProperty);
-            Find(control, stringProperty).Do(x => Actions.Remove(x));
-        }
-        public SetBindingAction Find(Control control, string stringProperty) {
-            Guard.ArgumentNotNull(control, "control");
-            Guard.ArgumentInRange(!string.IsNullOrEmpty(stringProperty), "property");
-            return Actions.FirstOrDefault(x => x.IsMatchedAction(control, stringProperty));
+        public void Remove(Control control, string propertyName) {
+            RemoveCore(control, StandardPropertyDescriptor.FromPropertyName(control, propertyName));
         }
         public void SetBinding(Control control, string propertyName, BindingBase binding) {
             BindingOperations.SetBinding(control, propertyName, binding);
             //TODO  all SetBinding variants and test it
             //TODO  do all this only in design time
-            this.AddOrReplace(control, propertyName, (Binding)binding);
+            this.AddOrReplace(control, StandardPropertyDescriptor.FromPropertyName(control, propertyName), (Binding)binding);
         }
         public void SetBinding(Control control, AttachedPropertyBase property, BindingBase binding) {
             if(setAttachedPropertyBindingMethodInfo == null) {
@@ -51,22 +45,31 @@ namespace WinMVVM {
             mi.Invoke(null, new object[] { control, property, binding });
             //this.AddOrReplace(control, null, property, (Binding)binding);
         }
-
         public void RemoveControlActions(Control control) {
             Guard.ArgumentNotNull(control, "control");
             foreach(SetBindingAction action in GetActions().Where(action => object.Equals(action.Control, control)).ToArray()) {
-                Remove(action.Control, action.Property);
+                RemoveCore(action.Control, action.Property);
             }
+        }
+
+        void RemoveCore(Control control, PropertyDescriptorBase property) {
+            BindingOperations.ClearBindingCore(control, property);
+            Find(control, property).Do(x => Actions.Remove(x));
+        }
+        internal SetBindingAction Find(Control control, PropertyDescriptorBase property) {
+            Guard.ArgumentNotNull(control, "control");
+            Guard.ArgumentNotNull(property, "property");
+            return Actions.FirstOrDefault(x => x.IsMatchedAction(control, property));
         }
 
         internal IEnumerable<SetBindingAction> GetActions() {
             return Actions;
         }
 
-        void AddOrReplace(Control control, string stringProperty, Binding binding) {
-            SetBindingAction newAction = new SetBindingAction(control, stringProperty, binding);
+        void AddOrReplace(Control control, PropertyDescriptorBase property, Binding binding) {
+            SetBindingAction newAction = new SetBindingAction(control, property, binding);
             int index = -1;
-            SetBindingAction oldAction = Find(control, stringProperty);
+            SetBindingAction oldAction = Find(control, property);
             if(oldAction != null)
                 index = Actions.IndexOf(oldAction);
             if(index >= 0)
