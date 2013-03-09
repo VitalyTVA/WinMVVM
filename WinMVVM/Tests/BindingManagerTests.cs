@@ -45,7 +45,7 @@ namespace WinMVVM.Tests {
                 Assert.That(action.Property.Name, Is.EqualTo("Text"));
                 Assert.That(((Binding)action.Binding).Path, Is.EqualTo("StringProperty2"));
 
-                manager.Remove(form, "Text");
+                manager.ClearBinding(form, "Text");
                 Assert.That(form.Text, Is.EqualTo(string.Empty));
                 Assert.That(manager.GetActions().Count(), Is.EqualTo(1));
 
@@ -105,13 +105,13 @@ namespace WinMVVM.Tests {
                 );
 
                 Assert.Throws<ArgumentException>(
-                    () => manager.Remove(null, "Text")
+                    () => manager.ClearBinding(null, "Text")
                 );
                 Assert.Throws<ArgumentNullException>(
-                    () => manager.Remove(form, (string)null)
+                    () => manager.ClearBinding(form, (string)null)
                 );
                 Assert.Throws<ArgumentException>(
-                    () => manager.Remove(form, string.Empty)
+                    () => manager.ClearBinding(form, string.Empty)
                 );
 
                 Assert.Throws<ArgumentNullException>(

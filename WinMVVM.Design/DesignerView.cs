@@ -38,7 +38,7 @@ namespace WinMVVM.Design {
             if(SelectedProperty == null || SelectedComponent == null)
                 return;
             designer.ChangeComponent(() => {
-                Manager.SetBinding(SelectedComponent, SelectedProperty.Name, new Binding(tbPath.Text));
+                Manager.SetBindingCore(SelectedComponent, SelectedProperty, new Binding(tbPath.Text));
                 RepopulateProperties();
             });
 
@@ -48,7 +48,7 @@ namespace WinMVVM.Design {
             if(SelectedProperty == null || SelectedComponent == null)
                 return;
             designer.ChangeComponent(() => {
-                Manager.Remove(SelectedComponent, SelectedProperty.Name);
+                Manager.ClearBindingCore(SelectedComponent, SelectedProperty);
                 RepopulateProperties();
             });
         }
@@ -81,7 +81,7 @@ namespace WinMVVM.Design {
             lbBoundProperties.Items.Clear();
             tbPath.Text = null;
             if(SelectedComponent != null) {
-                IEnumerable<PropertyDescriptorBase> orderedProperties = TypeDescriptor.GetProperties(SelectedComponent).Cast<PropertyDescriptor>().Select(x => StandardPropertyDescriptor.FromPropertyName(SelectedComponent, x.Name)).OrderBy(pd => pd.Name);
+                IEnumerable<PropertyDescriptorBase> orderedProperties = GetProperties(SelectedComponent);
                 foreach(PropertyDescriptorBase property in orderedProperties) {
                     SetBindingAction existingAction = Manager.Find(SelectedComponent, property);
                     if(existingAction == null)
@@ -97,6 +97,15 @@ namespace WinMVVM.Design {
             foreach(IComponent item in designer.Component.Site.Container.Components) {
                 lbComponentList.Items.Add(item);
             }
+        }
+        static IEnumerable<PropertyDescriptorBase> GetProperties(Control control) {
+            IEnumerable<PropertyDescriptorBase> attachedProperties = GetAttachedProperties(control).Select(x => AttachedPropertyDescriptor.FromAttachedProperty(x));
+            IEnumerable<PropertyDescriptorBase> standardProperties = TypeDescriptor.GetProperties(control).Cast<PropertyDescriptor>().Select(x => StandardPropertyDescriptor.FromPropertyName(control, x.Name)).OrderBy(pd => pd.Name);
+            return attachedProperties.Union(standardProperties);
+        }
+        static IEnumerable<AttachedPropertyBase> GetAttachedProperties(Control control) {
+            yield return DataContextProvider.DataContextProperty;
+            yield return CommandProvider.CommandProperty;
         }
     }
 }

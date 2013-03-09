@@ -28,14 +28,14 @@ namespace WinMVVM {
         }
         void ISupportInitialize.EndInit() {
         }
-        public void Remove(Control control, string propertyName) {
-            RemoveCore(control, StandardPropertyDescriptor.FromPropertyName(control, propertyName));
+        public void ClearBinding(Control control, string propertyName) {
+            ClearBindingCore(control, StandardPropertyDescriptor.FromPropertyName(control, propertyName));
         }
         public void SetBinding(Control control, string propertyName, BindingBase binding) {
             BindingOperations.SetBinding(control, propertyName, binding);
             //TODO  all SetBinding variants and test it
             //TODO  do all this only in design time
-            this.AddOrReplace(control, StandardPropertyDescriptor.FromPropertyName(control, propertyName), (Binding)binding);
+            this.SetBindingCore(control, StandardPropertyDescriptor.FromPropertyName(control, propertyName), (Binding)binding);
         }
         public void ClearBinding(Control control, AttachedPropertyBase property) {
             if(clearAttachedPropertyBindingMethodInfo == null) {
@@ -45,7 +45,7 @@ namespace WinMVVM {
             MethodInfo clearBindingActionMethod = clearAttachedPropertyBindingMethodInfo.MakeGenericMethod(property.PropertyType);
             clearBindingActionMethod.Invoke(null, new object[] { control, property });
 
-            this.RemoveCore(control, GetPropertyDescriptor(property));
+            this.ClearBindingCore(control, GetPropertyDescriptor(property));
         }
         public void SetBinding(Control control, AttachedPropertyBase property, BindingBase binding) {
             if(setAttachedPropertyBindingMethodInfo == null) {
@@ -55,19 +55,19 @@ namespace WinMVVM {
             MethodInfo setBindingActionMethod = setAttachedPropertyBindingMethodInfo.MakeGenericMethod(property.PropertyType);
             setBindingActionMethod.Invoke(null, new object[] { control, property, binding });
 
-            this.AddOrReplace(control, GetPropertyDescriptor(property), (Binding)binding);
+            this.SetBindingCore(control, GetPropertyDescriptor(property), (Binding)binding);
         }
         public void ClearAllBindings(Control control) {
             Guard.ArgumentNotNull(control, "control");
             foreach(SetBindingAction action in GetActions().Where(action => object.Equals(action.Control, control)).ToArray()) {
-                RemoveCore(action.Control, action.Property);
+                ClearBindingCore(action.Control, action.Property);
             }
         }
 
         static PropertyDescriptorBase GetPropertyDescriptor(AttachedPropertyBase property) {
             return AttachedPropertyDescriptor.FromAttachedProperty(property);
         }
-        void RemoveCore(Control control, PropertyDescriptorBase property) {
+        internal void ClearBindingCore(Control control, PropertyDescriptorBase property) {
             BindingOperations.ClearBindingCore(control, property);
             Find(control, property).Do(x => Actions.Remove(x));
         }
@@ -81,7 +81,7 @@ namespace WinMVVM {
             return Actions;
         }
 
-        void AddOrReplace(Control control, PropertyDescriptorBase property, Binding binding) {
+        internal void SetBindingCore(Control control, PropertyDescriptorBase property, Binding binding) {
             SetBindingAction newAction = new SetBindingAction(control, property, binding);
             int index = -1;
             SetBindingAction oldAction = Find(control, property);
