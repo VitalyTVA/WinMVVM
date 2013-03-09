@@ -16,6 +16,7 @@ namespace WinMVVM {
     [Designer(SR.BindingManagerDesignerAssemblyQualifiedName)]
     public class BindingManager : Component, ISupportInitialize {
         static MethodInfo setAttachedPropertyBindingMethodInfo;
+        static MethodInfo clearAttachedPropertyBindingMethodInfo;
         class SetBindingActionCollection : Collection<SetBindingAction> { 
         }
 
@@ -36,22 +37,37 @@ namespace WinMVVM {
             //TODO  do all this only in design time
             this.AddOrReplace(control, StandardPropertyDescriptor.FromPropertyName(control, propertyName), (Binding)binding);
         }
+        public void ClearBinding(Control control, AttachedPropertyBase property) {
+            if(clearAttachedPropertyBindingMethodInfo == null) {
+                clearAttachedPropertyBindingMethodInfo = typeof(BindingOperations).GetMethods(BindingFlags.Public | BindingFlags.Static).
+                    First(x => x.Name == "ClearBinding" && x.GetParameters().ElementAt(1).ParameterType.Name == typeof(AttachedProperty<>).Name); //TODO use lambda
+            }
+            MethodInfo clearBindingActionMethod = clearAttachedPropertyBindingMethodInfo.MakeGenericMethod(property.PropertyType);
+            clearBindingActionMethod.Invoke(null, new object[] { control, property });
+
+            this.RemoveCore(control, GetPropertyDescriptor(property));
+        }
         public void SetBinding(Control control, AttachedPropertyBase property, BindingBase binding) {
             if(setAttachedPropertyBindingMethodInfo == null) {
                 setAttachedPropertyBindingMethodInfo = typeof(BindingOperations).GetMethods(BindingFlags.Public | BindingFlags.Static).
                     First(x => x.Name == "SetBinding" && x.GetParameters().ElementAt(1).ParameterType.Name == typeof(AttachedProperty<>).Name); //TODO use lambda
             }
-            MethodInfo mi = setAttachedPropertyBindingMethodInfo.MakeGenericMethod(property.PropertyType);
-            mi.Invoke(null, new object[] { control, property, binding });
-            //this.AddOrReplace(control, null, property, (Binding)binding);
+            MethodInfo setBindingActionMethod = setAttachedPropertyBindingMethodInfo.MakeGenericMethod(property.PropertyType);
+            setBindingActionMethod.Invoke(null, new object[] { control, property, binding });
+
+            this.AddOrReplace(control, GetPropertyDescriptor(property), (Binding)binding);
         }
-        public void RemoveControlActions(Control control) {
+        public void ClearAllBindings(Control control) {
             Guard.ArgumentNotNull(control, "control");
             foreach(SetBindingAction action in GetActions().Where(action => object.Equals(action.Control, control)).ToArray()) {
                 RemoveCore(action.Control, action.Property);
             }
         }
 
+        static PropertyDescriptorBase GetPropertyDescriptor(AttachedPropertyBase property) {
+            MethodInfo createPropertyMethod = typeof(AttachedPropertyDescriptor<>).MakeGenericType(property.PropertyType).GetMethod("FromAttachedProperty", BindingFlags.Public | BindingFlags.Static); //TODO use lambda
+            return (PropertyDescriptorBase)createPropertyMethod.Invoke(null, new[] { property });
+        }
         void RemoveCore(Control control, PropertyDescriptorBase property) {
             BindingOperations.ClearBindingCore(control, property);
             Find(control, property).Do(x => Actions.Remove(x));

@@ -77,7 +77,7 @@ namespace WinMVVM.Design {
         private void OnComponentRemoving(object sender, ComponentEventArgs e) {
             ChangeComponent(() => {
                 BindingManager component = base.Component as BindingManager;
-                component.RemoveControlActions(e.Component as Control);
+                component.ClearAllBindings(e.Component as Control);
             });
         }
         public void ChangeComponent(Action changeAction) {

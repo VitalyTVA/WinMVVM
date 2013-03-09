@@ -25,6 +25,7 @@ namespace WinMVVM.Tests {
                 SetBindingAction action = manager.GetActions().First();
                 Assert.That(action.Control, Is.EqualTo(form));
                 Assert.That(action.Property.Name, Is.EqualTo("Text"));
+                Assert.That(action.Property, Is.InstanceOf<StandardPropertyDescriptor>());
                 Assert.That(((Binding)action.Binding).Path, Is.EqualTo("StringProperty"));
 
                 manager.SetBinding(button, "Text", new Binding("StringProperty2"));
@@ -55,7 +56,7 @@ namespace WinMVVM.Tests {
                 manager.SetBinding(form, "Text", new Binding("StringProperty"));
                 manager.SetBinding(form, "Tag", new Binding("StringProperty"));
                 Assert.That(manager.GetActions().Count(), Is.EqualTo(3));
-                manager.RemoveControlActions(form);
+                manager.ClearAllBindings(form);
                 Assert.That(manager.GetActions().Count(), Is.EqualTo(1));
 
                 action = manager.GetActions().First();
@@ -64,7 +65,25 @@ namespace WinMVVM.Tests {
 
                 manager.SetBinding(form, TextProperty, new Binding("StringProperty"));
                 Assert.That(form.GetValue(TextProperty), Is.EqualTo("test"));
-                //Assert.That(manager.GetActions().Count(), Is.EqualTo(2));
+                Assert.That(manager.GetActions().Count(), Is.EqualTo(2));
+
+                action = manager.GetActions().ElementAt(1);
+                Assert.That(action.Control, Is.EqualTo(form));
+                Assert.That(action.Property.Name, Is.EqualTo("Text"));
+                Assert.That(action.Property, Is.InstanceOf<AttachedPropertyDescriptor<string>>());
+                Assert.That(((Binding)action.Binding).Path, Is.EqualTo("StringProperty"));
+
+                manager.ClearBinding(form, TextProperty);
+                Assert.That(form.GetValue(TextProperty), Is.EqualTo(null));
+                Assert.That(manager.GetActions().Count(), Is.EqualTo(1));
+                Assert.That(manager.GetActions().First().Property, Is.InstanceOf<StandardPropertyDescriptor>());
+
+                manager.SetBinding(button, TextProperty, new Binding("StringProperty2"));
+                Assert.That(button.GetValue(TextProperty), Is.EqualTo("test2"));
+                Assert.That(manager.GetActions().Count(), Is.EqualTo(2));
+
+                manager.ClearAllBindings(button);
+                Assert.That(manager.GetActions().Count(), Is.EqualTo(0));
             }
         }
         [Test]
@@ -89,14 +108,14 @@ namespace WinMVVM.Tests {
                     () => manager.Remove(null, "Text")
                 );
                 Assert.Throws<ArgumentNullException>(
-                    () => manager.Remove(form, null)
+                    () => manager.Remove(form, (string)null)
                 );
                 Assert.Throws<ArgumentException>(
                     () => manager.Remove(form, string.Empty)
                 );
 
                 Assert.Throws<ArgumentNullException>(
-                    () => manager.RemoveControlActions(null)
+                    () => manager.ClearAllBindings(null)
                 );
             }
         }
