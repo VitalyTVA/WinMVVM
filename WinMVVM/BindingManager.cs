@@ -55,7 +55,7 @@ namespace WinMVVM {
         public void RemoveControlActions(Control control) {
             Guard.ArgumentNotNull(control, "control");
             foreach(SetBindingAction action in GetActions().Where(action => object.Equals(action.Control, control)).ToArray()) {
-                Remove(action.Control, action.StringProperty);
+                Remove(action.Control, action.Property);
             }
         }
 

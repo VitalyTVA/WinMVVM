@@ -31,7 +31,7 @@ namespace WinMVVM.Design {
             CodeExpression controlExpression = base.SerializeToExpression(manager, action.Control);
             if(controlExpression == null)
                 return null;
-            CodeExpression[] parameters = new CodeExpression[] { controlExpression, new CodePrimitiveExpression(action.StringProperty), GetBindingCreateExpression(action.Binding) };
+            CodeExpression[] parameters = new CodeExpression[] { controlExpression, new CodePrimitiveExpression(action.Property), GetBindingCreateExpression(action.Binding) };
             CodeExpression managerReferenceExpression = base.GetExpression(manager, bindingManager);
             return new CodeMethodInvokeExpression(managerReferenceExpression, "SetBinding", parameters);
         }
