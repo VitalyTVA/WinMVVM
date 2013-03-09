@@ -12,6 +12,7 @@ namespace WinMVVM.Utils {
             return new AttachedPropertyDescriptor(property);
         }
         private readonly AttachedPropertyBase property;
+        internal AttachedPropertyBase Property { get { return property; } }
         AttachedPropertyDescriptor(AttachedPropertyBase property)
             : base(property.Name, property.PropertyType) {
                 this.property = property;

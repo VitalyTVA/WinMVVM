@@ -34,7 +34,7 @@ namespace WinMVVM {
         public override Type PropertyType { get { return typeof(T); } }
         private string name;
         readonly Type ownerType;
-        public Type OwnerType { get { return ownerType; } }
+        public override Type OwnerType { get { return ownerType; } }
         public override string Name { get { return name; } }
         public PropertyMetadata<T> Metadata { get; private set; }
         internal bool Inherits { get { return (Metadata.Options & PropertyMetadataOptions.Inherits) != 0; } }

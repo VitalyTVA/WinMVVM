@@ -32,12 +32,13 @@ namespace WinMVVM.Design {
             if(controlExpression == null)
                 return null;
 
-            CodePrimitiveExpression propertyExpression = null;
+            CodeExpression propertyExpression = null;
             if(action.Property is StandardPropertyDescriptor) {
                 propertyExpression = new CodePrimitiveExpression(action.Property.Name);
             } else {
-                //AttachedPropertyBase property = (())
-                //propertyExpression = new CodePrimitiveExpression(action.Property.Name);
+                AttachedPropertyBase property = ((AttachedPropertyDescriptor)action.Property).Property;
+
+                propertyExpression = new CodeFieldReferenceExpression(new CodeTypeReferenceExpression(property.OwnerType), property.Name + "Property");
             }
 
             CodeExpression[] parameters = new CodeExpression[] { controlExpression, propertyExpression, GetBindingCreateExpression(action.Binding) };
