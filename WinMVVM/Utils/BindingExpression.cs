@@ -10,7 +10,7 @@ namespace WinMVVM.Utils {
     class BindingExpression {
         public BindingExpressionKey Key { get; private set; }
         Control Control { get { return Key.Control; } }
-        PropertyDescriptor Property { get { return Key.property; } }
+        PropertyDescriptorBase Property { get { return Key.property; } }
         public BindingBase Binding { get; private set; }
         PropertyChangeListener listener;
         readonly PropertyEntry<object> propertyEntry;

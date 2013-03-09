@@ -7,42 +7,29 @@ using System.Windows.Forms;
 using WpfBinding = System.Windows.Data.Binding;
 
 namespace WinMVVM.Utils {
-    class AttachedPropertyDescriptor<T> : PropertyDescriptor {
+    class AttachedPropertyDescriptor<T> : PropertyDescriptorBase {
+        public static PropertyDescriptorBase FromAttachedProperty(AttachedProperty<T> property) {
+            return new AttachedPropertyDescriptor<T>(property);
+        }
         private readonly AttachedProperty<T> property;
-        public AttachedPropertyDescriptor(AttachedProperty<T> property)
-            : base(property.Name, null) {
+        AttachedPropertyDescriptor(AttachedProperty<T> property)
+            : base(property.Name, property.PropertyType) {
                 this.property = property;
             
         }
-        public override bool CanResetValue(object component) {
-            throw new NotImplementedException();
+        internal override object GetValue(Control control) {
+            return control.GetValue(property);
         }
 
-        public override Type ComponentType {
-            get { throw new NotImplementedException(); }
+        //public override Type PropertyType {
+        //    get { return typeof(T); } //TODO
+        //}
+
+        internal override void SetValue(Control control, object value) {
+            control.SetValue(property, (T)value);
         }
 
-        public override object GetValue(object component) {
-            return ((Control)component).GetValue(property);
-        }
-
-        public override bool IsReadOnly {
-            get { throw new NotImplementedException(); }
-        }
-
-        public override Type PropertyType {
-            get { return typeof(T); } //TODO
-        }
-
-        public override void ResetValue(object component) {
-            throw new NotImplementedException();
-        }
-
-        public override void SetValue(object component, object value) {
-            ((Control)component).SetValue(property, (T)value);
-        }
-
-        public override bool ShouldSerializeValue(object component) {
+        internal override void ResetValue(Control control) {
             throw new NotImplementedException();
         }
 

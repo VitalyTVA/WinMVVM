@@ -90,6 +90,7 @@
     <Compile Include="Utils\BindingExpression.cs" />
     <Compile Include="Utils\BindingExpressionKey.cs" />
     <Compile Include="Utils\MayBe.cs" />
+    <Compile Include="Utils\PropertyDescriptorBase.cs" />
     <Compile Include="Utils\PropertyEntry.cs" />
     <Compile Include="Tests\BindableBase.cs" />
     <Compile Include="Tests\BindingOperationsTests.cs" />
@@ -101,6 +102,7 @@
     <Compile Include="Utils\ExpressionHelper.cs" />
     <Compile Include="Utils\PropertyChangeListener.cs" />
     <Compile Include="Utils\SR.cs" />
+    <Compile Include="Utils\StandardPropertyDescriptor.cs" />
     <Compile Include="Utils\WeakReferenceComparer.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -11,8 +11,8 @@ namespace WinMVVM.Utils {
         //TODO clear expressions with dead references
         readonly WeakReference controlReference;
         public Control Control { get { return (Control)controlReference.Target; } }
-        public readonly PropertyDescriptor property;
-        public BindingExpressionKey(Control control, PropertyDescriptor property) {
+        public readonly PropertyDescriptorBase property;
+        public BindingExpressionKey(Control control, PropertyDescriptorBase property) {
             this.property = property;
             this.controlReference = new WeakReference(control);
 

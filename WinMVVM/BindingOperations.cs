@@ -13,16 +13,16 @@ namespace WinMVVM {
         public static void SetBinding<T>(this Control control, AttachedProperty<T> property, BindingBase binding) {
             ValidateAttachedPropertyParameters<T>(control, property);
             Guard.ArgumentNotNull(binding, "binding");
-            control.SetBindingCore(new AttachedPropertyDescriptor<T>(property), binding);
+            control.SetBindingCore(AttachedPropertyDescriptor<T>.FromAttachedProperty(property), binding);
         }
         public static void SetBinding<T>(this Control control, Expression<Func<T>> expression, BindingBase binding) {
             control.SetBinding(ExpressionHelper.GetPropertyName(expression), binding);
         }
         public static void SetBinding(this Control control, string propertyName, BindingBase binding) {
-            PropertyDescriptor property = ValidatePropertyNameParameters(control, propertyName);
+            PropertyDescriptorBase property = ValidatePropertyNameParameters(control, propertyName);
             control.SetBindingCore(property, binding);
         }
-        static void SetBindingCore(this Control control, PropertyDescriptor property, BindingBase binding) {
+        static void SetBindingCore(this Control control, PropertyDescriptorBase property, BindingBase binding) {
             Guard.ArgumentNotNull(binding, "binding");
 
             BindingExpressionKey key = new BindingExpressionKey(control, property);
@@ -31,16 +31,16 @@ namespace WinMVVM {
         }
         public static void ClearBinding<T>(this Control control, AttachedProperty<T> property) {
             ValidateAttachedPropertyParameters<T>(control, property);
-            control.ClearBindingCore(new AttachedPropertyDescriptor<T>(property));
+            control.ClearBindingCore(AttachedPropertyDescriptor<T>.FromAttachedProperty(property));
         }
         public static void ClearBinding(this Control control, string propertyName) {
-            PropertyDescriptor property = ValidatePropertyNameParameters(control, propertyName);
+            PropertyDescriptorBase property = ValidatePropertyNameParameters(control, propertyName);
             control.ClearBindingCore(property);
         }
         public static void ClearBinding<T>(this Control control, Expression<Func<T>> expression) {
             control.ClearBinding(ExpressionHelper.GetPropertyName(expression));
         }
-        static void ClearBindingCore(this Control control, PropertyDescriptor property) {
+        static void ClearBindingCore(this Control control, PropertyDescriptorBase property) {
             BindingExpressionKey key = new BindingExpressionKey(control, property);
 
             var propertyEntry = DataContextProvider.DataContextProperty.GetPropertyEntry(control);
@@ -52,15 +52,10 @@ namespace WinMVVM {
         //public static void ClearAllBinding(this Control control, string propertyName) { //TODO
         //}
 
-        static PropertyDescriptor GetProperty(Control control, string propertyName) {
-            return TypeDescriptor.GetProperties(control)[propertyName];
-        }
-        static PropertyDescriptor ValidatePropertyNameParameters(Control control, string propertyName) {
+        static PropertyDescriptorBase ValidatePropertyNameParameters(Control control, string propertyName) {
             Guard.ArgumentNotNull(control, "control");
             Guard.ArgumentInRange(!string.IsNullOrEmpty(propertyName), "propertyName");
-            PropertyDescriptor property = GetProperty(control, propertyName);
-            if(property == null)
-                Guard.ArgumentException("propertyName");
+            PropertyDescriptorBase property = StandardPropertyDescriptor.FromPropertyName(control, propertyName);
             return property;
         }
         private static void ValidateAttachedPropertyParameters<T>(Control control, AttachedProperty<T> property) {

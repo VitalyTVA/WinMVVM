@@ -115,16 +115,17 @@ namespace WinMVVM.Tests {
         }
         [Test]
         public void AttachedPropertyDescriptorTests() {
-            var pd1 = new AttachedPropertyDescriptor<string>(TextProperty);
-            var pd2 = new AttachedPropertyDescriptor<string>(TextProperty);
-            var pd3 = new AttachedPropertyDescriptor<object>(DataContextProvider.DataContextProperty);
+            PropertyDescriptorBase pd1 = AttachedPropertyDescriptor<string>.FromAttachedProperty(TextProperty);
+            PropertyDescriptorBase pd2 = AttachedPropertyDescriptor<string>.FromAttachedProperty(TextProperty);
+            PropertyDescriptorBase pd3 = AttachedPropertyDescriptor<object>.FromAttachedProperty(DataContextProvider.DataContextProperty);
             Assert.That(pd1.PropertyType, Is.EqualTo(typeof(string)));
             Assert.That(object.Equals(pd1, pd2), Is.True);
-            Assert.That(object.Equals(pd1.GetHashCode(), pd2.GetHashCode()), Is.True);//TODO - how does it works???
+            Assert.That(object.Equals(pd1.GetHashCode(), pd2.GetHashCode()), Is.True);
             Assert.That(object.Equals(pd1, pd3), Is.False);
-            Assert.That(object.Equals(pd1, TypeDescriptor.GetProperties(typeof(Button))["Text"]), Is.False);
-            //TODO - when setting bindings for simple and attached properties with same name, it works only because hascodes are differrent...
-            //Assert.That(object.Equals(TypeDescriptor.GetProperties(typeof(Button))["Text"], pd1), Is.False); 
+            using(Button button = new Button()) {
+                Assert.That(object.Equals(pd1, StandardPropertyDescriptor.FromPropertyName(button, "Text")), Is.False);
+                Assert.That(object.Equals(StandardPropertyDescriptor.FromPropertyName(button, "Text"), pd1), Is.False); 
+            }
         }
         [Test]
         public void SetSimpleBindingAfterSetDataContext() {
