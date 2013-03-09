@@ -28,13 +28,14 @@ namespace WinMVVM {
 
         public AttachedProperty(string name, Type ownerType, PropertyMetadata<T> metadata) {
             Metadata = metadata;
-            Name = name;
+            this.name = name;
             this.ownerType = ownerType;
         }
         public override Type PropertyType { get { return typeof(T); } }
+        private string name;
         readonly Type ownerType;
         public Type OwnerType { get { return ownerType; } }
-        public string Name { get; private set; }
+        public override string Name { get { return name; } }
         public PropertyMetadata<T> Metadata { get; private set; }
         internal bool Inherits { get { return (Metadata.Options & PropertyMetadataOptions.Inherits) != 0; } }
 
@@ -95,6 +96,14 @@ namespace WinMVVM {
             return new WeakReference(control);
         }
 
+
+        internal override object GetValueInternal(Control control) {
+            return GetValue(control);
+        }
+
+        internal override void SetValueInternal(Control control, object value) {
+            SetValue(control, (T)value);
+        }
     }
     //TODO - generic attached property
 }

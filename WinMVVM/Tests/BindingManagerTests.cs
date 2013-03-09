@@ -70,7 +70,7 @@ namespace WinMVVM.Tests {
                 action = manager.GetActions().ElementAt(1);
                 Assert.That(action.Control, Is.EqualTo(form));
                 Assert.That(action.Property.Name, Is.EqualTo("Text"));
-                Assert.That(action.Property, Is.InstanceOf<AttachedPropertyDescriptor<string>>());
+                Assert.That(action.Property, Is.InstanceOf<AttachedPropertyDescriptor>());
                 Assert.That(((Binding)action.Binding).Path, Is.EqualTo("StringProperty"));
 
                 manager.ClearBinding(form, TextProperty);

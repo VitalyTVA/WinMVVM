@@ -13,7 +13,7 @@ namespace WinMVVM {
         public static void SetBinding<T>(this Control control, AttachedProperty<T> property, BindingBase binding) {
             ValidateAttachedPropertyParameters<T>(control, property);
             Guard.ArgumentNotNull(binding, "binding");
-            control.SetBindingCore(AttachedPropertyDescriptor<T>.FromAttachedProperty(property), binding);
+            control.SetBindingCore(AttachedPropertyDescriptor.FromAttachedProperty(property), binding);
         }
         public static void SetBinding<T>(this Control control, Expression<Func<T>> expression, BindingBase binding) {
             control.SetBinding(ExpressionHelper.GetPropertyName(expression), binding);
@@ -31,7 +31,7 @@ namespace WinMVVM {
         }
         public static void ClearBinding<T>(this Control control, AttachedProperty<T> property) {
             ValidateAttachedPropertyParameters<T>(control, property);
-            control.ClearBindingCore(AttachedPropertyDescriptor<T>.FromAttachedProperty(property));
+            control.ClearBindingCore(AttachedPropertyDescriptor.FromAttachedProperty(property));
         }
         public static void ClearBinding(this Control control, string propertyName) {
             PropertyDescriptorBase property = ValidatePropertyNameParameters(control, propertyName);

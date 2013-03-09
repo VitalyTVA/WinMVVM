@@ -11,7 +11,9 @@ using WinMVVM.Utils;
 namespace WinMVVM {
     public abstract class AttachedPropertyBase {
         public abstract Type PropertyType { get; }
+        public abstract string Name { get; }
         internal AttachedPropertyBase() { }
-
+        internal abstract object GetValueInternal(Control control);
+        internal abstract void SetValueInternal(Control control, object value);
     }
 }

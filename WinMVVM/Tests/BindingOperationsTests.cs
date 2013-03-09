@@ -115,9 +115,9 @@ namespace WinMVVM.Tests {
         }
         [Test]
         public void AttachedPropertyDescriptorTests() {
-            PropertyDescriptorBase pd1 = AttachedPropertyDescriptor<string>.FromAttachedProperty(TextProperty);
-            PropertyDescriptorBase pd2 = AttachedPropertyDescriptor<string>.FromAttachedProperty(TextProperty);
-            PropertyDescriptorBase pd3 = AttachedPropertyDescriptor<object>.FromAttachedProperty(DataContextProvider.DataContextProperty);
+            PropertyDescriptorBase pd1 = AttachedPropertyDescriptor.FromAttachedProperty(TextProperty);
+            PropertyDescriptorBase pd2 = AttachedPropertyDescriptor.FromAttachedProperty(TextProperty);
+            PropertyDescriptorBase pd3 = AttachedPropertyDescriptor.FromAttachedProperty(DataContextProvider.DataContextProperty);
             Assert.That(pd1.PropertyType, Is.EqualTo(typeof(string)));
             Assert.That(object.Equals(pd1, pd2), Is.True);
             Assert.That(object.Equals(pd1.GetHashCode(), pd2.GetHashCode()), Is.True);

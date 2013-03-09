@@ -7,18 +7,18 @@ using System.Windows.Forms;
 using WpfBinding = System.Windows.Data.Binding;
 
 namespace WinMVVM.Utils {
-    class AttachedPropertyDescriptor<T> : PropertyDescriptorBase {
-        public static PropertyDescriptorBase FromAttachedProperty(AttachedProperty<T> property) {
-            return new AttachedPropertyDescriptor<T>(property);
+    class AttachedPropertyDescriptor : PropertyDescriptorBase {
+        public static PropertyDescriptorBase FromAttachedProperty(AttachedPropertyBase property) {
+            return new AttachedPropertyDescriptor(property);
         }
-        private readonly AttachedProperty<T> property;
-        AttachedPropertyDescriptor(AttachedProperty<T> property)
+        private readonly AttachedPropertyBase property;
+        AttachedPropertyDescriptor(AttachedPropertyBase property)
             : base(property.Name, property.PropertyType) {
                 this.property = property;
             
         }
         internal override object GetValue(Control control) {
-            return control.GetValue(property);
+            return property.GetValueInternal(control);
         }
 
         //public override Type PropertyType {
@@ -26,7 +26,7 @@ namespace WinMVVM.Utils {
         //}
 
         internal override void SetValue(Control control, object value) {
-            control.SetValue(property, (T)value);
+            property.SetValueInternal(control, value);
         }
 
         internal override void ResetValue(Control control) {
@@ -37,7 +37,7 @@ namespace WinMVVM.Utils {
             return property.GetHashCode();
         }
         public override bool Equals(object obj) {
-            var other = obj as AttachedPropertyDescriptor<T>;
+            var other = obj as AttachedPropertyDescriptor;
             return other != null && other.property == property;
         }
     }

@@ -65,8 +65,7 @@ namespace WinMVVM {
         }
 
         static PropertyDescriptorBase GetPropertyDescriptor(AttachedPropertyBase property) {
-            MethodInfo createPropertyMethod = typeof(AttachedPropertyDescriptor<>).MakeGenericType(property.PropertyType).GetMethod("FromAttachedProperty", BindingFlags.Public | BindingFlags.Static); //TODO use lambda
-            return (PropertyDescriptorBase)createPropertyMethod.Invoke(null, new[] { property });
+            return AttachedPropertyDescriptor.FromAttachedProperty(property);
         }
         void RemoveCore(Control control, PropertyDescriptorBase property) {
             BindingOperations.ClearBindingCore(control, property);
