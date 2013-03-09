@@ -10,6 +10,7 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace WinMVVM.Design {
+
     public class BindingManagerDesigner : System.ComponentModel.Design.ComponentDesigner {
         class BindingManagerActionList : DesignerActionList {
             readonly BindingManagerDesigner designer;
@@ -48,6 +49,8 @@ namespace WinMVVM.Design {
                 form.ShowDialog(NativeWindow.FromHandle(NativeHelper.GetActiveWindow()));
             }
         }
+        DataContextExtender extender;
+        IExtenderProviderService localExtenderServiceReference;
         DesignerActionListCollection actionLists;
         public override DesignerActionListCollection ActionLists {
             get {
@@ -64,6 +67,10 @@ namespace WinMVVM.Design {
                 if(service != null) {
                     service.ComponentRemoving -= new ComponentEventHandler(this.OnComponentRemoving);
                 }
+                if(localExtenderServiceReference != null) {
+                    localExtenderServiceReference.RemoveExtenderProvider(extender);
+                    localExtenderServiceReference = null;
+                } 
             }
             base.Dispose(disposing);
         }
@@ -73,11 +80,20 @@ namespace WinMVVM.Design {
             if(service != null) {
                 service.ComponentRemoving += new ComponentEventHandler(this.OnComponentRemoving);
             }
+
+            IExtenderProviderService extenderService = (IExtenderProviderService)component.Site.GetService(typeof(IExtenderProviderService));
+            if(extenderService != null) {
+                extender = new DataContextExtender();
+                extenderService.AddExtenderProvider(extender);
+                localExtenderServiceReference = extenderService;
+            }
+
         }
         private void OnComponentRemoving(object sender, ComponentEventArgs e) {
             ChangeComponent(() => {
                 BindingManager component = base.Component as BindingManager;
-                component.ClearAllBindings(e.Component as Control);
+                if(component != null && e.Component is Control)
+                    component.ClearAllBindings(e.Component as Control);
             });
         }
         public void ChangeComponent(Action changeAction) {
