@@ -7,7 +7,7 @@ using System.Windows.Forms;
 
 namespace WinMVVM.Tests {
     [TestFixture]
-    public class BindingManagerTest {
+    public class BindingManagerTests {
         [Test]
         public void AddRemoveBindings() {
             using(var form = new Form()) {
