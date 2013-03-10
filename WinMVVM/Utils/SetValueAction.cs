@@ -6,14 +6,13 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Windows;
 using System.Windows.Forms;
-using WinMVVM.Utils;
 
 namespace WinMVVM.Utils {
-    internal class SetBindingAction : BindingManagerActionBase {
-        public SetBindingAction(Control control, PropertyDescriptorBase property, BindingBase binding) 
+    internal class SetValueAction : BindingManagerActionBase {
+        public SetValueAction(Control control, PropertyDescriptorBase property, object value)
             : base(control, property) {
-            Binding = binding;
+            Value = value;
         }
-        public BindingBase Binding { get; private set; }
+        public object Value { get; private set; }
     }
 }

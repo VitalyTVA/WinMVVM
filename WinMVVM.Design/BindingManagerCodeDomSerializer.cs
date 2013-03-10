@@ -19,7 +19,7 @@ namespace WinMVVM.Design {
                 CodeStatementCollection statements = (CodeStatementCollection)codeObject;
                 BindingManager bindingManager = (BindingManager)value;
 
-                foreach(var action in bindingManager.GetActions()) {
+                foreach(var action in bindingManager.GetBindingActions()) {
                     CodeMethodInvokeExpression methodInvoke = GetSetBindingExpression(manager, bindingManager, action);
                     statements.Add(methodInvoke);
                 }

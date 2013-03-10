@@ -63,7 +63,7 @@ namespace WinMVVM.Design {
 
             tbPath.Text = null;
             if(SelectedProperty != null) { //TODO - use MayBe
-                SetBindingAction action = Manager.Find(SelectedComponent, SelectedProperty);
+                SetBindingAction action = Manager.FindAction(SelectedComponent, SelectedProperty) as SetBindingAction;
                 if(action != null) {
                     Binding binding = action.Binding as Binding;
                     if(binding != null)
@@ -83,7 +83,7 @@ namespace WinMVVM.Design {
             if(SelectedComponent != null) {
                 IEnumerable<PropertyDescriptorBase> orderedProperties = GetProperties(SelectedComponent);
                 foreach(PropertyDescriptorBase property in orderedProperties) {
-                    SetBindingAction existingAction = Manager.Find(SelectedComponent, property);
+                    SetBindingAction existingAction = Manager.FindAction(SelectedComponent, property) as SetBindingAction;
                     if(existingAction == null)
                         lbUnboundProperties.Items.Add(property);
                     else

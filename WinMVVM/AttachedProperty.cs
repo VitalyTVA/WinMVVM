@@ -55,7 +55,7 @@ namespace WinMVVM {
                 return false;
             return entry.IsValueSet && entry.IsLocalValue;
         }
-        internal void ClearValue(Control control) {
+        internal override void ClearValue(Control control) {
             Guard.ArgumentNotNull(control, "control");
             ClearValueCore(control, true);
             if(Inherits && control.Parent != null) {

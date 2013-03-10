@@ -19,11 +19,14 @@ namespace WinMVVM.Design {
         }
         [Category("Attached properties")]
         [TypeConverter(typeof(DataContextConverter))]
-        public object GetDataContext(Control component) {
-            return DataContextProvider.GetDataContext(component);
+        public object GetDataContext(Control control) {
+            return DataContextProvider.GetDataContext(control);
         }
-        public void SetDataContext(Control component, object value) {
-            DataContextProvider.SetDataContext(component, value);
+        public void SetDataContext(Control control, object value) {
+            DataContextProvider.SetDataContext(control, value);
+        }
+        public void ResetDataContext(Control control) {
+            DataContextProvider.ClearDataContext(control);
         }
     }
 }
