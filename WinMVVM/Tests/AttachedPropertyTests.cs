@@ -103,6 +103,23 @@ namespace WinMVVM.Tests {
                 Assert.That(TestPropertyContainer.DefaultValueChangedArgs.OldValue, Is.EqualTo("button"));
             }
         }
+        [Test]
+        public void ClearValueOnBoundProperty() {
+            using(var button = new Button()) {
+                button.SetValue(DataContextProvider.DataContextProperty, "test");
+                button.SetBinding(DataContextProvider.DataContextProperty, new Binding());
+                button.ClearValue(DataContextProvider.DataContextProperty);
+                Assert.That(button.GetDataContext(), Is.Null);
+            }
+        }
+        [Test]
+        public void ClearValueOnBoundProperty2() {
+            using(var button = new Button()) {
+                button.SetBinding(TestPropertyContainer.DefaultValueProperty, new Binding());
+                button.ClearValue(TestPropertyContainer.DefaultValueProperty);
+                Assert.That(button.GetValue(TestPropertyContainer.DefaultValueProperty), Is.EqualTo("d"));
+            }
+        }
     }
     public static class TestPropertyContainer {
         public static readonly AttachedProperty<object> TestProperty = AttachedProperty<object>.Register(() => TestProperty, new PropertyMetadata<object>(null, null, PropertyMetadataOptions.Inherits));

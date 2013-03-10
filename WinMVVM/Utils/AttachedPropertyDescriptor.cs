@@ -31,7 +31,7 @@ namespace WinMVVM.Utils {
         }
 
         internal override void ResetValue(Control control) {
-            throw new NotImplementedException();
+            property.ClearValue(control);
         }
 
         public override int GetHashCode() {

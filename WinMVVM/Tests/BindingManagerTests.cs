@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
@@ -121,6 +122,48 @@ namespace WinMVVM.Tests {
                 Assert.That(manager.GetBindingActions().Count(), Is.EqualTo(0));
                 Assert.That(manager.GetValueActions().Count(), Is.EqualTo(0));
                 Assert.That(button.GetDataContext(), Is.Null);
+            }
+        }
+        [Test]
+        public void UndoSetBinding() {
+            using(var form = new Form()) {
+                //form initialized
+                BindingManager manager = new BindingManager();
+                ((ISupportInitialize)manager).BeginInit();
+                ((ISupportInitialize)manager).EndInit();
+                //binding created with wizard
+                manager.SetBinding(form, DataContextProvider.DataContextProperty, new Binding());
+                //deserialization on undo
+                ((ISupportInitialize)manager).BeginInit();
+                ((ISupportInitialize)manager).EndInit();
+
+                Assert.That(manager.GetBindingActions().Count(), Is.EqualTo(0));
+                Assert.That(manager.GetValueActions().Count(), Is.EqualTo(0));
+            }
+        }
+        [Test]
+        public void UndoSetBindingAndValue() {
+            using(var form = new Form()) {
+                //form initialized
+                BindingManager manager = new BindingManager();
+                ((ISupportInitialize)manager).BeginInit();
+                ((ISupportInitialize)manager).EndInit();
+                //binding created with wizard
+                manager.SetBinding(form, TextProperty, new Binding());
+                //value set with property grid
+                manager.SetValue(form, TextProperty, "test");
+                //deserialization on undo
+                ((ISupportInitialize)manager).BeginInit();
+                manager.SetBinding(form, TextProperty, new Binding());
+                ((ISupportInitialize)manager).EndInit();
+                //undo from property grid
+                manager.ClearValue(form, TextProperty);
+
+                Assert.That(manager.GetBindingActions().Count(), Is.EqualTo(1));
+                Assert.That(manager.GetValueActions().Count(), Is.EqualTo(0));
+
+                form.SetDataContext("Test");
+                Assert.That(form.GetValue(TextProperty), Is.EqualTo("Test"));
             }
         }
         [Test]

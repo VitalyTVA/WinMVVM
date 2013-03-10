@@ -25,6 +25,7 @@ namespace WinMVVM {
             Actions = new SetBindingActionCollection();
         }
         void ISupportInitialize.BeginInit() {
+            Actions.Clear();
         }
         void ISupportInitialize.EndInit() {
         }
@@ -37,7 +38,10 @@ namespace WinMVVM {
         public void ClearValue(Control control, AttachedPropertyBase property) {
             ValidateAttachedPropertyArguments(control, property);
             property.ClearValue(control);
-            RemoveAction(control, AttachedPropertyDescriptor.FromAttachedProperty(property));
+            PropertyDescriptorBase propertyDescriptor = AttachedPropertyDescriptor.FromAttachedProperty(property);
+            if(FindAction(control, propertyDescriptor) is SetBindingAction)
+                return;
+            RemoveAction(control, propertyDescriptor);
         }
 
         public void ClearBinding(Control control, string propertyName) {
