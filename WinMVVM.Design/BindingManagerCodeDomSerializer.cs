@@ -19,6 +19,12 @@ namespace WinMVVM.Design {
                 CodeStatementCollection statements = (CodeStatementCollection)codeObject;
                 BindingManager bindingManager = (BindingManager)value;
 
+
+                foreach(var action in bindingManager.GetValueActions()) {
+                    CodeMethodInvokeExpression methodInvoke = GetSetValueExpression(manager, bindingManager, action);
+                    statements.Add(methodInvoke);
+                }
+
                 foreach(var action in bindingManager.GetBindingActions()) {
                     CodeMethodInvokeExpression methodInvoke = GetSetBindingExpression(manager, bindingManager, action);
                     statements.Add(methodInvoke);
@@ -27,6 +33,24 @@ namespace WinMVVM.Design {
             return codeObject;
         }
 
+        CodeMethodInvokeExpression GetSetValueExpression(IDesignerSerializationManager manager, BindingManager bindingManager, SetValueAction action) {
+            CodeExpression controlExpression = base.SerializeToExpression(manager, action.Control);
+            if(controlExpression == null)
+                return null;
+
+            CodeExpression propertyExpression = null;
+            if(action.Property is StandardPropertyDescriptor) {
+                throw new InvalidOperationException();
+            } else {
+                AttachedPropertyBase property = ((AttachedPropertyDescriptor)action.Property).Property;
+
+                propertyExpression = new CodeFieldReferenceExpression(new CodeTypeReferenceExpression(property.OwnerType), property.Name + "Property");
+            }
+
+            CodeExpression[] parameters = new CodeExpression[] { controlExpression, propertyExpression, GetValueExpression(action.Value) };
+            CodeExpression managerReferenceExpression = base.GetExpression(manager, bindingManager);
+            return new CodeMethodInvokeExpression(managerReferenceExpression, "SetValue", parameters);
+        }
         CodeMethodInvokeExpression GetSetBindingExpression(IDesignerSerializationManager manager, BindingManager bindingManager, SetBindingAction action) {
             CodeExpression controlExpression = base.SerializeToExpression(manager, action.Control);
             if(controlExpression == null)
@@ -45,10 +69,14 @@ namespace WinMVVM.Design {
             CodeExpression managerReferenceExpression = base.GetExpression(manager, bindingManager);
             return new CodeMethodInvokeExpression(managerReferenceExpression, "SetBinding", parameters);
         }
-        static CodeObjectCreateExpression GetBindingCreateExpression(BindingBase binding) {
-            return  new CodeObjectCreateExpression(typeof(Binding), new CodeExpression[] { new CodePrimitiveExpression(((Binding)binding).Path) });
+        static CodeExpression GetBindingCreateExpression(BindingBase binding) {
+            return new CodeObjectCreateExpression(typeof(Binding), new CodeExpression[] { new CodePrimitiveExpression(((Binding)binding).Path) });
         }
-
+        static CodeExpression GetValueExpression(object value) {
+            if(value == null)
+                return new CodePrimitiveExpression(null);
+            return new CodeObjectCreateExpression(value.GetType(), new CodeExpression[] { });
+        }
 
     }
 }

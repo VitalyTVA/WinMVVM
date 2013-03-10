@@ -83,7 +83,7 @@ namespace WinMVVM.Design {
 
             IExtenderProviderService extenderService = (IExtenderProviderService)component.Site.GetService(typeof(IExtenderProviderService));
             if(extenderService != null) {
-                extender = new DataContextExtender();
+                extender = new DataContextExtender(this);
                 extenderService.AddExtenderProvider(extender);
                 localExtenderServiceReference = extenderService;
             }
