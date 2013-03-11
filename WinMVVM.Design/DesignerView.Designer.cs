@@ -35,6 +35,7 @@
             this.tbPath = new System.Windows.Forms.TextBox();
             this.bBind = new System.Windows.Forms.Button();
             this.bClear = new System.Windows.Forms.Button();
+            this.tvDataContext = new System.Windows.Forms.TreeView();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.SuspendLayout();
@@ -147,10 +148,18 @@
             this.bClear.Text = "Clear";
             this.bClear.UseVisualStyleBackColor = true;
             // 
+            // tvDataContext
+            // 
+            this.tvDataContext.Location = new System.Drawing.Point(456, 76);
+            this.tvDataContext.Name = "tvDataContext";
+            this.tvDataContext.Size = new System.Drawing.Size(179, 231);
+            this.tvDataContext.TabIndex = 9;
+            // 
             // DesignerView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.tvDataContext);
             this.Controls.Add(this.bClear);
             this.Controls.Add(this.bBind);
             this.Controls.Add(this.tbPath);
@@ -183,5 +192,6 @@
         private System.Windows.Forms.TextBox tbPath;
         private System.Windows.Forms.Button bBind;
         private System.Windows.Forms.Button bClear;
+        private System.Windows.Forms.TreeView tvDataContext;
     }
 }

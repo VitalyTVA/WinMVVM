@@ -28,10 +28,23 @@ namespace WinMVVM.Design {
             lbComponentList.SelectedIndexChanged += lbComponentList_SelectedIndexChanged;
             lbBoundProperties.SelectedIndexChanged += lbUnboundProperties_SelectedIndexChanged;
             lbUnboundProperties.SelectedIndexChanged += lbUnboundProperties_SelectedIndexChanged;
+            tvDataContext.AfterSelect += tvDataContext_AfterSelect;
             bClear.Click += bClear_Click;
             bBind.Click += bBind_Click;
             lbBoundProperties.DisplayMember = "Name";
             lbUnboundProperties.DisplayMember = "Name";
+        }
+
+        void tvDataContext_AfterSelect(object sender, TreeViewEventArgs e) {
+            if(e.Node != null) {
+                tbPath.Text = GetNodePath(e.Node);
+            }
+        }
+        string GetNodePath(TreeNode node) {
+            if(node == null)
+                return string.Empty;
+            string parentPath = GetNodePath(node.Parent);
+            return (string.IsNullOrEmpty(parentPath) ? string.Empty : parentPath + ".") + node.Text;
         }
 
         void bBind_Click(object sender, EventArgs e) {
@@ -61,7 +74,7 @@ namespace WinMVVM.Design {
                 lbUnboundProperties.SelectedItem = null;
             }
 
-            tbPath.Text = null;
+            ClearCurrentBindingInfo();
             if(SelectedProperty != null) { //TODO - use MayBe
                 SetBindingAction action = Manager.FindAction(SelectedComponent, SelectedProperty) as SetBindingAction;
                 if(action != null) {
@@ -69,7 +82,22 @@ namespace WinMVVM.Design {
                     if(binding != null)
                         tbPath.Text = binding.Path;
                 }
+                object dataContext = SelectedComponent.GetDataContext();
+                if(dataContext != null) {
+                    PoplateNodes(tvDataContext.Nodes, dataContext.GetType());
+                }
             }
+        }
+        void PoplateNodes(TreeNodeCollection nodes, Type type) {
+            foreach(PropertyDescriptor property in TypeDescriptor.GetProperties(type)) {
+                TreeNode node = new TreeNode(property.Name);
+                PoplateNodes(node.Nodes, property.PropertyType);
+                nodes.Add(node);
+            }
+        }
+        void ClearCurrentBindingInfo() {
+            tbPath.Text = null;
+            tvDataContext.Nodes.Clear();
         }
         void lbComponentList_SelectedIndexChanged(object sender, EventArgs e) {
 
@@ -79,7 +107,7 @@ namespace WinMVVM.Design {
         void RepopulateProperties() {
             lbUnboundProperties.Items.Clear();
             lbBoundProperties.Items.Clear();
-            tbPath.Text = null;
+            ClearCurrentBindingInfo();
             if(SelectedComponent != null) {
                 IEnumerable<PropertyDescriptorBase> orderedProperties = GetProperties(SelectedComponent);
                 foreach(PropertyDescriptorBase property in orderedProperties) {
