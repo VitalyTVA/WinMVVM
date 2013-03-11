@@ -28,6 +28,9 @@ namespace WinMVVM.Tests {
             Assert.Throws<ArgumentException>(() => {
                 ExpressionHelper.GetPropertyName(() => viewModel.NestedViewModel.NestedStringProperty);
             });
+
+            Assert.That(ExpressionHelper.GetPropertyName<object>(() => viewModel.StringProperty), Is.EqualTo("StringProperty"));
+            Assert.That(ExpressionHelper.GetPropertyName<object>(() => viewModel.IntProperty), Is.EqualTo("IntProperty"));
         }
 
         [Test]

@@ -405,6 +405,20 @@ namespace WinMVVM.Tests {
                 Assert.That(button.Text, Is.EqualTo("NestedStringProperty"));
             }
         }
+        [Test]
+        public void ConvertToTargetPropertyType() {
+            var viewModel = new TestViewModel() { IntProperty = 9, DoubleProperty = 153.2 };
+            using(var button = new Button()) {
+                button.SetDataContext(viewModel);
+                button.SetBinding(() => button.Text, new Binding(() => viewModel.IntProperty));
+                Assert.That(button.Text, Is.EqualTo("9"));
+                viewModel.IntProperty = 13;
+                Assert.That(button.Text, Is.EqualTo("13"));
+
+                button.SetBinding(() => button.TabIndex, new Binding(() => viewModel.DoubleProperty));
+                Assert.That(button.TabIndex, Is.EqualTo(153));
+            }
+        }
         //TODO test when update comes to collected control
     }
 }

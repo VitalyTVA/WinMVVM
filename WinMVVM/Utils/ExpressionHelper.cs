@@ -40,7 +40,11 @@ namespace WinMVVM.Utils {
         }
         static MemberExpression GetMemberExpression<T>(Expression<Func<T>> expression) {
             Guard.ArgumentNotNull(expression, "expression");
-            MemberExpression memberExpression = expression.Body as MemberExpression;
+            Expression body = expression.Body;
+            if(body is UnaryExpression) {
+                body = ((UnaryExpression)body).Operand;
+            }
+            MemberExpression memberExpression = body as MemberExpression;
             if(memberExpression == null) {
                 Guard.ArgumentException("expression");
             }

@@ -35,6 +35,19 @@ namespace WinMVVM.Tests {
                 return testCommand;
             }
         }
+
+
+        int intProperty;
+        public int IntProperty {
+            get { return intProperty; }
+            set { SetProperty(ref intProperty, value, () => IntProperty); }
+        }
+
+        double doubleProperty;
+        public double DoubleProperty {
+            get { return doubleProperty; }
+            set { SetProperty(ref doubleProperty, value, () => DoubleProperty); }
+        }
         
     }
     public class NestedTestViewModel : BindableBase {

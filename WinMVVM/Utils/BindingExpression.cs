@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Forms;
 using WpfBinding = System.Windows.Data.Binding;
@@ -12,7 +13,7 @@ namespace WinMVVM.Utils {
         Control Control { get { return Key.Control; } }
         PropertyDescriptorBase Property { get { return Key.property; } }
         public BindingBase Binding { get; private set; }
-        PropertyChangeListener listener;
+        IPropertyChangeListener listener;
         readonly PropertyEntry<object> propertyEntry;
         public BindingExpression(BindingExpressionKey key, BindingBase binding, PropertyEntry<object> propertyEntry) {
             this.propertyEntry = propertyEntry;
@@ -22,7 +23,9 @@ namespace WinMVVM.Utils {
 
             if(Property == null)
                 Guard.ArgumentException("propertyName");
-            listener = PropertyChangeListener.Create(wpfBinding, UpdateTargetProperty, Property.GetValue(Control));
+            MethodInfo createMethod = typeof(PropertyChangeListener<>).MakeGenericType(key.property.PropertyType).GetMethod("Create", BindingFlags.Static | BindingFlags.Public);
+
+            listener = (IPropertyChangeListener)createMethod.Invoke(null, new object[] { wpfBinding, new Action<object>(UpdateTargetProperty), Property.GetValue(Control) });
         }
 
         void UpdateTargetProperty(object value) {
