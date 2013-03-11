@@ -10,6 +10,7 @@ namespace WinMVVM.Tests {
         //TODO bind attached properties...
         [Test]
         public void AssignCommandToButton() {
+            CommandProvider.OnClickCount = 0;
             TestViewModel viewModel = new TestViewModel();
             using(var button = new Button()) {
                 button.SetCommand(viewModel.TestCommand);
@@ -17,12 +18,28 @@ namespace WinMVVM.Tests {
 
                 button.PerformClick();
                 Assert.That(viewModel.TestCommandExecuteCount, Is.EqualTo(1));
+                Assert.That(viewModel.ExecuteParameter, Is.Null);
+                Assert.That(viewModel.CanExecuteParameter, Is.Null);
                 Assert.That(CommandProvider.OnClickCount, Is.EqualTo(1));
 
                 button.SetCommand(null);
                 button.PerformClick();
                 Assert.That(viewModel.TestCommandExecuteCount, Is.EqualTo(1));
                 Assert.That(CommandProvider.OnClickCount, Is.EqualTo(1));
+
+                viewModel.CanExecuteTestCommand = false;
+                button.SetCommand(viewModel.TestCommand);
+                button.PerformClick();
+                Assert.That(viewModel.TestCommandExecuteCount, Is.EqualTo(1));
+                Assert.That(CommandProvider.OnClickCount, Is.EqualTo(2));
+
+                viewModel.CanExecuteTestCommand = true;
+                button.SetCommandParameter("param");
+                button.PerformClick();
+                Assert.That(viewModel.TestCommandExecuteCount, Is.EqualTo(2));
+                Assert.That(viewModel.ExecuteParameter, Is.EqualTo("param"));
+                Assert.That(viewModel.CanExecuteParameter, Is.EqualTo("param"));
+                Assert.That(CommandProvider.OnClickCount, Is.EqualTo(3));
             }
         }
         [Test]

@@ -26,11 +26,20 @@ namespace WinMVVM.Tests {
         }
 
         public int TestCommandExecuteCount { get; private set; }
+        public object ExecuteParameter { get; private set; }
+        public object CanExecuteParameter { get; private set; }
+        public bool CanExecuteTestCommand { get; set; }
         ICommand testCommand;
         public ICommand TestCommand {
             get {
                 if(testCommand == null) {
-                    testCommand = new DelegateCommand<object>(o => { TestCommandExecuteCount++; });
+                    testCommand = new DelegateCommand<object>(o => {
+                        ExecuteParameter = o;
+                        TestCommandExecuteCount++; 
+                    }, o => {
+                        CanExecuteParameter = o;
+                        return CanExecuteTestCommand; 
+                    });
                 }
                 return testCommand;
             }
@@ -47,6 +56,10 @@ namespace WinMVVM.Tests {
         public double DoubleProperty {
             get { return doubleProperty; }
             set { SetProperty(ref doubleProperty, value, () => DoubleProperty); }
+        }
+
+        public TestViewModel() {
+            CanExecuteTestCommand = true;
         }
         
     }
