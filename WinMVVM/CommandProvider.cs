@@ -9,18 +9,6 @@ using WinMVVM.Utils;
 
 namespace WinMVVM {
     public static class CommandProvider {
-        internal class CanExecuteChangedHandler {
-            readonly WeakReference buttonReference;
-            public CanExecuteChangedHandler(Button button) {
-                this.buttonReference = new WeakReference(button);
-            }
-            internal void OnCanExecuteChanged(object sender, EventArgs e) {
-                var button = buttonReference.Target as Button;
-                if(button != null)
-                    UpdateButtonEnabled(button, button.GetCommand(), button.GetCommandParameter());
-            }
-
-        }
 #if DEBUG
         internal 
 #endif
@@ -50,13 +38,13 @@ namespace WinMVVM {
             button.Click -= OnClick;
             if(e.OldValue != null) {
                 var handler = button.GetValue(HandlerProperty);
-                e.OldValue.CanExecuteChanged -= handler.OnCanExecuteChanged;
+                e.OldValue.CanExecuteChanged -= handler.Handler;
                 button.ClearValue(HandlerProperty);
             }
             if(e.NewValue != null) {
                 button.Click += OnClick;
-                var handler = new CanExecuteChangedHandler(button);
-                e.NewValue.CanExecuteChanged += handler.OnCanExecuteChanged;
+                var handler = new CanExecuteChangedHandler(button, (b, o, ea) => UpdateButtonEnabled(b, b.GetCommand(), b.GetCommandParameter()));
+                e.NewValue.CanExecuteChanged += handler.Handler;
                 button.SetValue(HandlerProperty, handler);
             }
         }

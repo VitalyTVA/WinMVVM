@@ -81,6 +81,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PropertyMetadata.cs" />
     <Compile Include="PropertyMetadataOptions.cs" />
+    <Compile Include="Utils\CanExecuteChangedHandler.cs" />
+    <Compile Include="Utils\IWeakEventHandler.cs" />
     <Compile Include="Utils\SetBindingAction.cs" />
     <Compile Include="Tests\AttachedPropertyTests.cs" />
     <Compile Include="Tests\CommandProviderTests.cs" />
@@ -105,6 +107,7 @@
     <Compile Include="Utils\SetValueAction.cs" />
     <Compile Include="Utils\SR.cs" />
     <Compile Include="Utils\StandardPropertyDescriptor.cs" />
+    <Compile Include="Utils\WeakEventHandler.cs" />
     <Compile Include="Utils\WeakReferenceComparer.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
