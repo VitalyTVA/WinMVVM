@@ -56,7 +56,9 @@ namespace WinMVVM.Tests {
             WeakReference reference = CreateButtonAndAssignCommand(viewModel.TestCommand);
             TestUtils.GarbageCollect();
             Assert.That(reference.IsAlive, Is.False);
+            Assert.That(viewModel.TestCommand.CanExecuteChangedSubscribeCount, Is.EqualTo(1));
             viewModel.TestCommand.RaiseCanExecuteChanged();
+            Assert.That(viewModel.TestCommand.CanExecuteChangedSubscribeCount, Is.EqualTo(0));
         }
 
         WeakReference CreateButtonAndAssignCommand(ICommand command) {
