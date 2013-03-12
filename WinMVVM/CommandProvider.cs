@@ -26,14 +26,18 @@ namespace WinMVVM {
         }
 
         static void OnCommandChanged(Control sender, AttachedPropertyChangedEventArgs<ICommand> e) {
-            Button b = sender as Button;
-            if(b == null)
+            Button button = sender as Button;
+            if(button == null)
                 return;
-            b.Click -= OnClick;
+            UpdateButtonEnabled(button, e.NewValue, GetCommandParameter(button));
+            button.Click -= OnClick;
             if(e.NewValue != null)
-                b.Click += OnClick;
+                button.Click += OnClick;
         }
         private static void OnCommandParameterChanged(Control sender, AttachedPropertyChangedEventArgs<object> e) {
+            var button = sender as Button;
+            if(button != null)
+                UpdateButtonEnabled(button, GetCommand(button), e.NewValue);
         }
 
 #if DEBUG
@@ -43,11 +47,14 @@ namespace WinMVVM {
 #if DEBUG
             OnClickCount++;
 #endif
-            Control control = (Control)sender;
+            Button control = (Button)sender;
             ICommand command = GetCommand(control);
             object parameter = GetCommandParameter(control);
             if(command != null && command.CanExecute(parameter))
                 command.Execute(parameter);
+        }
+        static void UpdateButtonEnabled(Button button, ICommand command, object commandParameter) {
+            button.Enabled = command != null ? command.CanExecute(commandParameter) : true;
         }
     }
 }

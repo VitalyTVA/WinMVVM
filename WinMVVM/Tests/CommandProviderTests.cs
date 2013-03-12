@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using System.Windows.Input;
 
 namespace WinMVVM.Tests {
     [TestFixture]
@@ -31,7 +32,7 @@ namespace WinMVVM.Tests {
                 button.SetCommand(viewModel.TestCommand);
                 button.PerformClick();
                 Assert.That(viewModel.TestCommandExecuteCount, Is.EqualTo(1));
-                Assert.That(CommandProvider.OnClickCount, Is.EqualTo(2));
+                Assert.That(CommandProvider.OnClickCount, Is.EqualTo(1));
 
                 viewModel.CanExecuteTestCommand = true;
                 button.SetCommandParameter("param");
@@ -39,7 +40,7 @@ namespace WinMVVM.Tests {
                 Assert.That(viewModel.TestCommandExecuteCount, Is.EqualTo(2));
                 Assert.That(viewModel.ExecuteParameter, Is.EqualTo("param"));
                 Assert.That(viewModel.CanExecuteParameter, Is.EqualTo("param"));
-                Assert.That(CommandProvider.OnClickCount, Is.EqualTo(3));
+                Assert.That(CommandProvider.OnClickCount, Is.EqualTo(2));
             }
         }
         [Test]
@@ -47,6 +48,38 @@ namespace WinMVVM.Tests {
             TestViewModel viewModel = new TestViewModel();
             using(var label = new Label()) {
                 label.SetCommand(viewModel.TestCommand);
+            }
+        }
+        [Test]
+        public void CollectButtonWithAssignedCommand() {
+            TestViewModel viewModel = new TestViewModel();
+            WeakReference reference = CreateButtonAndAssignCommand(viewModel.TestCommand);
+            TestUtils.GarbageCollect();
+            Assert.That(reference.IsAlive, Is.False);
+        }
+
+        WeakReference CreateButtonAndAssignCommand(ICommand command) {
+            var button = new Button();
+            button.SetCommand(command);
+            return new WeakReference(button);
+        }
+
+        [Test]
+        public void UpdateIsEnabledOnSetParameter() {
+            var command = new DelegateCommand<string>(o => { }, o => string.IsNullOrEmpty(o));
+            using(var button = new Button()) {
+                button.SetCommand(command);
+                Assert.That(button.Enabled, Is.True);
+                button.SetCommandParameter("x");
+                Assert.That(button.Enabled, Is.False);
+                button.SetCommandParameter(null);
+                Assert.That(button.Enabled, Is.True);
+                button.SetCommandParameter("x");
+                Assert.That(button.Enabled, Is.False);
+                button.SetCommand(null);
+                Assert.That(button.Enabled, Is.True);
+                button.SetCommand(command);
+                Assert.That(button.Enabled, Is.False);
             }
         }
     }
