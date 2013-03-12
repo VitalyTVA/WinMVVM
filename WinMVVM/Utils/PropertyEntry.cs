@@ -107,6 +107,7 @@ namespace WinMVVM.Utils {
         public void ClearValue() {
             IsValueSet = false;
             IsLocalValue = false;
+            propertyValue = default(T);
         }
         void ValidateChildAccess() {
             if(!property.Inherits)

@@ -41,7 +41,7 @@ namespace WinMVVM.Tests {
             }
             return CanExecute(typedParameter);
         }
-
+        public int CanExecuteChangedSubscribeCount { get { return CanExecuteChanged != null ? CanExecuteChanged.GetInvocationList().Count() : 0; } }
         public event EventHandler CanExecuteChanged;
         void ICommand.Execute(object parameter) {
             Execute((T)parameter);

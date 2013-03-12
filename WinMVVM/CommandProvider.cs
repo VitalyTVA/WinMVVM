@@ -9,6 +9,23 @@ using WinMVVM.Utils;
 
 namespace WinMVVM {
     public static class CommandProvider {
+        internal class CanExecuteChangedHandler {
+            readonly WeakReference buttonReference;
+            public CanExecuteChangedHandler(Button button) {
+                this.buttonReference = new WeakReference(button);
+            }
+            internal void OnCanExecuteChanged(object sender, EventArgs e) {
+                var button = buttonReference.Target as Button;
+                if(button != null)
+                    UpdateButtonEnabled(button, button.GetCommand(), button.GetCommandParameter());
+            }
+
+        }
+#if DEBUG
+        internal 
+#endif
+        static readonly AttachedProperty<CanExecuteChangedHandler> HandlerProperty = AttachedProperty<CanExecuteChangedHandler>.Register(() => HandlerProperty);
+
         public static readonly AttachedProperty<ICommand> CommandProperty = AttachedProperty<ICommand>.Register(() => CommandProperty, new PropertyMetadata<ICommand>(null, OnCommandChanged));
         public static ICommand GetCommand(this Control control) {
             return control.GetValue(CommandProperty);
@@ -31,8 +48,17 @@ namespace WinMVVM {
                 return;
             UpdateButtonEnabled(button, e.NewValue, GetCommandParameter(button));
             button.Click -= OnClick;
-            if(e.NewValue != null)
+            if(e.OldValue != null) {
+                var handler = button.GetValue(HandlerProperty);
+                e.OldValue.CanExecuteChanged -= handler.OnCanExecuteChanged;
+                button.ClearValue(HandlerProperty);
+            }
+            if(e.NewValue != null) {
                 button.Click += OnClick;
+                var handler = new CanExecuteChangedHandler(button);
+                e.NewValue.CanExecuteChanged += handler.OnCanExecuteChanged;
+                button.SetValue(HandlerProperty, handler);
+            }
         }
         private static void OnCommandParameterChanged(Control sender, AttachedPropertyChangedEventArgs<object> e) {
             var button = sender as Button;

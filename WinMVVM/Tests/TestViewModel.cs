@@ -29,8 +29,8 @@ namespace WinMVVM.Tests {
         public object ExecuteParameter { get; private set; }
         public object CanExecuteParameter { get; private set; }
         public bool CanExecuteTestCommand { get; set; }
-        ICommand testCommand;
-        public ICommand TestCommand {
+        DelegateCommand<object> testCommand;
+        public DelegateCommand<object> TestCommand {
             get {
                 if(testCommand == null) {
                     testCommand = new DelegateCommand<object>(o => {

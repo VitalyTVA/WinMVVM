@@ -56,6 +56,7 @@ namespace WinMVVM.Tests {
             WeakReference reference = CreateButtonAndAssignCommand(viewModel.TestCommand);
             TestUtils.GarbageCollect();
             Assert.That(reference.IsAlive, Is.False);
+            viewModel.TestCommand.RaiseCanExecuteChanged();
         }
 
         WeakReference CreateButtonAndAssignCommand(ICommand command) {
@@ -81,6 +82,33 @@ namespace WinMVVM.Tests {
                 button.SetCommand(command);
                 Assert.That(button.Enabled, Is.False);
             }
+        }
+        [Test]
+        public void UpdateIsEnabledOnCanExecuteChanged() {
+            bool canExecute = true;
+            bool executed = false;
+            var command = new DelegateCommand<string>(o => executed = true, o => canExecute);
+            using(var button = new Button()) {
+                button.SetCommand(command);
+                Assert.That(button.Enabled, Is.True);
+                canExecute = false;
+                Assert.That(button.Enabled, Is.True);
+                button.PerformClick();
+                Assert.That(executed, Is.False);
+                Assert.That(button.Enabled, Is.True);
+                TestUtils.GarbageCollect();
+                command.RaiseCanExecuteChanged();
+                Assert.That(button.Enabled, Is.False);
+                Assert.That(command.CanExecuteChangedSubscribeCount, Is.EqualTo(1));
+                WeakReference handlerRef = GetHandlerRef(button);
+                button.SetCommand(null);
+                Assert.That(command.CanExecuteChangedSubscribeCount, Is.EqualTo(0));
+                TestUtils.GarbageCollect();
+                Assert.That(handlerRef.IsAlive, Is.False);
+            }
+        }
+        static WeakReference GetHandlerRef(Button button) {
+            return new WeakReference(button.GetValue(CommandProvider.HandlerProperty));
         }
     }
 }

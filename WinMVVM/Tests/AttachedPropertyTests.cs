@@ -120,6 +120,22 @@ namespace WinMVVM.Tests {
                 Assert.That(button.GetValue(TestPropertyContainer.DefaultValueProperty), Is.EqualTo("d"));
             }
         }
+        [Test]
+        public void CollectPropertyValueAfterClearValue() {
+            using(var button = new Button()) {
+                WeakReference reference = SetPropertyAndGetValueReference(button);
+                TestUtils.GarbageCollect();
+                Assert.That(reference.IsAlive, Is.True);
+                button.ClearValue(TestPropertyContainer.TestProperty);
+                TestUtils.GarbageCollect();
+                Assert.That(reference.IsAlive, Is.False);
+            }
+        }
+        WeakReference SetPropertyAndGetValueReference(Button button) {
+            object value = new object();
+            button.SetValue(TestPropertyContainer.TestProperty, value);
+            return new WeakReference(value);
+        }
     }
     public static class TestPropertyContainer {
         public static readonly AttachedProperty<object> TestProperty = AttachedProperty<object>.Register(() => TestProperty, new PropertyMetadata<object>(null, null, PropertyMetadataOptions.Inherits));
