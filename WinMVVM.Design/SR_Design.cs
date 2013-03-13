@@ -10,5 +10,6 @@ using System.Threading.Tasks;
 namespace WinMVVM.Design {
     static class SR_Design {
         public const string RunDesigner = "Run designer";
+        public const string AttachedPropertiesCategory = "Attached properties";
     }
 }

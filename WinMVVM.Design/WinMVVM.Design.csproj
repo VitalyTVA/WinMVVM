@@ -50,6 +50,8 @@
   <ItemGroup>
     <Compile Include="BindingManagerDesigner.cs" />
     <Compile Include="BindingManagerCodeDomSerializer.cs" />
+    <Compile Include="BindingsEditor.cs" />
+    <Compile Include="BindingsTypeConverter.cs" />
     <Compile Include="DataContextConverter.cs" />
     <Compile Include="DataContextExtender.cs" />
     <Compile Include="DesignerForm.cs">

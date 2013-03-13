@@ -43,13 +43,13 @@ namespace WinMVVM.Design {
         void OnRunDesigner(object sender, EventArgs e) {
             RunDesigner();
         }
-        void RunDesigner() {
+        internal void RunDesigner() {
             using(var form = new DesignerForm()) {
                 form.SetDesigner(this);
                 form.ShowDialog(NativeWindow.FromHandle(NativeHelper.GetActiveWindow()));
             }
         }
-        DataContextExtender extender;
+        CommonPropertiesExtender extender;
         IExtenderProviderService localExtenderServiceReference;
         DesignerActionListCollection actionLists;
         public override DesignerActionListCollection ActionLists {
@@ -83,7 +83,7 @@ namespace WinMVVM.Design {
 
             IExtenderProviderService extenderService = (IExtenderProviderService)component.Site.GetService(typeof(IExtenderProviderService));
             if(extenderService != null) {
-                extender = new DataContextExtender(this);
+                extender = new CommonPropertiesExtender(this);
                 extenderService.AddExtenderProvider(extender);
                 localExtenderServiceReference = extenderService;
             }
