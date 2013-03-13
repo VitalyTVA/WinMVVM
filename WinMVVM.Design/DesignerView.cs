@@ -33,6 +33,8 @@ namespace WinMVVM.Design {
             bBind.Click += bBind_Click;
             lbBoundProperties.DisplayMember = "Name";
             lbUnboundProperties.DisplayMember = "Name";
+            cbMode.Items.AddRange(Enum.GetValues(typeof(BindingMode)).Cast<object>().ToArray());
+            cbMode.SelectedIndex = 0;
         }
 
         void tvDataContext_AfterSelect(object sender, TreeViewEventArgs e) {
@@ -51,7 +53,7 @@ namespace WinMVVM.Design {
             if(SelectedProperty == null || SelectedComponent == null)
                 return;
             designer.ChangeComponent(() => {
-                Manager.SetBindingCore(SelectedComponent, SelectedProperty, new Binding(tbPath.Text));
+                Manager.SetBindingCore(SelectedComponent, SelectedProperty, new Binding(tbPath.Text, (BindingMode)cbMode.SelectedItem));
                 RepopulateProperties();
             });
 

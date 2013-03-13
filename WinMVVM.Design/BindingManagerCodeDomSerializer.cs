@@ -69,8 +69,13 @@ namespace WinMVVM.Design {
             CodeExpression managerReferenceExpression = base.GetExpression(manager, bindingManager);
             return new CodeMethodInvokeExpression(managerReferenceExpression, "SetBinding", parameters);
         }
-        static CodeExpression GetBindingCreateExpression(BindingBase binding) {
-            return new CodeObjectCreateExpression(typeof(Binding), new CodeExpression[] { new CodePrimitiveExpression(((Binding)binding).Path) });
+        static CodeExpression GetBindingCreateExpression(BindingBase bindingBase) {
+            List<CodeExpression> parameters = new List<CodeExpression>();
+            Binding binding = (Binding)bindingBase;
+            parameters.Add(new CodePrimitiveExpression(binding.Path));
+            if(binding.Mode != BindingMode.OneWay)
+                parameters.Add(new CodeFieldReferenceExpression(new CodeTypeReferenceExpression(typeof(BindingMode)), binding.Mode.ToString()));
+            return new CodeObjectCreateExpression(typeof(Binding), parameters.ToArray());
         }
         static CodeExpression GetValueExpression(object value) {
             if(value == null)
