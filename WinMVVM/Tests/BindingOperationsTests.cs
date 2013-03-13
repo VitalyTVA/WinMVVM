@@ -10,6 +10,16 @@ namespace WinMVVM.Tests {
     [TestFixture]
     public class BindingOperationsTests {
         [Test]
+        public void BindingModeProperty() {
+            Assert.That(new Binding().Mode, Is.EqualTo(BindingMode.OneWay));
+            Assert.That(new Binding("").Mode, Is.EqualTo(BindingMode.OneWay));
+            Assert.That(new Binding(() => new TestViewModel().DoubleProperty).Mode, Is.EqualTo(BindingMode.OneWay));
+            Assert.That(new Binding("", BindingMode.OneWay).Mode, Is.EqualTo(BindingMode.OneWay));
+            Assert.That(new Binding("", BindingMode.TwoWay).Mode, Is.EqualTo(BindingMode.TwoWay));
+            Assert.That(new Binding(() => new TestViewModel().DoubleProperty, BindingMode.OneWay).Mode, Is.EqualTo(BindingMode.OneWay));
+            Assert.That(new Binding(() => new TestViewModel().DoubleProperty, BindingMode.TwoWay).Mode, Is.EqualTo(BindingMode.TwoWay));
+        }
+        [Test]
         public void NullControl() {
             Assert.Throws<ArgumentNullException>(() => BindingOperations.SetBinding(null, "Test", new Binding()));
             Assert.Throws<ArgumentNullException>(() => BindingOperations.ClearBinding(null, "Test"));

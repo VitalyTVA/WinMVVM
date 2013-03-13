@@ -71,6 +71,7 @@
     <Compile Include="AttachedPropertyExtensions.cs" />
     <Compile Include="Binding.cs" />
     <Compile Include="BindingBase.cs" />
+    <Compile Include="BindingMode.cs" />
     <Compile Include="Tests\BindingManagerTests.cs" />
     <Compile Include="BindingManager.cs">
       <SubType>Component</SubType>
