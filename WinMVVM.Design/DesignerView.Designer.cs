@@ -36,6 +36,8 @@
             this.bBind = new System.Windows.Forms.Button();
             this.bClear = new System.Windows.Forms.Button();
             this.tvDataContext = new System.Windows.Forms.TreeView();
+            this.cbMode = new System.Windows.Forms.ComboBox();
+            this.label4 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.SuspendLayout();
@@ -152,13 +154,32 @@
             // 
             this.tvDataContext.Location = new System.Drawing.Point(456, 76);
             this.tvDataContext.Name = "tvDataContext";
-            this.tvDataContext.Size = new System.Drawing.Size(179, 231);
+            this.tvDataContext.Size = new System.Drawing.Size(179, 170);
             this.tvDataContext.TabIndex = 9;
+            // 
+            // cbMode
+            // 
+            this.cbMode.FormattingEnabled = true;
+            this.cbMode.Location = new System.Drawing.Point(456, 274);
+            this.cbMode.Name = "cbMode";
+            this.cbMode.Size = new System.Drawing.Size(179, 21);
+            this.cbMode.TabIndex = 10;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(453, 254);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(34, 13);
+            this.label4.TabIndex = 11;
+            this.label4.Text = "Mode";
             // 
             // DesignerView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.cbMode);
             this.Controls.Add(this.tvDataContext);
             this.Controls.Add(this.bClear);
             this.Controls.Add(this.bBind);
@@ -193,5 +214,7 @@
         private System.Windows.Forms.Button bBind;
         private System.Windows.Forms.Button bClear;
         private System.Windows.Forms.TreeView tvDataContext;
+        private System.Windows.Forms.ComboBox cbMode;
+        private System.Windows.Forms.Label label4;
     }
 }
