@@ -20,5 +20,17 @@ namespace WinMVVM.Design {
             }
             return base.ConvertTo(context, culture, value, destinationType);
         }
+        public override bool GetPropertiesSupported(ITypeDescriptorContext context) {
+            return true;
+        }
+        public override PropertyDescriptorCollection GetProperties(ITypeDescriptorContext context, object value, Attribute[] attributes) {
+            BindingManagerDesigner designer = BindingManagerDesigner.FromTypeDescriptorContext(context);
+            if(designer == null)
+                return base.GetProperties(context, value, attributes);
+            PropertyDescriptorCollection properties = new PropertyDescriptorCollection(new PropertyDescriptor[] {
+                new BindablePropertyDescriptor(designer, DataContextProvider.DataContextProperty)
+            });
+            return  properties;
+        }
     }
 }

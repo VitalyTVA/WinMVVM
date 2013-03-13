@@ -28,6 +28,24 @@ namespace WinMVVM.Design {
                 designer.RunDesigner();
             }
         }
+
+        public static BindingManagerDesigner FromTypeDescriptorContext(ITypeDescriptorContext context) {
+            if(context != null) {
+                
+                IDesignerHost host = context.GetService(typeof(IDesignerHost)) as IDesignerHost;
+                if(host == null) {
+                    return null;
+                }
+
+                BindingManager manager = host.Container.Components.Cast<IComponent>().FirstOrDefault(x => x is BindingManager) as BindingManager;
+                if(manager == null) {
+                    return null;
+                }
+                return host.GetDesigner(manager) as BindingManagerDesigner;
+            }
+            return null;
+        }
+
         DesignerVerbCollection verbs;
         public override DesignerVerbCollection Verbs {
             get {

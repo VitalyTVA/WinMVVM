@@ -48,6 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BindablePropertyDescriptor.cs" />
     <Compile Include="BindingManagerDesigner.cs" />
     <Compile Include="BindingManagerCodeDomSerializer.cs" />
     <Compile Include="BindingsEditor.cs" />
