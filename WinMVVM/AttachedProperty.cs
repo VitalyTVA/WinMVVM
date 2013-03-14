@@ -104,6 +104,10 @@ namespace WinMVVM {
         internal override void SetValueInternal(Control control, object value) {
             SetValue(control, (T)value);
         }
+
+        internal override INotifyPropertyChanged GetTrackableEntry(Control control) {
+            return GetPropertyEntry(control);
+        }
     }
     //TODO - generic attached property
 }

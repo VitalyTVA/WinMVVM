@@ -42,6 +42,8 @@ namespace WinMVVM.Utils {
         void UpdateTargetProperty(object value) {
             if(Property == null)
                 Guard.ArgumentException("propertyName");
+            if(Control == null)
+                return;
             if(propertyEntry.IsValueSet) {
                 Property.SetValue(Control, value);
             } else {

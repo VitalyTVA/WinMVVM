@@ -45,6 +45,9 @@ namespace WinMVVM.Utils {
         public bool IsLocalValue { get; set; }
         Dictionary<BindingExpressionKey, BindingExpression> expressions = new Dictionary<BindingExpressionKey, BindingExpression>();
         public event PropertyChangedEventHandler PropertyChanged;
+#if DEBUG
+        public int PropertyChangedSubscribeCount { get { return PropertyChanged != null ? PropertyChanged.GetInvocationList().Count() : 0; } }
+#endif
 
         public PropertyEntry(AttachedProperty<T> property, WeakReference controlReference) {
             this.property = property;
