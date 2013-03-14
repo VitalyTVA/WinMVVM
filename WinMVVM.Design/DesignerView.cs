@@ -136,6 +136,7 @@ namespace WinMVVM.Design {
         static IEnumerable<AttachedPropertyBase> GetAttachedProperties(Control control) {
             yield return DataContextProvider.DataContextProperty;
             yield return CommandProvider.CommandProperty;
+            yield return CommandProvider.CommandParameterProperty;
         }
     }
 }

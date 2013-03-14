@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Input;
 
 namespace WinMVVM.Tutorial {
     public class MainViewModel : ViewModelBase {
@@ -19,10 +20,10 @@ namespace WinMVVM.Tutorial {
 
         public List<Customer> Customers { get { return Customer.Customers; } }
 
-        public RelayCommand ShowMessageCommand { get; private set; }
+        public ICommand ShowMessageCommand { get; private set; }
 
         public MainViewModel() {
-            ShowMessageCommand = new RelayCommand(() => MessageBox.Show("Test"));
+            ShowMessageCommand = new RelayCommand<string>(s => MessageBox.Show(s));
         }
     }
     public class Customer {
