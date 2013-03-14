@@ -21,6 +21,8 @@ namespace WinMVVM.Utils {
             this.propertyEntry = propertyEntry;
             Binding = binding;
             this.Key = key;
+            if(IsTwoWayBinding && string.IsNullOrEmpty(((Binding)this.Binding).Path))
+                Guard.InvalidOperation(SR.TwoWayBindingRequiresPathExceptionMessage);
             WpfBindingMode mode = IsTwoWayBinding ? WpfBindingMode.TwoWay : WpfBindingMode.OneWay;
             WpfBinding wpfBinding = new WpfBinding("PropertyValue." + ((Binding)binding).Path) { Source = propertyEntry, Mode = mode};
 

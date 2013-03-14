@@ -541,6 +541,17 @@ namespace WinMVVM.Tests {
 
             }
         }
+        [Test]
+        public void TwoWayBindingDirectlyToDataContext() {
+            var viewModel = "test";
+            using(var textBox = new TextBox()) {
+                textBox.SetDataContext(viewModel);
+                Assert.Throws<InvalidOperationException>(() => {
+                    textBox.SetBinding(() => textBox.Text, new Binding(string.Empty, BindingMode.TwoWay));
+                }, SR.TwoWayBindingRequiresPathExceptionMessage);
+
+            }
+        }
         //TODO test when update comes to collected control
     }
 }

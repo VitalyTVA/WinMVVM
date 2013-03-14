@@ -16,5 +16,7 @@ namespace WinMVVM.Utils {
         public const string BindingManagerSerializerAssemblyQualifiedName = BindingSerializerDesignerTypeName + ", " + DesignAssemblyFullName;
 
         public const string CodeDomSerializerAssemblyQualifiedName = "System.ComponentModel.Design.Serialization.CodeDomSerializer, System.Design, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a";
+
+        public const string TwoWayBindingRequiresPathExceptionMessage = "Two-way binding requires Path";
     }
 }

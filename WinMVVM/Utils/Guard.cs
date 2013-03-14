@@ -16,8 +16,8 @@ namespace WinMVVM.Utils {
             throw new ArgumentException(argumentName);
         }
 
-        public static void InvalidOperation() {
-            throw new InvalidOperationException();
+        public static void InvalidOperation(string message = null) {
+            throw new InvalidOperationException(message);
         }
     }
 }
