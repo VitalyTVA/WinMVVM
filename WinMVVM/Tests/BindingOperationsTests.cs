@@ -18,6 +18,8 @@ namespace WinMVVM.Tests {
             Assert.That(new Binding("", BindingMode.TwoWay).Mode, Is.EqualTo(BindingMode.TwoWay));
             Assert.That(new Binding(() => new TestViewModel().DoubleProperty, BindingMode.OneWay).Mode, Is.EqualTo(BindingMode.OneWay));
             Assert.That(new Binding(() => new TestViewModel().DoubleProperty, BindingMode.TwoWay).Mode, Is.EqualTo(BindingMode.TwoWay));
+            Assert.That(object.Equals(new Binding("", BindingMode.OneWay), new Binding("", BindingMode.TwoWay)), Is.False);
+            Assert.That(object.Equals(new Binding("", BindingMode.OneWay), new Binding("", BindingMode.OneWay)), Is.True);
         }
         [Test]
         public void NullControl() {
@@ -338,6 +340,25 @@ namespace WinMVVM.Tests {
             return new WeakReference(button);
         }
         [Test]
+        public void CollectBindingSourceOnlyAfterClearBinding() {
+            using(var button = new Button()) {
+                WeakReference reference = DoBindButtonAndGetViewModelReference(button);
+                TestUtils.GarbageCollect();
+                Assert.That(reference.IsAlive, Is.True);
+                Assert.That(button.Text, Is.EqualTo("test"));
+                button.ClearDataContext();
+                TestUtils.GarbageCollect();
+                Assert.That(reference.IsAlive, Is.False);
+                Assert.That(button.Text, Is.EqualTo(string.Empty));
+            }
+        }
+        WeakReference DoBindButtonAndGetViewModelReference(Button button) {
+            var viewModel = new TestViewModel() { StringProperty = "test" };
+            button.SetDataContext(viewModel);
+            button.SetBinding("Text", new Binding(() => viewModel.StringProperty));
+            return new WeakReference(viewModel);
+        }
+        [Test]
         public void SetBindingTwice() {
             using(var button = new TestButton()) {
                 button.SetDataContext("test");
@@ -427,6 +448,23 @@ namespace WinMVVM.Tests {
 
                 button.SetBinding(() => button.TabIndex, new Binding(() => viewModel.DoubleProperty));
                 Assert.That(button.TabIndex, Is.EqualTo(153));
+            }
+        }
+        [Test]
+        public void TwoWayBinding() {
+            var viewModel = new TestViewModel() { };
+            using(var textBox = new TextBox()) {
+                textBox.SetDataContext(viewModel);
+                textBox.SetBinding(() => textBox.Text, new Binding(() => viewModel.StringProperty));
+                Assert.That(textBox.Text, Is.EqualTo(string.Empty));
+                textBox.Text = "test";
+                Assert.That(viewModel.StringProperty, Is.EqualTo(null));
+
+                textBox.SetBinding(() => textBox.Text, new Binding(() => viewModel.StringProperty, BindingMode.TwoWay));
+                Assert.That(textBox.Text, Is.EqualTo(string.Empty));
+                textBox.Text = "test";
+                //Assert.That(viewModel.StringProperty, Is.EqualTo("test"));
+
             }
         }
         //TODO test when update comes to collected control

@@ -26,10 +26,10 @@ namespace WinMVVM {
 
         public override bool Equals(object obj) {
             Binding other = obj as Binding;
-            return other != null && other.Path == Path;
+            return other != null && other.Path == Path && other.Mode == Mode;
         }
         public override int GetHashCode() {
-            return Path != null ? Path.GetHashCode() : base.GetHashCode();
+            return (Path != null ? Path.GetHashCode() : base.GetHashCode()) ^ Mode.GetHashCode();
         }
     }
 }
