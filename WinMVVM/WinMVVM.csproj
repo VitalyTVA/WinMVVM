@@ -83,6 +83,7 @@
     <Compile Include="PropertyMetadata.cs" />
     <Compile Include="PropertyMetadataOptions.cs" />
     <Compile Include="Utils\CanExecuteChangedHandler.cs" />
+    <Compile Include="Utils\IPropertyChangeListener.cs" />
     <Compile Include="Utils\IWeakEventHandler.cs" />
     <Compile Include="Utils\SetBindingAction.cs" />
     <Compile Include="Tests\AttachedPropertyTests.cs" />

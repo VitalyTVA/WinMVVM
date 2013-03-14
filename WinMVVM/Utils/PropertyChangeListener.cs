@@ -10,9 +10,6 @@ using WpfBindingOperations = System.Windows.Data.BindingOperations;
 using WpfPropertyMetadata = System.Windows.PropertyMetadata;
 
 namespace WinMVVM.Utils {
-    interface IPropertyChangeListener {
-        void Clear();
-    }
     class PropertyChangeListener<T> : DependencyObject, IPropertyChangeListener {
         public static readonly DependencyProperty FakeProperty = DependencyProperty.Register("Fake", typeof(T), typeof(PropertyChangeListener<T>), new WpfPropertyMetadata(default(T), (d, e) => ((PropertyChangeListener<T>)d).OnFakeChanged()));
         readonly Action<object> changedCallback;
@@ -24,16 +21,19 @@ namespace WinMVVM.Utils {
             this.changedCallback = changedCallback;
             WpfBindingOperations.SetBinding(this, FakeProperty, binding);
         }
-        public T Fake {
+        T Fake {
             get { return (T)GetValue(FakeProperty); }
             set { SetValue(FakeProperty, value); }
         }
-        public void Clear() {
+        void IPropertyChangeListener.Clear() {
             WpfBindingOperations.ClearBinding(this, FakeProperty);
         }
         void OnFakeChanged() {
             if(changedCallback != null)
                 changedCallback(Fake);
+        }
+        void IPropertyChangeListener.SetValue(object value) {
+            SetValue(FakeProperty, value);
         }
     }
 }

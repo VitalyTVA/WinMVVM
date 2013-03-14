@@ -340,6 +340,20 @@ namespace WinMVVM.Tests {
             return new WeakReference(button);
         }
         [Test]
+        public void CollectBoundControl_TwoWay() {
+            var viewModel = new TestViewModel();
+            var reference = DoCollectTwoWayBoudnDataControl(viewModel);
+            TestUtils.GarbageCollect();
+            Assert.That(reference.IsAlive, Is.False);
+            viewModel.StringProperty = "new Value";
+        }
+        WeakReference DoCollectTwoWayBoudnDataControl(TestViewModel viewModel) {
+            var textBox = new TextBox();
+            textBox.SetDataContext(viewModel);
+            textBox.SetBinding("Text", new Binding(() => viewModel.StringProperty, BindingMode.TwoWay));
+            return new WeakReference(textBox);
+        }
+        [Test]
         public void CollectBindingSourceOnlyAfterClearBinding() {
             using(var button = new Button()) {
                 WeakReference reference = DoBindButtonAndGetViewModelReference(button);
@@ -463,8 +477,49 @@ namespace WinMVVM.Tests {
                 textBox.SetBinding(() => textBox.Text, new Binding(() => viewModel.StringProperty, BindingMode.TwoWay));
                 Assert.That(textBox.Text, Is.EqualTo(string.Empty));
                 textBox.Text = "test";
-                //Assert.That(viewModel.StringProperty, Is.EqualTo("test"));
+                Assert.That(viewModel.StringProperty, Is.EqualTo("test"));
 
+            }
+        }
+        public class TestControl : Control {
+            private string testProperty;
+            public string TestProperty {
+                get {
+                    return testProperty;
+                }
+                set {
+                    if(testProperty == value)
+                        return;
+                    testProperty = value;
+                    if(TestPropertyChanged != null)
+                        TestPropertyChanged(this, EventArgs.Empty);
+                }
+            }
+            public event EventHandler TestPropertyChanged;
+            public int TestPropertyChangedSubscribeCount { get { return TestPropertyChanged != null ? TestPropertyChanged.GetInvocationList().Count() : 0; } }
+        }
+        [Test]
+        public void ClearTwoWayBinding() {
+            var viewModel = new TestViewModel() { };
+            using(var testControl = new TestControl()) {
+                testControl.SetDataContext(viewModel);
+
+                Assert.That(testControl.TestPropertyChangedSubscribeCount, Is.EqualTo(0));
+                testControl.SetBinding(() => testControl.TestProperty, new Binding(() => viewModel.StringProperty, BindingMode.TwoWay));
+                Assert.That(testControl.TestPropertyChangedSubscribeCount, Is.EqualTo(1));
+
+                Assert.That(testControl.TestProperty, Is.Null);
+                testControl.TestProperty = "test";
+                Assert.That(viewModel.StringProperty, Is.EqualTo("test"));
+                Assert.That(testControl.TestPropertyChangedSubscribeCount, Is.EqualTo(1));
+
+                testControl.ClearBinding(() => testControl.TestProperty);
+                Assert.That(viewModel.StringProperty, Is.EqualTo("test"));
+                Assert.That(testControl.TestProperty, Is.Null);
+                Assert.That(testControl.TestPropertyChangedSubscribeCount, Is.EqualTo(0));
+
+                viewModel.StringProperty = "test2";
+                Assert.That(testControl.TestProperty, Is.Null);
             }
         }
         //TODO test when update comes to collected control

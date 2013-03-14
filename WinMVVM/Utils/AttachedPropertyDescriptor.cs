@@ -41,5 +41,13 @@ namespace WinMVVM.Utils {
             var other = obj as AttachedPropertyDescriptor;
             return other != null && other.property == property;
         }
+
+        internal override void AddValueChanged(Control control, EventHandler handler) {
+            throw new NotImplementedException(); //TODO
+        }
+
+        internal override void RemoveValueChanged(Control control, EventHandler handler) {
+            throw new NotImplementedException();
+        }
     }
 }

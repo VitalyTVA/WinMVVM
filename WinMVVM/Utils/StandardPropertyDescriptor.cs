@@ -39,5 +39,13 @@ namespace WinMVVM.Utils {
         internal override void ResetValue(Control control) {
             property.ResetValue(control);
         }
+
+        internal override void AddValueChanged(Control control, EventHandler handler) {
+            property.AddValueChanged(control, handler);
+        }
+
+        internal override void RemoveValueChanged(Control control, EventHandler handler) {
+            property.RemoveValueChanged(control, handler);
+        }
     }
 }

@@ -17,5 +17,7 @@ namespace WinMVVM.Utils {
         internal abstract void ResetValue(Control control);
         internal abstract object GetValue(Control control);
         internal abstract void SetValue(Control control, object value);
+        internal abstract void AddValueChanged(Control control, EventHandler handler);
+        internal abstract void RemoveValueChanged(Control control, EventHandler handler);
     }
 }
