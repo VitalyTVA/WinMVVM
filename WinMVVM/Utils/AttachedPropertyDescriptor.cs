@@ -42,38 +42,14 @@ namespace WinMVVM.Utils {
             return other != null && other.property == property;
         }
 
-        //class Subscriber {
-        //    readonly EventHandler handler;
-        //    public Subscriber(EventHandler handler) {
-        //        this.handler = handler;
-        //    }
-        //    public override bool Equals(object obj) {
-        //        var other = obj as Subscriber;
-        //        return other != null && other.handler == handler;
-        //    }
-        //    public override int GetHashCode() {
-        //        return base.GetHashCode();
-        //    }
-        //    public void OnEvent(object sender, PropertyChangedEventArgs e) {
-        //        handler(sender, EventArgs.Empty);
-        //    }
-        //}
-
         internal override void AddValueChanged(Control control, EventHandler handler) {
-            INotifyPropertyChanged propertyChanged = property.GetTrackableEntry(control);
-            //propertyChanged.PropertyChanged += new Subscriber(handler).OnEvent;
-            propertyChanged.PropertyChanged += (sender, e) => {
-                handler(sender, e);
-            };
+            IPropertyEntry propertyChanged = property.GetTrackableEntry(control);
+            propertyChanged.Changed += handler;
         }
 
-
         internal override void RemoveValueChanged(Control control, EventHandler handler) {
-            INotifyPropertyChanged propertyChanged = property.GetTrackableEntry(control);
-            //propertyChanged.PropertyChanged -= new Subscriber(handler).OnEvent;
-            //propertyChanged.PropertyChanged -= (sender, e) => {
-            //    handler(sender, e);
-            //};
+            IPropertyEntry propertyChanged = property.GetTrackableEntry(control);
+            propertyChanged.Changed -= handler;
         }
     }
 }

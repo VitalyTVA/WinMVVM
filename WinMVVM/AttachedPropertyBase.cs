@@ -17,6 +17,6 @@ namespace WinMVVM {
         internal abstract void ClearValue(Control control);
         internal abstract object GetValueInternal(Control control);
         internal abstract void SetValueInternal(Control control, object value);
-        internal abstract INotifyPropertyChanged GetTrackableEntry(Control control);
+        internal abstract IPropertyEntry GetTrackableEntry(Control control);
     }
 }

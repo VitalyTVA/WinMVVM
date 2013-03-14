@@ -590,16 +590,16 @@ namespace WinMVVM.Tests {
 
                 PropertyEntry<object> entry = CommandProvider.CommandParameterProperty.GetPropertyEntry(button);
 
-                Assert.That(entry.PropertyChangedSubscribeCount, Is.EqualTo(0));
+                Assert.That(entry.ChangedSubscribeCount, Is.EqualTo(0));
                 button.SetBinding(CommandProvider.CommandParameterProperty, new Binding(() => viewModel.StringProperty, BindingMode.TwoWay));
-                Assert.That(entry.PropertyChangedSubscribeCount, Is.EqualTo(1));
+                Assert.That(entry.ChangedSubscribeCount, Is.EqualTo(1));
 
                 Assert.That(button.GetCommandParameter(), Is.Null);
                 button.SetCommandParameter("test");
                 Assert.That(viewModel.StringProperty, Is.EqualTo("test"));
 
                 button.ClearBinding(CommandProvider.CommandParameterProperty);
-                //Assert.That(entry.PropertyChangedSubscribeCount, Is.EqualTo(0));
+                Assert.That(entry.ChangedSubscribeCount, Is.EqualTo(0));
                 Assert.That(viewModel.StringProperty, Is.EqualTo("test"));
                 Assert.That(button.GetCommandParameter(), Is.Null);
 

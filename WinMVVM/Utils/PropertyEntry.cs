@@ -7,7 +7,10 @@ using System.Windows.Forms;
 using WinMVVM.Utils;
 using WpfBinding = System.Windows.Data.Binding;
 namespace WinMVVM.Utils {
-    class PropertyEntry<T> : INotifyPropertyChanged {
+    interface IPropertyEntry {
+        event EventHandler Changed;
+    }
+    class PropertyEntry<T> : INotifyPropertyChanged, IPropertyEntry {
         private bool isValueSet;
         static readonly PropertyChangedEventArgs Args = new PropertyChangedEventArgs("PropertyValue");
         private Control Control { get { return (Control)controlReference.Target; } }
@@ -45,8 +48,9 @@ namespace WinMVVM.Utils {
         public bool IsLocalValue { get; set; }
         Dictionary<BindingExpressionKey, BindingExpression> expressions = new Dictionary<BindingExpressionKey, BindingExpression>();
         public event PropertyChangedEventHandler PropertyChanged;
+        public event EventHandler Changed;
 #if DEBUG
-        public int PropertyChangedSubscribeCount { get { return PropertyChanged != null ? PropertyChanged.GetInvocationList().Count() : 0; } }
+        public int ChangedSubscribeCount { get { return Changed != null ? Changed.GetInvocationList().Count() : 0; } }
 #endif
 
         public PropertyEntry(AttachedProperty<T> property, WeakReference controlReference) {
@@ -64,6 +68,8 @@ namespace WinMVVM.Utils {
                 property.Metadata.Callback(Control, new AttachedPropertyChangedEventArgs<T>(oldValue, PropertyValue));
             if(PropertyChanged != null)
                 PropertyChanged(this, Args);
+            if(Changed != null)
+                Changed(this, EventArgs.Empty);
         }
         public void AddBinding(BindingExpressionKey key, BindingBase binding, Func<BindingExpression> createExpression) {
             BindingExpression existingExpression;

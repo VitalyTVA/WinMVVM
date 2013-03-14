@@ -105,7 +105,7 @@ namespace WinMVVM {
             SetValue(control, (T)value);
         }
 
-        internal override INotifyPropertyChanged GetTrackableEntry(Control control) {
+        internal override IPropertyEntry GetTrackableEntry(Control control) {
             return GetPropertyEntry(control);
         }
     }
