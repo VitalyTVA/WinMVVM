@@ -484,9 +484,7 @@ namespace WinMVVM.Tests {
         public class TestControl : Control {
             private string testProperty;
             public string TestProperty {
-                get {
-                    return testProperty;
-                }
+                get { return testProperty; }
                 set {
                     if(testProperty == value)
                         return;
@@ -520,6 +518,27 @@ namespace WinMVVM.Tests {
 
                 viewModel.StringProperty = "test2";
                 Assert.That(testControl.TestProperty, Is.Null);
+            }
+        }
+        public class UnstablePropertyViewModel : BindableBase {
+            string myProperty;
+            public string MyProperty {
+                get { return myProperty; }
+                set { SetProperty(ref myProperty, value + "_", () => MyProperty); }
+            }
+        }
+        [Test]
+        public void TwoWayBindingToUnstableProperty() {
+            var viewModel = new UnstablePropertyViewModel() { };
+            using(var textBox = new TextBox()) {
+                textBox.SetDataContext(viewModel);
+
+                textBox.SetBinding(() => textBox.Text, new Binding(() => viewModel.MyProperty, BindingMode.TwoWay));
+                Assert.That(textBox.Text, Is.EqualTo(string.Empty));
+                textBox.Text = "test";
+                Assert.That(viewModel.MyProperty, Is.EqualTo("test_"));
+                Assert.That(textBox.Text, Is.EqualTo("test_"));
+
             }
         }
         //TODO test when update comes to collected control
