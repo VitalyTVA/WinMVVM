@@ -72,6 +72,7 @@
     <Compile Include="Binding.cs" />
     <Compile Include="BindingBase.cs" />
     <Compile Include="BindingMode.cs" />
+    <Compile Include="ItemsSourceProvider.cs" />
     <Compile Include="Tests\BindingManagerTests.cs" />
     <Compile Include="BindingManager.cs">
       <SubType>Component</SubType>
@@ -82,6 +83,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PropertyMetadata.cs" />
     <Compile Include="PropertyMetadataOptions.cs" />
+    <Compile Include="Tests\ItemsSourceProviderTests.cs" />
     <Compile Include="Utils\CanExecuteChangedHandler.cs" />
     <Compile Include="Utils\IPropertyChangeListener.cs" />
     <Compile Include="Utils\IWeakEventHandler.cs" />
