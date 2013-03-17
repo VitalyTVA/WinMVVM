@@ -18,7 +18,10 @@ namespace WinMVVM {
             control.SetValue(ItemsSourceProperty, value);
         }
         static void OnItemsSourceChanged(Control sender, AttachedPropertyChangedEventArgs<IEnumerable> e) {
-            
+            var listBox = sender as ListBox;
+            if(listBox == null)
+                return;
+            listBox.DataSource = e.NewValue;
         }
     }
 }
