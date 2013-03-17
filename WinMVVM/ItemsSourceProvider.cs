@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
@@ -21,7 +22,7 @@ namespace WinMVVM {
             var listBox = sender as ListBox;
             if(listBox == null)
                 return;
-            listBox.DataSource = e.NewValue;
+            listBox.DataSource = (e.NewValue is INotifyCollectionChanged && e.NewValue is IList) ? BindingListAdapter.CreateFromList((IList)e.NewValue) : e.NewValue;
         }
     }
 }
