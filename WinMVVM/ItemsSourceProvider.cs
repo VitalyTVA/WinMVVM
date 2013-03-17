@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Input;
 using WinMVVM.Utils;
+using WinMVVM.Utils.Adapter;
 
 namespace WinMVVM {
     public static class ItemsSourceProvider {

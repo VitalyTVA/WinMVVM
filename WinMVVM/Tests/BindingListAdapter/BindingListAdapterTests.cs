@@ -10,9 +10,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
-using WinMVVM.Utils;
+using WinMVVM.Utils.Adapter;
 
-namespace WinMVVM.Tests {
+namespace WinMVVM.Tests.Adapter {
     public class CarData {
         public string Model { get; set; }
         public string Trademark { get; set; }
@@ -72,6 +72,51 @@ namespace WinMVVM.Tests {
         #endregion
     }
     #endregion
+    public class TestData : INotifyPropertyChanged {
+        int number;
+        string text;
+        public int Number {
+            get { return number; }
+            set {
+                if(number == value)
+                    return;
+                number = value;
+                NotifyChanged("Number");
+            }
+        }
+        public string Text {
+            get { return text; }
+            set {
+                if(text == value)
+                    return;
+                text = value;
+                NotifyChanged("Text");
+            }
+        }
+        public int GetPropertyChangedInvocationCount() {
+            return propertyChanged != null ? propertyChanged.GetInvocationList().Count() : 0;
+        }
+        public Delegate[] GetPropertyChangedInvocationList() {
+            return propertyChanged != null ? propertyChanged.GetInvocationList() : null;
+        }
+        protected void NotifyChanged(string propertyName) {
+            if(propertyChanged != null)
+                propertyChanged(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        #region INotifyPropertyChanged Members
+        event PropertyChangedEventHandler propertyChanged;
+        #endregion
+
+        #region INotifyPropertyChanged Members
+
+        event PropertyChangedEventHandler INotifyPropertyChanged.PropertyChanged {
+            add { propertyChanged += value; }
+            remove { propertyChanged -= value; }
+        }
+
+        #endregion
+    }
     public static class TestDataObjectExtensions {
         public static object GetNumber(this object obj) {
             return obj.GetPropertyValue("Number");
@@ -101,51 +146,6 @@ namespace WinMVVM.Tests {
     }
     [TestFixture]
     public class BindingListAdapterTests {
-        public class TestData : INotifyPropertyChanged {
-            int number;
-            string text;
-            public int Number {
-                get { return number; }
-                set {
-                    if(number == value)
-                        return;
-                    number = value;
-                    NotifyChanged("Number");
-                }
-            }
-            public string Text {
-                get { return text; }
-                set {
-                    if(text == value)
-                        return;
-                    text = value;
-                    NotifyChanged("Text");
-                }
-            }
-            public int GetPropertyChangedInvocationCount() {
-                return propertyChanged != null ? propertyChanged.GetInvocationList().Count() : 0;
-            }
-            public Delegate[] GetPropertyChangedInvocationList() {
-                return propertyChanged != null ? propertyChanged.GetInvocationList() : null;
-            }
-            protected void NotifyChanged(string propertyName) {
-                if(propertyChanged != null)
-                    propertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
-
-            #region INotifyPropertyChanged Members
-            event PropertyChangedEventHandler propertyChanged;
-            #endregion
-
-            #region INotifyPropertyChanged Members
-
-            event PropertyChangedEventHandler INotifyPropertyChanged.PropertyChanged {
-                add { propertyChanged += value; }
-                remove { propertyChanged -= value; }
-            }
-
-            #endregion
-        }
         class ManuallyNotifiedCollection : List<TestData>, INotifyCollectionChanged {
             public void NotifyChanged(NotifyCollectionChangedEventArgs e) {
                 if(CollectionChanged != null)

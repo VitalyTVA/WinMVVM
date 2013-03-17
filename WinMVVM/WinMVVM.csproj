@@ -73,7 +73,7 @@
     <Compile Include="BindingBase.cs" />
     <Compile Include="BindingMode.cs" />
     <Compile Include="ItemsSourceProvider.cs" />
-    <Compile Include="Tests\BindingListAdapterTests.cs" />
+    <Compile Include="Tests\BindingListAdapter\BindingListAdapterTests.cs" />
     <Compile Include="Tests\BindingManagerTests.cs" />
     <Compile Include="BindingManager.cs">
       <SubType>Component</SubType>
@@ -85,7 +85,13 @@
     <Compile Include="PropertyMetadata.cs" />
     <Compile Include="PropertyMetadataOptions.cs" />
     <Compile Include="Tests\ItemsSourceProviderTests.cs" />
-    <Compile Include="Utils\BindingListAdapter.cs" />
+    <Compile Include="Utils\BindingListAdapter\BindingListAdapter.cs" />
+    <Compile Include="Utils\BindingListAdapter\BindingListAdapterBase.cs" />
+    <Compile Include="Utils\BindingListAdapter\ItemPropertyNotificationMode.cs" />
+    <Compile Include="Utils\BindingListAdapter\TypedListBindingListAdapter.cs" />
+    <Compile Include="Utils\BindingListAdapter\TypedListBindingListAdapterBase.cs" />
+    <Compile Include="Utils\CollectionChangedWeakEventHandler.cs" />
+    <Compile Include="Utils\PropertyChangedWeakEventHandler.cs" />
     <Compile Include="Utils\CanExecuteChangedHandler.cs" />
     <Compile Include="Utils\IPropertyChangeListener.cs" />
     <Compile Include="Utils\IWeakEventHandler.cs" />

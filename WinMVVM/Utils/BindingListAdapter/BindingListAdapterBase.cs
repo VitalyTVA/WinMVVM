@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -8,26 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace WinMVVM.Utils {
-    internal class PropertyChangedWeakEventHandler<TOwner> : WeakEventHandler<TOwner, PropertyChangedEventArgs, PropertyChangedEventHandler> where TOwner : class {
-        static Action<WeakEventHandler<TOwner, PropertyChangedEventArgs, PropertyChangedEventHandler>, object> action = (h, o) => ((INotifyPropertyChanged)o).PropertyChanged -= h.Handler;
-        static Func<WeakEventHandler<TOwner, PropertyChangedEventArgs, PropertyChangedEventHandler>, PropertyChangedEventHandler> create = h => new PropertyChangedEventHandler(h.OnEvent);
-        public PropertyChangedWeakEventHandler(TOwner owner, Action<TOwner, object, PropertyChangedEventArgs> onEventAction)
-            : base(owner, onEventAction, action, create) {
-        }
-    }
-    internal class CollectionChangedWeakEventHandler<TOwner> : WeakEventHandler<TOwner, NotifyCollectionChangedEventArgs, NotifyCollectionChangedEventHandler> where TOwner : class {
-        static Action<WeakEventHandler<TOwner, NotifyCollectionChangedEventArgs, NotifyCollectionChangedEventHandler>, object> action = (h, o) => ((INotifyCollectionChanged)o).CollectionChanged -= h.Handler;
-        static Func<WeakEventHandler<TOwner, NotifyCollectionChangedEventArgs, NotifyCollectionChangedEventHandler>, NotifyCollectionChangedEventHandler> create = h => new NotifyCollectionChangedEventHandler(h.OnEvent);
-        public CollectionChangedWeakEventHandler(TOwner owner, Action<TOwner, object, NotifyCollectionChangedEventArgs> onEventAction)
-            : base(owner, onEventAction, action, create) {
-        }
-    }
-    [Flags]
-    internal enum ItemPropertyNotificationMode {
-        None = 0,
-        PropertyChanged = 1
-    }
+namespace WinMVVM.Utils.Adapter {
     internal abstract class BindingListAdapterBase : IBindingList, IDisposable {
         static readonly PropertyChangedEventArgs EmptyEventArgs = new PropertyChangedEventArgs(null);
         readonly ItemPropertyNotificationMode itemPropertyNotificationMode;
@@ -300,79 +281,5 @@ namespace WinMVVM.Utils {
         }
 
         #endregion
-    }
-    internal abstract class TypedListBindingListAdapterBase : BindingListAdapterBase, ITypedList {
-        ITypedList TypedList { get { return (ITypedList)source; } }
-        public TypedListBindingListAdapterBase(IList source)
-            : this(source, ItemPropertyNotificationMode.PropertyChanged) {
-        }
-        public TypedListBindingListAdapterBase(IList source, ItemPropertyNotificationMode itemPropertyNotificationMode)
-            : base(source, itemPropertyNotificationMode) {
-            if(!(source is ITypedList))
-                throw new ArgumentException("source");
-        }
-        PropertyDescriptorCollection ITypedList.GetItemProperties(PropertyDescriptor[] listAccessors) {
-            return TypedList.GetItemProperties(listAccessors);
-        }
-        string ITypedList.GetListName(PropertyDescriptor[] listAccessors) {
-            return TypedList.GetListName(listAccessors);
-        }
-    }
-
-    internal class BindingListAdapter : BindingListAdapterBase, ICancelAddNew {
-        static readonly PropertyChangedEventArgs EmptyEventArgs = new PropertyChangedEventArgs(null);
-        public static BindingListAdapter CreateFromList(IList list, ItemPropertyNotificationMode itemPropertyNotificationMode = ItemPropertyNotificationMode.PropertyChanged) {
-            return list is ITypedList ? new TypedListBindingListAdapter(list, itemPropertyNotificationMode) : new BindingListAdapter(list, itemPropertyNotificationMode);
-        }
-        bool isNewItemRowEditing;
-        readonly ItemPropertyNotificationMode itemPropertyNotificationMode;
-        bool ShouldSubscribePropertyChanged { get { return (itemPropertyNotificationMode & ItemPropertyNotificationMode.PropertyChanged) != ItemPropertyNotificationMode.None; } }
-        protected override bool ShouldSubscribePropertiesChanged { get { return itemPropertyNotificationMode != ItemPropertyNotificationMode.None; } }
-        internal BindingListAdapter(IList source, ItemPropertyNotificationMode itemPropertyNotificationMode = ItemPropertyNotificationMode.PropertyChanged)
-            : base(source, itemPropertyNotificationMode, false) {
-            this.itemPropertyNotificationMode = itemPropertyNotificationMode;
-            SubscribeAll(source);
-        }
-
-        void OnObjectDependencyPropertyChanged(object sender, EventArgs e) {
-            OnObjectPropertyChanged(sender, EmptyEventArgs);
-        }
-
-        protected override void AddNewInternal() {
-            isNewItemRowEditing = true;
-        }
-        #region ICancelAddNew Members
-        public void CancelNew(int itemIndex) {
-            if(OriginalDataSource is IEditableCollectionView) {
-                ((IEditableCollectionView)OriginalDataSource).CancelNew();
-            } else {
-                if(isNewItemRowEditing) {
-                    RemoveAt(itemIndex);
-                    isNewItemRowEditing = false;
-                }
-            }
-        }
-        public void EndNew(int itemIndex) {
-            if(OriginalDataSource is IEditableCollectionView) {
-                ((IEditableCollectionView)OriginalDataSource).CommitNew();
-            } else {
-                isNewItemRowEditing = false;
-            }
-        }
-        #endregion
-    }
-    internal class TypedListBindingListAdapter : BindingListAdapter, ITypedList {
-        ITypedList TypedList { get { return (ITypedList)source; } }
-        public TypedListBindingListAdapter(IList source, ItemPropertyNotificationMode itemPropertyNotificationMode = ItemPropertyNotificationMode.PropertyChanged)
-            : base(source, itemPropertyNotificationMode) {
-            if(!(source is ITypedList))
-                throw new ArgumentException("source");
-        }
-        PropertyDescriptorCollection ITypedList.GetItemProperties(PropertyDescriptor[] listAccessors) {
-            return TypedList.GetItemProperties(listAccessors);
-        }
-        string ITypedList.GetListName(PropertyDescriptor[] listAccessors) {
-            return TypedList.GetListName(listAccessors);
-        }
     }
 }
