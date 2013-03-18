@@ -11,7 +11,7 @@ using WpfBinding = System.Windows.Data.Binding;
 namespace WinMVVM {
     public static class BindingOperations {
         public static void SetBinding<T>(this Control control, AttachedProperty<T> property, BindingBase binding) {
-            ValidateAttachedPropertyParameters<T>(control, property);
+            ValidateAttachedPropertyParameters(control, property);
             Guard.ArgumentNotNull(binding, "binding");
             control.SetBindingCore(AttachedPropertyDescriptor.FromAttachedProperty(property), binding);
         }
@@ -22,7 +22,7 @@ namespace WinMVVM {
             PropertyDescriptorBase property = ValidatePropertyNameParameters(control, propertyName);
             control.SetBindingCore(property, binding);
         }
-        static void SetBindingCore(this Control control, PropertyDescriptorBase property, BindingBase binding) {
+        internal static void SetBindingCore(this Control control, PropertyDescriptorBase property, BindingBase binding) {
             Guard.ArgumentNotNull(binding, "binding");
 
             BindingExpressionKey key = new BindingExpressionKey(control, property);
@@ -30,7 +30,7 @@ namespace WinMVVM {
             propertyEntry.AddBinding(key, binding, () => new BindingExpression(key, binding, propertyEntry));
         }
         public static void ClearBinding<T>(this Control control, AttachedProperty<T> property) {
-            ValidateAttachedPropertyParameters<T>(control, property);
+            ValidateAttachedPropertyParameters(control, property);
             control.ClearBindingCore(AttachedPropertyDescriptor.FromAttachedProperty(property));
         }
         public static void ClearBinding(this Control control, string propertyName) {
@@ -52,13 +52,12 @@ namespace WinMVVM {
         //public static void ClearAllBinding(this Control control, string propertyName) { //TODO
         //}
 
-        static PropertyDescriptorBase ValidatePropertyNameParameters(Control control, string propertyName) {
+        internal static PropertyDescriptorBase ValidatePropertyNameParameters(Control control, string propertyName) {
             Guard.ArgumentNotNull(control, "control");
             Guard.ArgumentInRange(!string.IsNullOrEmpty(propertyName), "propertyName");
-            PropertyDescriptorBase property = StandardPropertyDescriptor.FromPropertyName(control, propertyName);
-            return property;
+            return StandardPropertyDescriptor.FromPropertyName(control, propertyName);
         }
-        private static void ValidateAttachedPropertyParameters<T>(Control control, AttachedProperty<T> property) {
+        internal static void ValidateAttachedPropertyParameters(Control control, AttachedPropertyBase property) {
             Guard.ArgumentNotNull(control, "control");
             Guard.ArgumentNotNull(property, "property");
         }

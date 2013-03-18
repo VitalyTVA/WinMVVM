@@ -15,28 +15,29 @@ namespace WinMVVM {
     [DesignerSerializer(SR.BindingManagerSerializerAssemblyQualifiedName, SR.CodeDomSerializerAssemblyQualifiedName)]
     [Designer(SR.BindingManagerDesignerAssemblyQualifiedName)]
     public class BindingManager : Component, ISupportInitialize {
-        static MethodInfo setAttachedPropertyBindingMethodInfo;
-        static MethodInfo clearAttachedPropertyBindingMethodInfo;
-        class SetBindingActionCollection : Collection<BindingManagerActionBase> { 
+        class ActionCollection : Collection<BindingManagerActionBase> { 
         }
 
-        SetBindingActionCollection Actions { get; set; }
+        ActionCollection Actions { get; set; }
         public BindingManager() {
-            Actions = new SetBindingActionCollection();
+            Actions = new ActionCollection();
         }
         void ISupportInitialize.BeginInit() {
-            Actions.Clear();
+            foreach(BindingManagerActionBase action in Actions.ToArray()) {
+                action.With(x => x as SetBindingAction).Do(x => ClearBindingCore(x.Control, x.Property));
+                action.With(x => x as SetValueAction).Do(x => ClearValue(x.Control, ((AttachedPropertyDescriptor)x.Property).Property));
+            }
         }
         void ISupportInitialize.EndInit() {
         }
 
         public void SetValue(Control control, AttachedPropertyBase property, object value) {
-            ValidateAttachedPropertyArguments(control, property);
+            BindingOperations.ValidateAttachedPropertyParameters(control, property);
             property.SetValueInternal(control, value);
             AddAction(new SetValueAction(control, AttachedPropertyDescriptor.FromAttachedProperty(property), value));
         }
         public void ClearValue(Control control, AttachedPropertyBase property) {
-            ValidateAttachedPropertyArguments(control, property);
+            BindingOperations.ValidateAttachedPropertyParameters(control, property);
             property.ClearValue(control);
             PropertyDescriptorBase propertyDescriptor = AttachedPropertyDescriptor.FromAttachedProperty(property);
             if(FindAction(control, propertyDescriptor) is SetBindingAction)
@@ -48,31 +49,16 @@ namespace WinMVVM {
             ClearBindingCore(control, StandardPropertyDescriptor.FromPropertyName(control, propertyName));
         }
         public void SetBinding(Control control, string propertyName, BindingBase binding) {
-            BindingOperations.SetBinding(control, propertyName, binding);
-            //TODO  all SetBinding variants and test it
             //TODO  do all this only in design time
-            this.SetBindingCore(control, StandardPropertyDescriptor.FromPropertyName(control, propertyName), (Binding)binding);
+            var property = BindingOperations.ValidatePropertyNameParameters(control, propertyName);
+            this.SetBindingCore(control, property, (Binding)binding);
         }
         public void ClearBinding(Control control, AttachedPropertyBase property) {
-            ValidateAttachedPropertyArguments(control, property);
-            if(clearAttachedPropertyBindingMethodInfo == null) {
-                clearAttachedPropertyBindingMethodInfo = typeof(BindingOperations).GetMethods(BindingFlags.Public | BindingFlags.Static).
-                    First(x => x.Name == "ClearBinding" && x.GetParameters().ElementAt(1).ParameterType.Name == typeof(AttachedProperty<>).Name); //TODO use lambda
-            }
-            MethodInfo clearBindingActionMethod = clearAttachedPropertyBindingMethodInfo.MakeGenericMethod(property.PropertyType);
-            clearBindingActionMethod.Invoke(null, new object[] { control, property });
-
+            BindingOperations.ValidateAttachedPropertyParameters(control, property);
             this.ClearBindingCore(control, GetPropertyDescriptor(property));
         }
         public void SetBinding(Control control, AttachedPropertyBase property, BindingBase binding) {
-            ValidateAttachedPropertyArguments(control, property);
-            if(setAttachedPropertyBindingMethodInfo == null) {
-                setAttachedPropertyBindingMethodInfo = typeof(BindingOperations).GetMethods(BindingFlags.Public | BindingFlags.Static).
-                    First(x => x.Name == "SetBinding" && x.GetParameters().ElementAt(1).ParameterType.Name == typeof(AttachedProperty<>).Name); //TODO use lambda
-            }
-            MethodInfo setBindingActionMethod = setAttachedPropertyBindingMethodInfo.MakeGenericMethod(property.PropertyType);
-            setBindingActionMethod.Invoke(null, new object[] { control, property, binding });
-
+            BindingOperations.ValidateAttachedPropertyParameters(control, property);
             this.SetBindingCore(control, GetPropertyDescriptor(property), (Binding)binding);
         }
         public void ClearAllBindings(Control control) {
@@ -103,6 +89,7 @@ namespace WinMVVM {
         }
 
         internal void SetBindingCore(Control control, PropertyDescriptorBase property, Binding binding) {
+            BindingOperations.SetBindingCore(control, property, binding);
             AddAction(new SetBindingAction(control, property, binding));
         }
         void AddAction(BindingManagerActionBase newAction) {
@@ -117,10 +104,6 @@ namespace WinMVVM {
         }
         void RemoveAction(Control control, PropertyDescriptorBase property) {
             FindAction(control, property).Do(x => Actions.Remove(x));
-        }
-        static void ValidateAttachedPropertyArguments(Control control, AttachedPropertyBase property) {
-            Guard.ArgumentNotNull(control, "control");
-            Guard.ArgumentNotNull(property, "property");
         }
     }
 }

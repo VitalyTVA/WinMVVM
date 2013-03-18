@@ -132,13 +132,16 @@ namespace WinMVVM.Tests {
                 ((ISupportInitialize)manager).BeginInit();
                 ((ISupportInitialize)manager).EndInit();
                 //binding created with wizard
-                manager.SetBinding(form, DataContextProvider.DataContextProperty, new Binding());
+                manager.SetBinding(form, TextProperty, new Binding());
                 //deserialization on undo
                 ((ISupportInitialize)manager).BeginInit();
                 ((ISupportInitialize)manager).EndInit();
 
                 Assert.That(manager.GetBindingActions().Count(), Is.EqualTo(0));
                 Assert.That(manager.GetValueActions().Count(), Is.EqualTo(0));
+
+                form.SetDataContext("test");
+                Assert.That(form.GetValue(TextProperty), Is.Null);
             }
         }
         [Test]
@@ -154,6 +157,7 @@ namespace WinMVVM.Tests {
                 manager.SetValue(form, TextProperty, "test");
                 //deserialization on undo
                 ((ISupportInitialize)manager).BeginInit();
+                Assert.That(form.GetValue(TextProperty), Is.Null);
                 manager.SetBinding(form, TextProperty, new Binding());
                 ((ISupportInitialize)manager).EndInit();
                 //undo from property grid

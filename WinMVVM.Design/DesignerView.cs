@@ -137,6 +137,9 @@ namespace WinMVVM.Design {
             yield return DataContextProvider.DataContextProperty;
             yield return CommandProvider.CommandProperty;
             yield return CommandProvider.CommandParameterProperty;
+            if(control is ListBox || control is DataGridView) {
+                yield return ItemsSourceProvider.ItemsSourceProperty;
+            }
         }
     }
 }
