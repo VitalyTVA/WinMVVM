@@ -10,20 +10,13 @@ using WinMVVM.Utils;
 
 namespace WinMVVM.Tests {
     [TestFixture]
-    public class ItemsSourceProviderTests {
-        [Test]
-        public void SetListToNotItemsControl() {
-            var list = new List<TestData>();
-            using(var button = new Button()) {
-                button.SetItemsSource(list);
-            }
-        }
+    public class ListBoxItemsSourceTests {
         [Test]
         public void BindToSimpleList() {
             var list = new List<TestData>() { 
-                new TestData(0, "text 0"),
-                new TestData(1, "text 1"),
-            };
+                    new TestData(0, "text 0"),
+                    new TestData(1, "text 1"),
+                };
             using(var form = new Form()) {
                 var listBox = new ListBox();
                 form.Controls.Add(listBox);
@@ -46,15 +39,15 @@ namespace WinMVVM.Tests {
                 if(!canSerialize)
                     actualCanSerialize = !properties.Contains(property.Name);
                 Assert.That(SerializeHelper.CanSerializeProperty(control, property), Is.EqualTo(actualCanSerialize));
-                
+
             }
         }
         [Test]
         public void BindToBindingList() {
             var list = new BindingList<TestData>() { 
-                new TestData(0, "text 0"),
-                new TestData(1, "text 1"),
-            };
+                    new TestData(0, "text 0"),
+                    new TestData(1, "text 1"),
+                };
             using(var form = new Form()) {
                 var listBox = new ListBox();
                 form.Controls.Add(listBox);
@@ -76,9 +69,9 @@ namespace WinMVVM.Tests {
         [Test]
         public void BindToObservableCollection() {
             var list = new ObservableCollection<TestData>() { 
-                new TestData(0, "text 0"),
-                new TestData(1, "text 1"),
-            };
+                    new TestData(0, "text 0"),
+                    new TestData(1, "text 1"),
+                };
             using(var form = new Form()) {
                 var listBox = new ListBox();
                 form.Controls.Add(listBox);
@@ -98,13 +91,4 @@ namespace WinMVVM.Tests {
             }
         }
     }
-    public class TestData {
-        public int IntProperty { get; set; }
-        public string TextProperty { get; set; }
-        public TestData(int intProperty, string textProperty) {
-            IntProperty = intProperty;
-            TextProperty = textProperty;
-        }
-    }
-
 }
