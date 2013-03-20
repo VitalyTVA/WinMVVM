@@ -86,7 +86,7 @@
     <Compile Include="PropertyMetadataOptions.cs" />
     <Compile Include="Tests\ItemsSourceProvider\ItemsSourceProviderTests.cs" />
     <Compile Include="Tests\ItemsSourceProvider\ItemsSourceTestsBase.cs" />
-    <Compile Include="Tests\ItemsSourceProvider\ListBoxItemsSourceTests.cs" />
+    <Compile Include="Tests\ItemsSourceProvider\ListBoxItemsSourceTests.cs"/>
     <Compile Include="Tests\TestData.cs" />
     <Compile Include="Utils\BindingListAdapter\BindingListAdapter.cs" />
     <Compile Include="Utils\BindingListAdapter\BindingListAdapterBase.cs" />

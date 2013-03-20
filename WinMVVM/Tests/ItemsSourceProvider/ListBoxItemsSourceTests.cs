@@ -10,13 +10,24 @@ using System.Windows.Input;
 using WinMVVM.Utils;
 
 namespace WinMVVM.Tests.ItemsSource {
+    public abstract class ListControlItemsSourceTests<TListControl> : ItemsSourceTestsBase<TListControl> where TListControl : ListControl, new() {
+        protected override object GetDataSource(TListControl control) {
+            return control.DataSource;
+        }
+    }
     [TestFixture]
-    public class ListBoxItemsSourceTests : ItemsSourceTestsBase<ListBox> {
+    public class ListBoxItemsSourceTests : ListControlItemsSourceTests<ListBox> {
         protected override IList GetItems(ListBox control) {
             return control.Items;
         }
-        protected override object GetDataSource(ListBox control) {
-            return control.DataSource;
+    }
+
+    public class CustomListBox : ListBox { 
+    }
+    [TestFixture]
+    public class CustomListBoxItemsSourceTests : ListControlItemsSourceTests<CustomListBox> {
+        protected override IList GetItems(CustomListBox control) {
+            return control.Items;
         }
     }
 }
