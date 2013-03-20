@@ -8,7 +8,7 @@ using System.Windows.Forms;
 using System.Windows.Input;
 using WinMVVM.Utils;
 
-namespace WinMVVM.Tests {
+namespace WinMVVM.Tests.ItemsSource {
     [TestFixture]
     public class ItemsSourceProviderTests {
         [Test]
@@ -19,13 +19,4 @@ namespace WinMVVM.Tests {
             }
         }
     }
-    public class TestData {
-        public int IntProperty { get; set; }
-        public string TextProperty { get; set; }
-        public TestData(int intProperty, string textProperty) {
-            IntProperty = intProperty;
-            TextProperty = textProperty;
-        }
-    }
-
 }
