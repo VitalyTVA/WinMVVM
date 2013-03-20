@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using WinMVVM.Utils;
+using System.ComponentModel.Design;
 
 namespace WinMVVM.Design {
     public partial class DesignerView : UserControl {
@@ -52,11 +53,18 @@ namespace WinMVVM.Design {
         void bBind_Click(object sender, EventArgs e) {
             if(SelectedProperty == null || SelectedComponent == null)
                 return;
+            IComponentChangeService service = (IComponentChangeService)designer.Component.Site.GetService(typeof(IComponentChangeService));
+            if(SelectedProperty is StandardPropertyDescriptor) {
+                service.OnComponentChanging(SelectedComponent, ((StandardPropertyDescriptor)SelectedProperty).Property);
+            }
             designer.ChangeComponent(() => {
                 Manager.SetBindingCore(SelectedComponent, SelectedProperty, new Binding(tbPath.Text, (BindingMode)cbMode.SelectedItem));
                 RepopulateProperties();
             });
-
+            if(SelectedProperty is StandardPropertyDescriptor) {
+                service.OnComponentChanged(SelectedComponent, ((StandardPropertyDescriptor)SelectedProperty).Property, null, null);
+            }
+            //TODO notify related component property is changed to make serialization work
         }
 
         void bClear_Click(object sender, EventArgs e) {

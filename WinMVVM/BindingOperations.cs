@@ -61,5 +61,11 @@ namespace WinMVVM {
             Guard.ArgumentNotNull(control, "control");
             Guard.ArgumentNotNull(property, "property");
         }
+        internal static bool IsBoundProperty(Control control, PropertyDescriptor propertyCore) {
+            PropertyDescriptorBase property = StandardPropertyDescriptor.FromProperty(propertyCore);
+            BindingExpressionKey key = new BindingExpressionKey(control, property);
+            var propertyEntry = DataContextProvider.DataContextProperty.GetPropertyEntry(control);
+            return propertyEntry.HasBinding(key);
+        }
     }
 }

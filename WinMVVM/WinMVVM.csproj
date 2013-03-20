@@ -117,6 +117,7 @@
     <Compile Include="Utils\PropertyChangeListener.cs" />
     <Compile Include="Utils\SetBindingActionBase.cs" />
     <Compile Include="Utils\SetValueAction.cs" />
+    <Compile Include="Utils\SerializeHelper.cs" />
     <Compile Include="Utils\SR.cs" />
     <Compile Include="Utils\StandardPropertyDescriptor.cs" />
     <Compile Include="Utils\WeakEventHandler.cs" />

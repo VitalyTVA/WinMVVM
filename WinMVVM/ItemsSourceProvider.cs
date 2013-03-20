@@ -21,9 +21,18 @@ namespace WinMVVM {
         }
         static void OnItemsSourceChanged(Control sender, AttachedPropertyChangedEventArgs<IEnumerable> e) {
             var listBox = sender as ListBox;
-            if(listBox == null)
-                return;
-            listBox.DataSource = (e.NewValue is INotifyCollectionChanged && e.NewValue is IList) ? BindingListAdapter.CreateFromList((IList)e.NewValue) : e.NewValue;
+            if(listBox != null) {
+                IEnumerable dataSource = (e.NewValue is INotifyCollectionChanged && e.NewValue is IList) ? BindingListAdapter.CreateFromList((IList)e.NewValue) : e.NewValue;//TODO
+                listBox.DataSource = dataSource;
+            }
+
+            //var gridView = sender as DataGridView;
+            //if(gridView != null) {
+            //    IEnumerable dataSource = (e.NewValue is INotifyCollectionChanged && e.NewValue is IList) ? BindingListAdapter.CreateFromList((IList)e.NewValue) : e.NewValue;//TODO
+            //    gridView.DataSource = dataSource != null ? new BindingSource(dataSource, null) : null;
+            //}
+
         }
+
     }
 }

@@ -88,6 +88,9 @@ namespace WinMVVM.Utils {
             }
             return result;
         }
+        public bool HasBinding(BindingExpressionKey key) {
+            return expressions.ContainsKey(key);
+        }
         void OnControlAdded(object sender, ControlEventArgs e) {
             ValidateChildAccess();
             UpdateChildValue(e.Control);

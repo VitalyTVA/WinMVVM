@@ -10,7 +10,6 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace WinMVVM.Design {
-
     public class BindingManagerDesigner : System.ComponentModel.Design.ComponentDesigner {
         class BindingManagerActionList : DesignerActionList {
             readonly BindingManagerDesigner designer;
@@ -84,19 +83,30 @@ namespace WinMVVM.Design {
                 IComponentChangeService service = (IComponentChangeService)this.GetService(typeof(IComponentChangeService));
                 if(service != null) {
                     service.ComponentRemoving -= new ComponentEventHandler(this.OnComponentRemoving);
+                    service.ComponentAdding -= OnComponentAdding;
                 }
                 if(localExtenderServiceReference != null) {
                     localExtenderServiceReference.RemoveExtenderProvider(extender);
                     localExtenderServiceReference = null;
-                } 
+                }
+
+                //foreach(var item in Component.Site.Container.Components) {
+                //    RemoveProvider(item);
+                //}
             }
             base.Dispose(disposing);
         }
         public override void Initialize(System.ComponentModel.IComponent component) {
             base.Initialize(component);
+
+            foreach(var item in Component.Site.Container.Components) {
+                AddProvider(item);
+            }
+
             IComponentChangeService service = (IComponentChangeService)this.GetService(typeof(IComponentChangeService));
             if(service != null) {
-                service.ComponentRemoving += new ComponentEventHandler(this.OnComponentRemoving);
+                service.ComponentRemoving += OnComponentRemoving;
+                service.ComponentAdding += OnComponentAdding;
             }
 
             IExtenderProviderService extenderService = (IExtenderProviderService)component.Site.GetService(typeof(IExtenderProviderService));
@@ -107,11 +117,24 @@ namespace WinMVVM.Design {
             }
 
         }
-        private void OnComponentRemoving(object sender, ComponentEventArgs e) {
+
+        static void AddProvider(object item) {
+            TypeDescriptor.AddProvider(new BoundElementTypeDescriptionProvider(TypeDescriptor.GetProvider(item)), item);
+        }
+        //static void RemoveProvider(object item) {
+        //    BoundElementTypeDescriptionProvider provider = TypeDescriptor.GetProvider(item) as BoundElementTypeDescriptionProvider;
+        //    if(provider != null)
+        //        TypeDescriptor.RemoveProvider(provider, item);
+        //}
+        void OnComponentAdding(object sender, ComponentEventArgs e) {
+            AddProvider(e.Component);
+        }
+        void OnComponentRemoving(object sender, ComponentEventArgs e) {
+            //RemoveProvider(e.Component);
             ChangeComponent(() => {
-                BindingManager component = base.Component as BindingManager;
-                if(component != null && e.Component is Control)
-                    component.ClearAllBindings(e.Component as Control);
+                BindingManager bindingManager = base.Component as BindingManager;
+                if(bindingManager != null && e.Component is Control)
+                    bindingManager.ClearAllBindings(e.Component as Control);
             });
         }
         public void ChangeComponent(Action changeAction) {

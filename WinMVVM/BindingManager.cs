@@ -23,14 +23,23 @@ namespace WinMVVM {
             Actions = new ActionCollection();
         }
         void ISupportInitialize.BeginInit() {
+            Clear();
+        }
+        void ISupportInitialize.EndInit() {
+        }
+
+        protected override void Dispose(bool disposing) {
+            if(disposing) {
+                Clear();       
+            }
+            base.Dispose(disposing);
+        }
+        void Clear() {
             foreach(BindingManagerActionBase action in Actions.ToArray()) {
                 action.With(x => x as SetBindingAction).Do(x => ClearBindingCore(x.Control, x.Property));
                 action.With(x => x as SetValueAction).Do(x => ClearValue(x.Control, ((AttachedPropertyDescriptor)x.Property).Property));
             }
         }
-        void ISupportInitialize.EndInit() {
-        }
-
         public void SetValue(Control control, AttachedPropertyBase property, object value) {
             BindingOperations.ValidateAttachedPropertyParameters(control, property);
             property.SetValueInternal(control, value);

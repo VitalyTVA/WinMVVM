@@ -12,10 +12,14 @@ namespace WinMVVM.Utils {
             PropertyDescriptor property = TypeDescriptor.GetProperties(control)[propertyName];
             if(property == null)
                 Guard.ArgumentException("propertyName");
+            return FromProperty(property);
+        }
+        public static PropertyDescriptorBase FromProperty(PropertyDescriptor property) {
             return new StandardPropertyDescriptor(property);
         }
 
         readonly PropertyDescriptor property;
+        internal PropertyDescriptor Property { get { return property; } }
         StandardPropertyDescriptor(PropertyDescriptor property)
             : base(property.Name, property.PropertyType) {
             this.property = property;

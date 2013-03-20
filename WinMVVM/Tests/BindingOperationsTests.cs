@@ -184,6 +184,15 @@ namespace WinMVVM.Tests {
             }
         }
         [Test]
+        public void IsBoundProperty() {
+            using(var button = new Button()) {
+                button.SetBinding("Text", new Binding());
+                Assert.That(BindingOperations.IsBoundProperty(button, TypeDescriptor.GetProperties(button)["Text"]), Is.True);
+                button.ClearBinding("Text");
+                Assert.That(BindingOperations.IsBoundProperty(button, TypeDescriptor.GetProperties(button)["Text"]), Is.False);
+            }
+        }
+        [Test]
         public void InheritedDataContextBinding_BindAfterAddToTree() {
             using(var form = new Form()) {
                 var button1 = new Button();

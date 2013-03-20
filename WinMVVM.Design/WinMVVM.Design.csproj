@@ -53,6 +53,7 @@
     <Compile Include="BindingManagerCodeDomSerializer.cs" />
     <Compile Include="BindingsEditor.cs" />
     <Compile Include="BindingsTypeConverter.cs" />
+    <Compile Include="BoundElementTypeDescriptionProvider.cs" />
     <Compile Include="DataContextConverter.cs" />
     <Compile Include="DataContextExtender.cs" />
     <Compile Include="DesignerForm.cs">
@@ -70,6 +71,7 @@
     <Compile Include="NativeHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SR_Design.cs" />
+    <Compile Include="WrapperPropertyDescriptor.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WinMVVM\WinMVVM.csproj">

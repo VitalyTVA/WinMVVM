@@ -171,6 +171,15 @@ namespace WinMVVM.Tests {
             }
         }
         [Test]
+        public void ClearOnDispose() {
+            using(var form = new Form()) {
+                using(BindingManager manager = new BindingManager()) {
+                    manager.SetValue(form, TextProperty, "test");
+                }
+                Assert.That(form.GetValue(TextProperty), Is.Null);
+            }
+        }
+        [Test]
         public void NullParameters() {
             using(var form = new Form()) {
                 BindingManager manager = new BindingManager();

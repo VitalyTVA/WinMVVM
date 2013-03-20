@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
 using System.Windows.Input;
+using WinMVVM.Utils;
 
 namespace WinMVVM.Tests {
     [TestFixture]
@@ -26,13 +27,26 @@ namespace WinMVVM.Tests {
             using(var form = new Form()) {
                 var listBox = new ListBox();
                 form.Controls.Add(listBox);
+                AssertCanSerializeProperties(listBox, true, "Items", "DataSource");
                 listBox.SetItemsSource(list);
+                AssertCanSerializeProperties(listBox, false, "Items", "DataSource");
                 Assert.That(listBox.Items.Count, Is.EqualTo(2));
                 Assert.That(listBox.Items[0], Is.EqualTo(list[0]));
                 Assert.That(listBox.Items[1], Is.EqualTo(list[1]));
 
                 listBox.SetItemsSource(null);
+                AssertCanSerializeProperties(listBox, true, "Items", "DataSource");
                 Assert.That(listBox.Items.Count, Is.EqualTo(0));
+                Assert.That(listBox.DataSource, Is.Null);
+            }
+        }
+        void AssertCanSerializeProperties(Control control, bool canSerialize, params string[] properties) {
+            foreach(PropertyDescriptor property in TypeDescriptor.GetProperties(control)) {
+                bool actualCanSerialize = true;
+                if(!canSerialize)
+                    actualCanSerialize = !properties.Contains(property.Name);
+                Assert.That(SerializeHelper.CanSerializeProperty(control, property), Is.EqualTo(actualCanSerialize));
+                
             }
         }
         [Test]
