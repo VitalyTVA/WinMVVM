@@ -14,6 +14,8 @@ namespace WinMVVM.Tests.ItemsSource {
         protected abstract IList GetItems(TControl control);
         protected abstract object GetDataSource(TControl control);
 
+        //TODO what to do with synchronization in different controls bound to same collection?
+
         [Test]
         public void BindToSimpleList() {
             var list = new List<TestData>() { 
@@ -47,7 +49,6 @@ namespace WinMVVM.Tests.ItemsSource {
                 if(!canSerialize)
                     actualCanSerialize = !properties.Contains(property.Name);
                 Assert.That(SerializeHelper.CanSerializeProperty(control, property), Is.EqualTo(actualCanSerialize));
-
             }
         }
         [Test]

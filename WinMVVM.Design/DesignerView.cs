@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using WinMVVM.Utils;
 using System.ComponentModel.Design;
+using WinMVVM.Features;
 
 namespace WinMVVM.Design {
     public partial class DesignerView : UserControl {
@@ -145,7 +146,7 @@ namespace WinMVVM.Design {
             yield return DataContextProvider.DataContextProperty;
             yield return CommandProvider.CommandProperty;
             yield return CommandProvider.CommandParameterProperty;
-            if(control is ListBox || control is DataGridView) {
+            if(FeatureProvider<IItemsSourceFeature>.GetFeature(control) != null) {
                 yield return ItemsSourceProvider.ItemsSourceProperty;
             }
         }
