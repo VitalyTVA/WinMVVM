@@ -12,8 +12,8 @@ using WinMVVM.Utils;
 using WinMVVM.Utils.Adapter;
 
 namespace WinMVVM.Features {
-    //TODO it is key to performance to optimize this class - track last suitable features, cache those ever used, etc.
-    //TODO register features explicitly only from metadata provider to avoid static ctors initialization order problems
+    //TODO it is key to performance to optimize this class - track last suitable features, cache ever used features, use binary tree cashes, etc.
+    //search in cash by control type first, then full search by features list and cache type if feature is found to speed up access in the future
     public static class FeatureProvider<TFeature> where TFeature : IFeature {
         static FeatureProvider() {
             DefaultFeatureRegistrator.RegisterDefaultFeatures();
