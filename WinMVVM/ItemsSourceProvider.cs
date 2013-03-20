@@ -9,9 +9,15 @@ using System.Windows.Forms;
 using System.Windows.Input;
 using WinMVVM.Utils;
 using WinMVVM.Utils.Adapter;
+using WinMVVM.Features;
+using WinMVVM.Features.ItemsSource;
 
 namespace WinMVVM {
     public static class ItemsSourceProvider {
+        static ItemsSourceProvider() {
+            FeatureProvider<IItemsSourceFeature>.RegisterFeature<ListBoxItemsSourceFeature>();
+            FeatureProvider<IItemsSourceFeature>.RegisterFeature<ComboBoxItemsSourceFeature>();
+        }
         public static readonly AttachedProperty<IEnumerable> ItemsSourceProperty = AttachedProperty<IEnumerable>.Register(() => ItemsSourceProperty, new PropertyMetadata<IEnumerable>(null, OnItemsSourceChanged));
         public static IEnumerable GetItemsSource(this Control control) {
             return control.GetValue(ItemsSourceProperty);
@@ -20,10 +26,10 @@ namespace WinMVVM {
             control.SetValue(ItemsSourceProperty, value);
         }
         static void OnItemsSourceChanged(Control sender, AttachedPropertyChangedEventArgs<IEnumerable> e) {
-            var listBox = sender as ListBox;
-            if(listBox != null) {
+            IItemsSourceFeature feature = FeatureProvider<IItemsSourceFeature>.GetFeature(sender);
+            if(feature != null) {
                 IEnumerable dataSource = (e.NewValue is INotifyCollectionChanged && e.NewValue is IList) ? BindingListAdapter.CreateFromList((IList)e.NewValue) : e.NewValue;//TODO
-                listBox.DataSource = dataSource;
+                feature.SetDataSource(sender, dataSource);
             }
 
             //var gridView = sender as DataGridView;
@@ -31,8 +37,6 @@ namespace WinMVVM {
             //    IEnumerable dataSource = (e.NewValue is INotifyCollectionChanged && e.NewValue is IList) ? BindingListAdapter.CreateFromList((IList)e.NewValue) : e.NewValue;//TODO
             //    gridView.DataSource = dataSource != null ? new BindingSource(dataSource, null) : null;
             //}
-
         }
-
     }
 }

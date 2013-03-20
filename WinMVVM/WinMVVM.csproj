@@ -72,6 +72,13 @@
     <Compile Include="Binding.cs" />
     <Compile Include="BindingBase.cs" />
     <Compile Include="BindingMode.cs" />
+    <Compile Include="Features\BaseFeature.cs" />
+    <Compile Include="Features\BaseItemsSourceFeature.cs" />
+    <Compile Include="Features\IFeature.cs" />
+    <Compile Include="Features\IItemsSourceFeature.cs" />
+    <Compile Include="Features\ItemsSource\ComboBoxItemsSourceFeature.cs" />
+    <Compile Include="Features\ItemsSource\ListBoxItemsSourceFeature.cs" />
+    <Compile Include="Features\ItemsSource\ListControlItemsSourceFeature.cs" />
     <Compile Include="ItemsSourceProvider.cs" />
     <Compile Include="Tests\BindingListAdapter\BindingListAdapterTests.cs" />
     <Compile Include="Tests\BindingManagerTests.cs" />
@@ -86,7 +93,9 @@
     <Compile Include="PropertyMetadataOptions.cs" />
     <Compile Include="Tests\ItemsSourceProvider\ItemsSourceProviderTests.cs" />
     <Compile Include="Tests\ItemsSourceProvider\ItemsSourceTestsBase.cs" />
-    <Compile Include="Tests\ItemsSourceProvider\ListBoxItemsSourceTests.cs"/>
+    <Compile Include="Tests\ItemsSourceProvider\ListControlItemsSourceTests.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Tests\TestData.cs" />
     <Compile Include="Utils\BindingListAdapter\BindingListAdapter.cs" />
     <Compile Include="Utils\BindingListAdapter\BindingListAdapterBase.cs" />
@@ -126,6 +135,7 @@
     <Compile Include="Utils\WeakEventHandler.cs" />
     <Compile Include="Utils\WeakReferenceComparer.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>
