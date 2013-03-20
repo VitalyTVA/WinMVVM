@@ -4,14 +4,17 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Forms;
+using WinMVVM.Features;
 using WpfBinding = System.Windows.Data.Binding;
 
 namespace WinMVVM.Utils {
     internal static class SerializeHelper {
         internal static bool CanSerializeProperty(Control control, PropertyDescriptor property) {
-            if(control is ListBox) {
-                if(control.GetItemsSource() != null) //TODO - can't use local value
-                    return property.Name != "Items" && property.Name != "DataSource";
+            IItemsSourceFeature feature = FeatureProvider<IItemsSourceFeature>.GetFeature(control);
+            if(feature != null) {
+                if(control.GetItemsSource() == null)
+                    return true;
+                return !feature.GetItemsSourceAffectedProperties().Any(x => (x == property.Name));
             }
             return true;
         }

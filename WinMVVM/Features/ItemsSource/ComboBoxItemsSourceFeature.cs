@@ -11,6 +11,6 @@ using WinMVVM.Utils;
 using WinMVVM.Utils.Adapter;
 
 namespace WinMVVM.Features.ItemsSource {
-    internal class ComboBoxItemsSourceFeature : ListControlItemsSourceFeature<ListBox> {
+    internal class ComboBoxItemsSourceFeature : ListControlItemsSourceFeature<ComboBox> {
     }
 }

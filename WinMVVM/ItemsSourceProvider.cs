@@ -14,10 +14,6 @@ using WinMVVM.Features.ItemsSource;
 
 namespace WinMVVM {
     public static class ItemsSourceProvider {
-        static ItemsSourceProvider() {
-            FeatureProvider<IItemsSourceFeature>.RegisterFeature<ListBoxItemsSourceFeature>();
-            FeatureProvider<IItemsSourceFeature>.RegisterFeature<ComboBoxItemsSourceFeature>();
-        }
         public static readonly AttachedProperty<IEnumerable> ItemsSourceProperty = AttachedProperty<IEnumerable>.Register(() => ItemsSourceProperty, new PropertyMetadata<IEnumerable>(null, OnItemsSourceChanged));
         public static IEnumerable GetItemsSource(this Control control) {
             return control.GetValue(ItemsSourceProperty);

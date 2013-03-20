@@ -15,6 +15,11 @@ namespace WinMVVM.Features {
         void IItemsSourceFeature.SetDataSource(Control control, object value) {
             SetDataSource((TControl)control, value);
         }
+        string[] IItemsSourceFeature.GetItemsSourceAffectedProperties() {
+            return GetItemsSourceAffectedProperties();
+        }
+
+        protected abstract string[] GetItemsSourceAffectedProperties();
         protected abstract void SetDataSource(TControl control, object value);
     }
 }

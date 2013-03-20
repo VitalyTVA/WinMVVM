@@ -39,6 +39,9 @@ namespace WinMVVM.Tests.ItemsSource {
             }
         }
         void AssertCanSerializeProperties(Control control, bool canSerialize, params string[] properties) {
+            foreach(string property in properties) {
+                Assert.That(TypeDescriptor.GetProperties(control)[property], Is.Not.Null);
+            }
             foreach(PropertyDescriptor property in TypeDescriptor.GetProperties(control)) {
                 bool actualCanSerialize = true;
                 if(!canSerialize)

@@ -13,5 +13,6 @@ using WinMVVM.Utils.Adapter;
 namespace WinMVVM.Features {
     public interface IItemsSourceFeature : IFeature {
         void SetDataSource(Control control, object value);
+        string[] GetItemsSourceAffectedProperties();
     }
 }

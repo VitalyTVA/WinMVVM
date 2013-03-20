@@ -31,10 +31,10 @@ namespace WinMVVM.Tests.ItemsSource {
         }
     }
 
-    //[TestFixture]
-    //public class ComboBoxItemsSourceTests : ListControlItemsSourceTests<ComboBox> {
-    //    protected override IList GetItems(ComboBox control) {
-    //        return control.Items;
-    //    }
-    //}
+    [TestFixture]
+    public class ComboBoxItemsSourceTests : ListControlItemsSourceTests<ComboBox> {
+        protected override IList GetItems(ComboBox control) {
+            return control.Items;
+        }
+    }
 }
