@@ -74,8 +74,9 @@
     <Compile Include="BindingMode.cs" />
     <Compile Include="Features\BaseFeature.cs" />
     <Compile Include="Features\BaseItemsSourceFeature.cs" />
-    <Compile Include="UntestedStuff\DefaultFeatureRegistrator.cs" />
-    <Compile Include="UntestedStuff\FeatureProvider.cs" />
+    <Compile Include="Tests\FeatureProviderTests.cs" />
+    <Compile Include="Features\DefaultFeatureRegistrator.cs" />
+    <Compile Include="Features\FeatureProvider.cs" />
     <Compile Include="Features\IFeature.cs" />
     <Compile Include="Features\IItemsSourceFeature.cs" />
     <Compile Include="Features\ItemsSource\ComboBoxItemsSourceFeature.cs" />
