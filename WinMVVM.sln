@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinMVVM", "WinMVVM\WinMVVM.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinMVVM.Design", "WinMVVM.Design\WinMVVM.Design.csproj", "{C4EA8A36-89B9-42B3-9B61-A2F44A923C79}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinMVVM.TestExtension", "WinMVVM.TestExtension\WinMVVM.TestExtension.csproj", "{7D120B51-655E-4007-A8A2-DC2A6F81DC98}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,6 +26,12 @@ Global
 		{C4EA8A36-89B9-42B3-9B61-A2F44A923C79}.DebugTest|Any CPU.Build.0 = Debug|Any CPU
 		{C4EA8A36-89B9-42B3-9B61-A2F44A923C79}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C4EA8A36-89B9-42B3-9B61-A2F44A923C79}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7D120B51-655E-4007-A8A2-DC2A6F81DC98}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D120B51-655E-4007-A8A2-DC2A6F81DC98}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D120B51-655E-4007-A8A2-DC2A6F81DC98}.DebugTest|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D120B51-655E-4007-A8A2-DC2A6F81DC98}.DebugTest|Any CPU.Build.0 = Debug|Any CPU
+		{7D120B51-655E-4007-A8A2-DC2A6F81DC98}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D120B51-655E-4007-A8A2-DC2A6F81DC98}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
