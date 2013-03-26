@@ -74,6 +74,8 @@
     <Compile Include="BindingMode.cs" />
     <Compile Include="Features\BaseFeature.cs" />
     <Compile Include="Features\BaseItemsSourceFeature.cs" />
+    <Compile Include="Features\FeatureRegistratorAttribute.cs" />
+    <Compile Include="Features\IFeatureRegistrator.cs" />
     <Compile Include="Tests\FeatureProviderTests.cs" />
     <Compile Include="Features\DefaultFeatureRegistrator.cs" />
     <Compile Include="Features\FeatureProvider.cs" />
