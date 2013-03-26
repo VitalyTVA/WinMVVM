@@ -35,21 +35,25 @@
     <Reference Include="nunit.framework">
       <HintPath>C:\Program Files (x86)\TestDriven.NET 3\NUnit\2.6\framework\nunit.framework.dll</HintPath>
     </Reference>
-    <Reference Include="DevExpress.Data.v12.2, Version=12.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4, processorArchitecture=MSIL">
+    <Reference Include="DevExpress.Data.v12.2">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\3dParty\DevExpress.v12.2\DevExpress.Data.v12.2.dll</HintPath>
+      <Private>False</Private>
     </Reference>
-    <Reference Include="DevExpress.Utils.v12.2, Version=12.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4, processorArchitecture=MSIL">
+    <Reference Include="DevExpress.Utils.v12.2">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\3dParty\DevExpress.v12.2\DevExpress.Utils.v12.2.dll</HintPath>
+      <Private>False</Private>
     </Reference>
-    <Reference Include="DevExpress.XtraEditors.v12.2, Version=12.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4, processorArchitecture=MSIL">
+    <Reference Include="DevExpress.XtraEditors.v12.2">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\3dParty\DevExpress.v12.2\DevExpress.XtraEditors.v12.2.dll</HintPath>
+      <Private>False</Private>
     </Reference>
-    <Reference Include="DevExpress.XtraGrid.v12.2, Version=12.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4, processorArchitecture=MSIL">
+    <Reference Include="DevExpress.XtraGrid.v12.2">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\3dParty\DevExpress.v12.2\DevExpress.XtraGrid.v12.2.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -62,8 +66,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\FeatureRegistrator.cs" />
-    <Compile Include="Properties\XtraGridItemsSourceFeature.cs" />
+    <Compile Include="FeatureRegistrator.cs" />
+    <Compile Include="XtraGridItemsSourceFeature.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WinMVVM\WinMVVM.csproj">

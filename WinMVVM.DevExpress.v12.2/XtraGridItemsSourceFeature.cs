@@ -12,7 +12,7 @@ namespace WinMVVM.DevExpress {
             ((GridControl)control).DataSource = value;
         }
         string[] IItemsSourceFeature.GetItemsSourceAffectedProperties() {
-            return new string[0];
+            return new string[] { "DataSource" };
         }
     }
 }
