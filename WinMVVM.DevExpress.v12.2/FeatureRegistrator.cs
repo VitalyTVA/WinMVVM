@@ -8,7 +8,7 @@ using WinMVVM.Features;
 namespace WinMVVM.DevExpress {
     public class FeatureRegistrator : IFeatureRegistrator {
         void IFeatureRegistrator.RegisterFeatures() {
-            FeatureProvider<IItemsSourceFeature>.RegisterFeature<XtraGridItemsSourceFeature>();
+            FeatureProvider<IItemsSourceFeature>.RegisterFeature<GridControlItemsSourceFeature>();
         }
     }
 }

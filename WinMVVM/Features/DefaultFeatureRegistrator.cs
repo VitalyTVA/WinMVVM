@@ -22,6 +22,7 @@ namespace WinMVVM.Features {
             registered = true;
             FeatureProvider<IItemsSourceFeature>.RegisterFeature<ListBoxItemsSourceFeature>();
             FeatureProvider<IItemsSourceFeature>.RegisterFeature<ComboBoxItemsSourceFeature>();
+            FeatureProvider<IItemsSourceFeature>.RegisterFeature<DataGridViewItemsSourceFeature>();
 
             LoadExtensions();
         }

@@ -12,7 +12,7 @@ using WinMVVM.Utils;
 
 namespace WinMVVM.Tests.ItemsSource {
     public abstract class ItemsSourceTestsBase<TControl> where TControl : Control, new() {
-        public static string GetPropertyName<T>(Expression<Func<T>> expression) {
+        protected static string GetPropertyName<T>(Expression<Func<T>> expression) {
             return ExpressionHelper.GetPropertyName(expression);
         }
         protected abstract IList GetItems(TControl control);

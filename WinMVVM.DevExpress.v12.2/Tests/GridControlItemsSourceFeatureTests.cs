@@ -11,7 +11,7 @@ using System.Collections;
 
 namespace WinMVVM.DevExpress.Tests {
     [TestFixture]
-    public class XtraGridItemsSourceFeatureTests : ItemsSourceTestsBase<GridControl> {
+    public class GridControlItemsSourceFeatureTests : ItemsSourceTestsBase<GridControl> {
         protected override IList GetItems(GridControl control) {
             return GetItemsCore(control).ToList();
         }

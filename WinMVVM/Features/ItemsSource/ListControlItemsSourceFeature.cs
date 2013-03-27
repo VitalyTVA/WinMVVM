@@ -11,8 +11,11 @@ using WinMVVM.Utils;
 using WinMVVM.Utils.Adapter;
 
 namespace WinMVVM.Features.ItemsSource {
-    internal abstract class ListControlItemsSourceFeature<TListControl> : BaseItemsSourceFeature<TListControl> where TListControl : ListControl {
-        static readonly string[] AffectedProperties = new string[] { "Items", "DataSource" };
+    internal abstract class ListControlItemsSourceFeature<TListControl> : BaseItemsSourceFeature<TListControl> where TListControl : ListControl, new() {
+        static readonly string[] AffectedProperties;
+        static ListControlItemsSourceFeature() {
+            AffectedProperties = new string[] { GetPropertyName(() => new ListBox().Items), GetPropertyName(() => new TListControl().DataSource) };
+        }
         protected override void SetDataSource(TListControl control, object value) {
             control.DataSource = value;
         }

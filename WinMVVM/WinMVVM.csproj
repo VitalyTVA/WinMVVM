@@ -76,6 +76,7 @@
     <Compile Include="Features\BaseItemsSourceFeature.cs" />
     <Compile Include="Features\FeatureRegistratorAttribute.cs" />
     <Compile Include="Features\IFeatureRegistrator.cs" />
+    <Compile Include="Features\ItemsSource\DataGridViewItemsSourceFeature.cs" />
     <Compile Include="Tests\FeatureProviderTests.cs" />
     <Compile Include="Features\DefaultFeatureRegistrator.cs" />
     <Compile Include="Features\FeatureProvider.cs" />
@@ -96,6 +97,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PropertyMetadata.cs" />
     <Compile Include="PropertyMetadataOptions.cs" />
+    <Compile Include="Tests\ItemsSourceProvider\DataGridViewItemsSourceTests.cs" />
     <Compile Include="Tests\ItemsSourceProvider\ItemsSourceProviderTests.cs" />
     <Compile Include="Tests\ItemsSourceProvider\ItemsSourceTestsBase.cs" />
     <Compile Include="Tests\ItemsSourceProvider\ListControlItemsSourceTests.cs">

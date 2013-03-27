@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Input;
@@ -12,6 +13,9 @@ using WinMVVM.Utils.Adapter;
 
 namespace WinMVVM.Features {
     public abstract class BaseItemsSourceFeature<TControl> : BaseFeature<TControl>, IItemsSourceFeature where TControl : Control {
+        protected static string GetPropertyName<T>(Expression<Func<T>> expression) {
+            return ExpressionHelper.GetPropertyName(expression);
+        }
         void IItemsSourceFeature.SetDataSource(Control control, object value) {
             SetDataSource((TControl)control, value);
         }
