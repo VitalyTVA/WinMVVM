@@ -14,6 +14,9 @@ namespace WinMVVM.Tests.ItemsSource {
         protected override object GetDataSource(TListControl control) {
             return control.DataSource;
         }
+        protected override string[] GetItemsSourceDependentProperties() {
+            return new string[] { GetPropertyName(() => new ListBox().Items), GetPropertyName(() => new TListControl().DataSource) };
+        }
     }
     [TestFixture]
     public class ListBoxItemsSourceTests : ListControlItemsSourceTests<ListBox> {
