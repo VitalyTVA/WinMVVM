@@ -25,7 +25,7 @@ namespace WinMVVM {
             IItemsSourceFeature feature = FeatureProvider<IItemsSourceFeature>.GetFeature(sender);
             if(feature != null) {
                 IEnumerable dataSource = (e.NewValue is INotifyCollectionChanged && e.NewValue is IList) ? BindingListAdapter.CreateFromList((IList)e.NewValue) : e.NewValue;//TODO
-                feature.SetDataSource(sender, dataSource);
+                feature.SetDataSource(sender, dataSource.With(x => new BindingSource() { DataSource = dataSource }));
             }
 
             //var gridView = sender as DataGridView;

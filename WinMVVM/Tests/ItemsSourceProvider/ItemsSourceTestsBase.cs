@@ -18,6 +18,8 @@ namespace WinMVVM.Tests.ItemsSource {
         protected abstract IList GetItems(TControl control);
         protected abstract object GetDataSource(TControl control);
         protected abstract string[] GetItemsSourceDependentProperties();
+        protected abstract int GetSelectedIndex(TControl control);
+        protected abstract void SetSelectedIndex(TControl control, int value);
 
         protected virtual TControl CreateControl() {
             return new TControl();
@@ -113,5 +115,32 @@ namespace WinMVVM.Tests.ItemsSource {
                 Assert.That(items.Count, Is.EqualTo(0));
             }
         }
+        [Test]
+        public void CurrentItemIsNotSynchronizedInDifferentControls() {
+            var list = new List<TestData>() { 
+                        new TestData(0, "text 0"),
+                        new TestData(1, "text 1"),
+                    };
+            using(var form = new Form()) {
+                var control1 = CreateControl();
+                var control2 = CreateControl();
+                form.Controls.Add(control1);
+                form.Controls.Add(control2);
+                control1.SetItemsSource(list);
+                control2.SetItemsSource(list);
+
+                SetSelectedIndex(control1, 1);
+                Assert.That(GetSelectedIndex(control1), Is.EqualTo(1));
+                Assert.That(GetSelectedIndex(control2), Is.Not.EqualTo(1));
+
+                SetSelectedIndex(control1, 0);
+                Assert.That(GetSelectedIndex(control1), Is.EqualTo(0));
+
+                SetSelectedIndex(control2, 1);
+                Assert.That(GetSelectedIndex(control2), Is.EqualTo(1));
+                Assert.That(GetSelectedIndex(control1), Is.EqualTo(0));
+            }
+        }
+        //TODO IsSynchronizedWithCurrentItem
     }
 }

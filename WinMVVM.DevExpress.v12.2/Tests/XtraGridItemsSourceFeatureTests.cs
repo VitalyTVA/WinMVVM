@@ -32,5 +32,12 @@ namespace WinMVVM.DevExpress.Tests {
             gridControl.MainView = new GridView();
             return gridControl;
         }
+        protected override int GetSelectedIndex(GridControl control) {
+            return ((GridView)control.MainView).FocusedRowHandle;
+        }
+        protected override void SetSelectedIndex(GridControl control, int value) {
+            ((GridView)control.MainView).FocusedRowHandle = value;
+        }
+
     }
 }

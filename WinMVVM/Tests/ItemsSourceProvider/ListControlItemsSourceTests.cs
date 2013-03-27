@@ -17,6 +17,12 @@ namespace WinMVVM.Tests.ItemsSource {
         protected override string[] GetItemsSourceDependentProperties() {
             return new string[] { GetPropertyName(() => new ListBox().Items), GetPropertyName(() => new TListControl().DataSource) };
         }
+        protected override int GetSelectedIndex(TListControl control) {
+            return control.SelectedIndex;
+        }
+        protected override void SetSelectedIndex(TListControl control, int value) {
+            control.SelectedIndex = value;
+        }
     }
     [TestFixture]
     public class ListBoxItemsSourceTests : ListControlItemsSourceTests<ListBox> {
