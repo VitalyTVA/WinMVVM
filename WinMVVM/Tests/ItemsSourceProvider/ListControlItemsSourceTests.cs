@@ -41,7 +41,7 @@ namespace WinMVVM.Tests.ItemsSource {
                 control.SetItemsSource(list);
                 SetSelectedIndex(control, 0);
 
-                //Assert.That(control.GetSelectedItem(), Is.EqualTo(null)); ???
+                //Assert.That(control.GetSelectedItem(), Is.EqualTo(null)); ??? //TODO
 
                 control.SetSelectedItem(list[1]);
                 Assert.That(control.GetSelectedItem(), Is.EqualTo(list[1]));
@@ -57,6 +57,43 @@ namespace WinMVVM.Tests.ItemsSource {
                 Assert.That(GetSelectedIndex(control), Is.EqualTo(1));
             }
         }
+        public class TestViewModel : BindableBase {
+            TestData testData;
+            public TestData TestData {
+                get { return testData; }
+                set { SetProperty(ref testData, value, () => TestData); }
+            }
+        }
+        [Test]
+        public void SelectedItemBinding() {
+            var list = new List<TestData>() { 
+                        new TestData(0, "text 0"),
+                        new TestData(1, "text 1"),
+                    };
+            var viewModel = new TestViewModel() { TestData = list[0] };
+            using(var form = new Form()) {
+                form.SetDataContext(viewModel);
+                var control = CreateControl();
+                form.Controls.Add(control);
+                control.SetItemsSource(list);
+                SetSelectedIndex(control, 1);
+
+                control.SetBinding(ItemsSourceProvider.SelectedItemProperty, new Binding(() => new TestViewModel().TestData, BindingMode.TwoWay));
+                Assert.That(control.GetSelectedItem(), Is.EqualTo(list[0]));
+                Assert.That(viewModel.TestData, Is.EqualTo(list[0]));
+
+                viewModel.TestData = list[1];
+                Assert.That(control.GetSelectedItem(), Is.EqualTo(list[1]));
+                Assert.That(viewModel.TestData, Is.EqualTo(list[1]));
+
+                SetSelectedIndex(control, 0);
+                //Assert.That(control.GetSelectedItem(), Is.EqualTo(list[0]));
+                //Assert.That(viewModel.TestData, Is.EqualTo(list[0]));
+            }
+        }
+        //binding when source property is null 
+        //binding when source property is equal to currently selected item in control
+        //one way binding
     }
 
     public class CustomListBox : ListBox { 
