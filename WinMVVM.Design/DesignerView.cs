@@ -146,7 +146,7 @@ namespace WinMVVM.Design {
             yield return DataContextProvider.DataContextProperty;
             yield return CommandProvider.CommandProperty;
             yield return CommandProvider.CommandParameterProperty;
-            if(FeatureProvider<IItemsSourceFeature>.GetFeature(control) != null) {
+            if(control.GetItemsSourceFeature() != null) {
                 yield return ItemsSourceProvider.ItemsSourceProperty;
             }
         }

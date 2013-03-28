@@ -16,6 +16,9 @@ namespace WinMVVM.Tests.ItemsSource {
             var list = new List<TestData>();
             using(var button = new Button()) {
                 button.SetItemsSource(list);
+                Assert.That(button.GetItemsSource(), Is.EqualTo(list));
+                button.SetSelectedItem("foo");
+                Assert.That(button.GetSelectedItem(), Is.EqualTo("foo"));
             }
         }
     }

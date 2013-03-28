@@ -29,6 +29,32 @@ namespace WinMVVM.Tests.ItemsSource {
         protected override IList GetItems(ListBox control) {
             return control.Items;
         }
+        [Test]
+        public void SelectedItemChange() {
+            var list = new List<TestData>() { 
+                        new TestData(0, "text 0"),
+                        new TestData(1, "text 1"),
+                    };
+            using(var form = new Form()) {
+                var control = CreateControl();
+                form.Controls.Add(control);
+                control.SetItemsSource(list);
+                SetSelectedIndex(control, 0);
+
+                Assert.That(control.GetSelectedItem(), Is.EqualTo(null));
+
+                control.SetSelectedItem(list[1]);
+                Assert.That(control.GetSelectedItem(), Is.EqualTo(list[1]));
+                //Assert.That(GetSelectedIndex(control), Is.EqualTo(1));
+
+                //control.SetSelectedItem(null);
+                //Assert.That(control.GetSelectedItem(), Is.Null);
+                //Assert.That(GetSelectedIndex(control), Is.EqualTo(-1));
+
+                //control.SetSelectedItem("bla");
+                //???
+            }
+        }
     }
 
     public class CustomListBox : ListBox { 

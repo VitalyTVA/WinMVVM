@@ -22,17 +22,25 @@ namespace WinMVVM {
             control.SetValue(ItemsSourceProperty, value);
         }
         static void OnItemsSourceChanged(Control sender, AttachedPropertyChangedEventArgs<IEnumerable> e) {
-            IItemsSourceFeature feature = FeatureProvider<IItemsSourceFeature>.GetFeature(sender);
+            IItemsSourceFeature feature = sender.GetItemsSourceFeature();
             if(feature != null) {
                 IEnumerable dataSource = (e.NewValue is INotifyCollectionChanged && e.NewValue is IList) ? BindingListAdapter.CreateFromList((IList)e.NewValue) : e.NewValue;//TODO
                 feature.SetDataSource(sender, dataSource.With(x => new BindingSource() { DataSource = dataSource }));
             }
+        }
 
-            //var gridView = sender as DataGridView;
-            //if(gridView != null) {
-            //    IEnumerable dataSource = (e.NewValue is INotifyCollectionChanged && e.NewValue is IList) ? BindingListAdapter.CreateFromList((IList)e.NewValue) : e.NewValue;//TODO
-            //    gridView.DataSource = dataSource != null ? new BindingSource(dataSource, null) : null;
-            //}
+        public static readonly AttachedProperty<object> SelectedItemProperty = AttachedProperty<object>.Register(() => SelectedItemProperty, new PropertyMetadata<object>(null, OnSelectedItemChanged));
+        public static object GetSelectedItem(this Control control) {
+            return control.GetValue(SelectedItemProperty);
+        }
+        public static void SetSelectedItem(this Control control, object value) {
+            control.SetValue(SelectedItemProperty, value);
+        }
+        static void OnSelectedItemChanged(Control sender, AttachedPropertyChangedEventArgs<object> e) {
+        }
+
+        internal static IItemsSourceFeature GetItemsSourceFeature(this Control sender) {
+            return FeatureProvider<IItemsSourceFeature>.GetFeature(sender);
         }
     }
 }

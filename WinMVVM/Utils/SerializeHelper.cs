@@ -10,7 +10,7 @@ using WpfBinding = System.Windows.Data.Binding;
 namespace WinMVVM.Utils {
     internal static class SerializeHelper {
         internal static bool CanSerializeProperty(Control control, PropertyDescriptor property) {
-            IItemsSourceFeature feature = FeatureProvider<IItemsSourceFeature>.GetFeature(control);
+            IItemsSourceFeature feature = control.GetItemsSourceFeature();
             if(feature != null) {
                 if(control.GetItemsSource() == null)
                     return true;
