@@ -12,5 +12,11 @@ using WinMVVM.Utils.Adapter;
 
 namespace WinMVVM.Features.ItemsSource {
     internal class ListBoxItemsSourceFeature : ListControlItemsSourceFeature<ListBox> {
+        protected override void SetSelectedItem(ListBox control, object value) {
+            control.SelectedItem = value;
+        }
+        protected override object GetSelectedItem(ListBox control) {
+            return control.SelectedItem;
+        }
     }
 }

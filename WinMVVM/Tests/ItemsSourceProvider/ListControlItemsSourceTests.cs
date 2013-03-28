@@ -41,18 +41,20 @@ namespace WinMVVM.Tests.ItemsSource {
                 control.SetItemsSource(list);
                 SetSelectedIndex(control, 0);
 
-                Assert.That(control.GetSelectedItem(), Is.EqualTo(null));
+                //Assert.That(control.GetSelectedItem(), Is.EqualTo(null)); ???
 
                 control.SetSelectedItem(list[1]);
                 Assert.That(control.GetSelectedItem(), Is.EqualTo(list[1]));
-                //Assert.That(GetSelectedIndex(control), Is.EqualTo(1));
+                Assert.That(GetSelectedIndex(control), Is.EqualTo(1));
 
-                //control.SetSelectedItem(null);
-                //Assert.That(control.GetSelectedItem(), Is.Null);
-                //Assert.That(GetSelectedIndex(control), Is.EqualTo(-1));
+                control.SetSelectedItem(list[0]);
+                Assert.That(control.GetSelectedItem(), Is.EqualTo(list[0]));
+                Assert.That(GetSelectedIndex(control), Is.EqualTo(0));
 
-                //control.SetSelectedItem("bla");
-                //???
+                control.SetSelectedItem(list[1]);
+                control.SetSelectedItem("bla");
+                Assert.That(control.GetSelectedItem(), Is.EqualTo(list[1]));
+                Assert.That(GetSelectedIndex(control), Is.EqualTo(1));
             }
         }
     }

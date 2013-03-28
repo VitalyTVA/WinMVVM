@@ -37,6 +37,12 @@ namespace WinMVVM {
             control.SetValue(SelectedItemProperty, value);
         }
         static void OnSelectedItemChanged(Control sender, AttachedPropertyChangedEventArgs<object> e) {
+            IItemsSourceFeature feature = sender.GetItemsSourceFeature();
+            if(feature != null) {
+                feature.SetSelectedItem(sender, e.NewValue);
+                sender.SetSelectedItem(feature.GetSelectedItem(sender));
+                //TODO recursion
+            }
         }
 
         internal static IItemsSourceFeature GetItemsSourceFeature(this Control sender) {

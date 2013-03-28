@@ -15,5 +15,12 @@ namespace WinMVVM.Features.ItemsSource {
         protected override void SetDataSource(DataGridView control, object value) {
             control.DataSource = value;
         }
+
+        protected override void SetSelectedItem(DataGridView tControl, object value) {
+            throw new NotImplementedException();
+        }
+        protected override object GetSelectedItem(DataGridView control) {
+            throw new NotImplementedException();
+        }
     }
 }

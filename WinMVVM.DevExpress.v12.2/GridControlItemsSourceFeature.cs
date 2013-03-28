@@ -18,5 +18,13 @@ namespace WinMVVM.DevExpress {
         protected override void SetDataSource(GridControl control, object value) {
             control.DataSource = value;
         }
+
+        protected override void SetSelectedItem(GridControl tControl, object value) {
+            throw new NotImplementedException();
+        }
+        protected override object GetSelectedItem(GridControl control) {
+            throw new NotImplementedException();
+        }
+
     }
 }

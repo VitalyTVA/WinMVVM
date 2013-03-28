@@ -14,5 +14,7 @@ namespace WinMVVM.Features {
     public interface IItemsSourceFeature : IFeature {
         void SetDataSource(Control control, object value);
         string[] GetItemsSourceAffectedProperties();
+        void SetSelectedItem(Control control, object value);
+        object GetSelectedItem(Control control);
     }
 }

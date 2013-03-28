@@ -12,5 +12,11 @@ using WinMVVM.Utils.Adapter;
 
 namespace WinMVVM.Features.ItemsSource {
     internal class ComboBoxItemsSourceFeature : ListControlItemsSourceFeature<ComboBox> {
+        protected override void SetSelectedItem(ComboBox tControl, object value) {
+            throw new NotImplementedException();
+        }
+        protected override object GetSelectedItem(ComboBox control) {
+            throw new NotImplementedException();
+        }
     }
 }

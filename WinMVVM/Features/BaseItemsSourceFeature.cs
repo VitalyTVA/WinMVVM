@@ -22,7 +22,15 @@ namespace WinMVVM.Features {
         string[] IItemsSourceFeature.GetItemsSourceAffectedProperties() {
             return GetItemsSourceAffectedProperties();
         }
+        void IItemsSourceFeature.SetSelectedItem(Control control, object value) {
+            SetSelectedItem((TControl)control, value);
+        }
+        object IItemsSourceFeature.GetSelectedItem(Control control) {
+            return GetSelectedItem((TControl)control);
+        }
 
+        protected abstract object GetSelectedItem(TControl tControl);
+        protected abstract void SetSelectedItem(TControl tControl, object value);
         protected abstract string[] GetItemsSourceAffectedProperties();
         protected abstract void SetDataSource(TControl control, object value);
     }
