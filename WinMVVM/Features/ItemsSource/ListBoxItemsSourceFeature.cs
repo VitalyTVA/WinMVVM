@@ -18,5 +18,8 @@ namespace WinMVVM.Features.ItemsSource {
         protected override object GetSelectedItem(ListBox control) {
             return control.SelectedItem;
         }
+        protected override void AddSelectionChangedCallback(ListBox control, Action<Control> action) {
+            control.SelectedValueChanged += (o, e) => action((Control)o);
+        }
     }
 }

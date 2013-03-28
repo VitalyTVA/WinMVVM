@@ -55,6 +55,10 @@ namespace WinMVVM.Tests.ItemsSource {
                 control.SetSelectedItem("bla");
                 Assert.That(control.GetSelectedItem(), Is.EqualTo(list[1]));
                 Assert.That(GetSelectedIndex(control), Is.EqualTo(1));
+
+                SetSelectedIndex(control, 0);
+                Assert.That(control.GetSelectedItem(), Is.EqualTo(list[0]));
+                Assert.That(GetSelectedIndex(control), Is.EqualTo(0));
             }
         }
         public class TestViewModel : BindableBase {
@@ -87,8 +91,8 @@ namespace WinMVVM.Tests.ItemsSource {
                 Assert.That(viewModel.TestData, Is.EqualTo(list[1]));
 
                 SetSelectedIndex(control, 0);
-                //Assert.That(control.GetSelectedItem(), Is.EqualTo(list[0]));
-                //Assert.That(viewModel.TestData, Is.EqualTo(list[0]));
+                Assert.That(control.GetSelectedItem(), Is.EqualTo(list[0]));
+                Assert.That(viewModel.TestData, Is.EqualTo(list[0]));
             }
         }
         //binding when source property is null 

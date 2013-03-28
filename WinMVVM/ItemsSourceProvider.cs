@@ -36,15 +36,30 @@ namespace WinMVVM {
         public static void SetSelectedItem(this Control control, object value) {
             control.SetValue(SelectedItemProperty, value);
         }
+        static readonly AttachedProperty<Action<Control>> HandlerProperty = AttachedProperty<Action<Control>>.Register(() => HandlerProperty);
         static void OnSelectedItemChanged(Control sender, AttachedPropertyChangedEventArgs<object> e) {
             IItemsSourceFeature feature = sender.GetItemsSourceFeature();
             if(feature != null) {
+                //TODO test it
+                //Action selectionChangedHandler = sender.GetValue(HandlerProperty);
+                //if(selectionChangedHandler == null) {
+                //    selectionChangedHandler = new Action(OnSelectionChanged);
+                //    sender.SetValue(HandlerProperty, selectionChangedHandler);
+                //    feature.AddSelectionChangedCallback(sender, selectionChangedHandler);
+                //}
+
+                feature.AddSelectionChangedCallback(sender, OnSelectionChanged);
+
                 feature.SetSelectedItem(sender, e.NewValue);
                 sender.SetSelectedItem(feature.GetSelectedItem(sender));
-                //TODO recursion
+                //TODO test recursion or add assert
             }
         }
-
+        static void OnSelectionChanged(Control sender) {
+            IItemsSourceFeature feature = sender.GetItemsSourceFeature();
+            sender.SetSelectedItem(feature.GetSelectedItem(sender));
+            //TODO test recursion or add assert
+        }
         internal static IItemsSourceFeature GetItemsSourceFeature(this Control sender) {
             return FeatureProvider<IItemsSourceFeature>.GetFeature(sender);
         }

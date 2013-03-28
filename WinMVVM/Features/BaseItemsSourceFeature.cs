@@ -28,10 +28,19 @@ namespace WinMVVM.Features {
         object IItemsSourceFeature.GetSelectedItem(Control control) {
             return GetSelectedItem((TControl)control);
         }
+        void IItemsSourceFeature.AddSelectionChangedCallback(Control control, Action<Control> action) {
+            AddSelectionChangedCallback((TControl)control, action);
+        }
+
+        protected virtual void AddSelectionChangedCallback(TControl control, Action<Control> action) {
+            throw new NotImplementedException();
+        }
 
         protected abstract object GetSelectedItem(TControl tControl);
         protected abstract void SetSelectedItem(TControl tControl, object value);
         protected abstract string[] GetItemsSourceAffectedProperties();
         protected abstract void SetDataSource(TControl control, object value);
+
+
     }
 }

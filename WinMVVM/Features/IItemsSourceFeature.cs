@@ -16,5 +16,6 @@ namespace WinMVVM.Features {
         string[] GetItemsSourceAffectedProperties();
         void SetSelectedItem(Control control, object value);
         object GetSelectedItem(Control control);
+        void AddSelectionChangedCallback(Control control, Action<Control> action);
     }
 }
