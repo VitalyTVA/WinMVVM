@@ -40,15 +40,12 @@ namespace WinMVVM {
         static void OnSelectedItemChanged(Control sender, AttachedPropertyChangedEventArgs<object> e) {
             IItemsSourceFeature feature = sender.GetItemsSourceFeature();
             if(feature != null) {
-                //TODO test it
-                //Action selectionChangedHandler = sender.GetValue(HandlerProperty);
-                //if(selectionChangedHandler == null) {
-                //    selectionChangedHandler = new Action(OnSelectionChanged);
-                //    sender.SetValue(HandlerProperty, selectionChangedHandler);
-                //    feature.AddSelectionChangedCallback(sender, selectionChangedHandler);
-                //}
-
-                feature.AddSelectionChangedCallback(sender, OnSelectionChanged);
+                Action<Control> selectionChangedHandler = sender.GetValue(HandlerProperty);
+                if(selectionChangedHandler == null) {
+                    selectionChangedHandler = OnSelectionChanged;
+                    sender.SetValue(HandlerProperty, selectionChangedHandler);
+                    feature.AddSelectionChangedCallback(sender, selectionChangedHandler);
+                }
 
                 feature.SetSelectedItem(sender, e.NewValue);
                 sender.SetSelectedItem(feature.GetSelectedItem(sender));

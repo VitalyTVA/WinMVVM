@@ -5,8 +5,11 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Reflection;
 using System.Windows.Forms;
 using System.Windows.Input;
+using WinMVVM.Features;
+using WinMVVM.Features.ItemsSource;
 using WinMVVM.Utils;
 
 namespace WinMVVM.Tests.ItemsSource {
@@ -98,15 +101,7 @@ namespace WinMVVM.Tests.ItemsSource {
         //binding when source property is null 
         //binding when source property is equal to currently selected item in control
         //one way binding
-    }
-
-    public class CustomListBox : ListBox { 
-    }
-    [TestFixture]
-    public class CustomListBoxItemsSourceTests : ListControlItemsSourceTests<CustomListBox> {
-        protected override IList GetItems(CustomListBox control) {
-            return control.Items;
-        }
+        //REAL unsubscribe with same handler on clear binding (or never unsubscribe at all - always sync selectedItem attached property)
     }
 
     [TestFixture]

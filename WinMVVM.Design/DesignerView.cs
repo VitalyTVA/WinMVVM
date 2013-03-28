@@ -148,6 +148,7 @@ namespace WinMVVM.Design {
             yield return CommandProvider.CommandParameterProperty;
             if(control.GetItemsSourceFeature() != null) {
                 yield return ItemsSourceProvider.ItemsSourceProperty;
+                yield return ItemsSourceProvider.SelectedItemProperty;
             }
         }
     }
